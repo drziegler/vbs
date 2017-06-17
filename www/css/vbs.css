@@ -1,0 +1,107 @@
+@charset "utf-8";
+/* Simple fluid media
+   Note: Fluid media requires that you remove the media's height and width attributes from the HTML
+   http://www.alistapart.com/articles/fluid-images/ 
+*/
+img, object, embed, video {
+	max-width: 100%;
+}
+body, select, textarea {
+	font-family: sans-serif;
+/*	font-size: medium; */
+	color: #222;
+}
+/* IE 6 does not support max-width so default to width 100% */
+.ie6 img {
+	width:100%;
+}
+
+
+
+/* Mobile Layout: 480px and below. */
+.gridContainer {
+	margin-left: auto;
+	margin-right: auto;
+	width: 95%;
+	padding-left: 1.98%;
+	padding-right: 1.98%;
+}
+h1, h2 {
+	width: 99%;
+	margin: auto;
+	text-align: center;
+	font-size: 7vw;
+}
+h2 {
+	font-weight:normal;
+	font-size: 5vw;
+}
+.center{
+	margin-left:auto;
+	margin-right:auto;
+	width:99%;
+	text-align:center;
+}
+.red{
+	color:red;
+}
+#counter{
+	font-size: 3vw;
+}
+#Footer {
+	position: absolute;
+	text-align:center;
+	clear: both;
+	float: left;
+	margin-left: 0;
+	width: 100%;
+	display: block;
+	padding:15;
+	bottom:0;
+	left:0;
+}
+}
+
+/* Tablet Layout: 481px to 768px. Inherits styles from: Mobile Layout. */
+
+@media only screen and (min-width: 481px) {
+.gridContainer {
+	width: 95.04%;
+	padding-left: 1.98%;
+	padding-right: 1.98%;
+}
+}
+
+/* Desktop Layout: 769px to a max of 1232px.  Inherits styles from: Mobile Layout and Tablet Layout. */
+
+@media only screen and (min-width: 769px) {
+.gridContainer {
+	width: 80%;
+	padding-left: 1.98%;
+	padding-right: 1.98%;
+	margin: auto;
+}
+.gridContainer p{
+	font-size:large;
+}
+h1, h2 {
+	width: 99%;
+	margin: auto;
+	text-align: center;
+	font-size: 4vw;
+}
+h2 {
+	font-size: 3vw;
+}
+#logo{
+	padding-top: 3vw;
+}
+#logo div{
+	max-width:25%;	
+}
+#counter{
+	padding-top: 2vw;
+	font-size: 2vw;
+}
+
+}
