@@ -1,15 +1,46 @@
-<?php
+_<?php
 /* This function formats the email to the vbs mail box. */
+/* Errors in this function as in the 2000 range */
 session_start();
 include_once('vbsUtils.inc');
 require_once('Connections/vbsDB.php');
-
+define("SUBMIT_REGISTRATION", "Submit Registration");
+define("CANCEL_REGISTRATION", "Cancel");
+$family = array();
+$studentTotal = 0;
+$staffTotal = 0;
 
 if (empty($_SESSION['family_id'])){
 	header("Location: " . HOME_PAGE);
 }
+/* This function changes registered 'Y' values into 'C' values for confirmed
+ * This is not a logical value but it was too late into the process to change
+ * the existing Y processes and retest everything.
+ */
+function confirm($famID){
+	global $vbsDBi;
+	$studentsConfirmed=true;
+	$staffConfirmed=true;
+
+
+	$sql="update students set registered='C' where registered='Y' and family_id=$famID";
+	writeLog($sql);
+	if (!mysqli_query($vbsDBi, $sql)){
+		writeErr("Unable to confirm students for famID $famID.", __FUNCTION__, __LINE__, 2001);
+		$studentsConfirmed=false;
+	}
+
+	$sql="update staff set registered='C' where registered='Y' and family_id=$famID";
+	writeLog($sql);
+	if (!mysqli_query($vbsDBi, $sql)){
+		writeErr("Unable to confirm staff for famID $famID.", __FUNCTION__, __LINE__, 2002);
+		$staffConfirmed=false;
+	}
+	return ($studentsConfirmed && $staffConfirmed);
+}
 
 function sendVBSmail($famID){
+	global $studentTotal, $staffTotal, $family;
 
 	$mailbody = "<html><head>";
 	$mailbody .= getStyles();
@@ -22,12 +53,12 @@ function sendVBSmail($famID){
 	$mailbody .= formatStudents($famID) ."\r\n";
 	$mailbody .= formatStaff($famID) . "\r\n";
 	$mailbody .= "</body></html>";			/* just so we're well formed ! */
-	
+
 	// Append lines to $mail_header that you wish to be added to the headers of the e-mail. (SMTP Format
 	// with newline char ending each line)
-	$email = getEmail($_SESSION['family_id']);
-	$mail_header  = "From: " . $email['email'] . "(" . $email['family_name'] . ")\r\n";
-	$mail_header .= "Reply-to: " .$email['email']." (".$email['family_name'].")\r\n";
+	$email = getEmail($famID);
+	$mail_header  = "From: " . $email['family_name'] . " <" . $email['email'] . ">\r\n";
+	$mail_header .= "Reply-to: " .$email['family_name']." <".$email['email'].">\r\n";
 	$mail_header .= "Content-Type: text/html; charset=utf-8\r\n";
 
 	/* Temporarily set the php.ini file to the sendmail_from value specified here */
@@ -35,23 +66,37 @@ function sendVBSmail($famID){
 
 
 //@@	$mail_status = mail(SEND_TO, SUBJECT, $mailbody, $mail_header);
-	$mail_status = mail('david@the-zieglers.com', 'VBS Registration', $mailbody, $mail_header);
+	$mail_status = mail(VBS_EMAIL, 'VBS Registration', $mailbody, $mail_header);
 	if(!$mail_status){
-		 $errors[] = "Mail could not be sent due to an error while trying to send the mail.";
-         writeLog("[PHPFormMail] Mail could not be sent due to an error while trying to send the mail.");
+         writeLog("[VBS MAIL] Mail could not be sent due to an error while trying to send the mail.  Mail status is $mail_status");
 	}
+
+	/* HLR lookup api - to get mobil carrier name */
+
+	if (SEND_TEXT){
+		writelog("Sending text message to " . VBS_TEXT);
+		$text_headers = 'From: vbs@hopecherryville.org' . "\r\n";
+		$textMsg  = "New VBS registration for " . trim($family['family_name']) . " for $studentTotal students and $staffTotal volunteers\r\n";
+		/*
+		writelog("Sending to " . VBS_TEXT);
+		writelog("Sending from " . $text_headers);
+		writelog("Sending message " . $textMsg);
+		*/
+		$mail_status = mail(VBS_TEXT, '', $textMsg, $text_headers);
+		writelog("[VBS TEXT] Text mail status is " . $mail_status );
+	}
+
 }
 
 /* This function generates the confirmation email back to the requester */
 function sendConfo($famID){
-global $family;
 
 	$mailbody = "<html><head>";
 	$mailbody .= getStyles();
 	$mailbody .= "</head><body>";
 	$mailbody .= "<h1>VBS registration confirmation.</h1><br />";
 	$mailbody .= "Registration date: " . date("F dS, Y") . "<br /><br />";
-	
+
 	$mailbody .="Thank you for registering for VBS " . date("Y") . ". The following information has been sent to the VBS office.";
 	$mailbody .=" If any of the information is not correct, please <a href=\"mailto:vbs@hopecherryville.org\">email us</a> so we may adjust our ";
 	$mailbody .="records.<br><br>";
@@ -59,7 +104,7 @@ global $family;
 	$mailbody .= formatStudents($famID) ."\r\n";
 	$mailbody .= formatStaff($famID) . "\r\n";
 	$mailbody .= "</body></html>";			/* just so we're well formed ! */
-	
+
 	// Append lines to $mail_header that you wish to be added to the headers of the e-mail. (SMTP Format
 	// with newline char ending each line)
 	$headers = array();
@@ -69,23 +114,29 @@ global $family;
 	$headers[] = "Content-Type: text/html; charset=utf-8";
 	$headers[] = "Subject: VBS Confirmation";
 
-	$sendTo = $family[F_NAME] . "<" . $family[F_EMAIL] . ">";
-//@@	$mail_status = mail($sendTo, "VBS Confirmation", $mailbody, implode("\r\n", $headers));
-	$mail_status = mail("david@the-zieglers.com", "VBS Confirmation", $mailbody, implode("\r\n", $headers));
+	$email = getEmail($famID);
+
+	writelog("Sent to " . $email['family_name'] . " at " . $email['email']);
+	$sendTo = $email['family_name'] . "<" . $email['email'] . ">";
+
+	$mail_status = mail($sendTo, "VBS Confirmation", $mailbody, implode("\r\n", $headers));
 	if(!$mail_status){
          writeErr("Failed to send email to " . $sendTo . " on " . date("F dS, Y"));
+	}
+	else{
+		writeLog("Sent confirmation email to " . $email['family_name'] . " at " . $email['email']);
 	}
 }
 
 function formatFamily($famID){
-	global $vbsDBi;
+	global $vbsDBi, $family;
 	$sql = $ph = $fam = "";
-	
+
 	$sql = "select * from family fam left join zipcodes zip on LEFT(fam.zipcode, 5)=zip.zipcode where family_id=" . $famID;
 	$result = mysqli_query($vbsDBi, $sql);
 	if ($result) {
 		$family = mysqli_fetch_assoc($result);
-		
+
 		// Add the family data to the email body
 		$fam = '<div id="Family">';
 		$fam .= '<h2 style="margin:0">Family Information</h2>';
@@ -106,12 +157,12 @@ function formatFamily($famID){
 		writeErr("No family results for " . $famID, __FUNCTION__, __LINE__, $sqlErr);
 	}
 
-	@mysqli_free_result($family);
-	
+	//@mysqli_free_result($family);
+
 	return $fam;
 }
-	
-function formatConfoPhone($famID){	
+
+function formatConfoPhone($famID){
 global $vbsDBi;
 
 	$sql = "SELECT contact_name, phone, phone_type_desc FROM phone_numbers JOIN phone_types ON phone_numbers.phone_type_code = phone_types.phone_type_code
@@ -136,15 +187,15 @@ global $vbsDBi;
 	@mysqli_free_result($phone);
 
 	return $ph;
-	
+
 }
 
 /* If includeID is false, then this is a confirmation for the requester and we suppress the ID field(s). */
 function formatStudents($famID){
-global $vbsDBi;
+global $vbsDBi, $studentTotal;
 
 	$sql = "SELECT CONCAT(first_name, ' ',last_name) as name, birthdate, class, shirt_size, picture, buddy, comments, confo, last_name, first_name
-			FROM students WHERE registered='Y' and family_id=" . $famID . " ORDER BY last_name, first_name";
+			FROM students WHERE (registered='Y' or registered='C') and family_id=" . $famID . " ORDER BY last_name, first_name";
 	$result = mysqli_query($vbsDBi, $sql);
 
 	if ($result===false){
@@ -156,9 +207,10 @@ global $vbsDBi;
 		$stud .= "<h2>Student Information</h2>";
 		$stud .= '<table cellspacing="0">';
 
-		if (! is_null($s)){ 
+		if (! is_null($s)){
 			$stud .= "<tr><th>Name</th><th>Birthdate</th><th>Picture</th>";
-			$stud .= "<th>Class</th><th>T-Shirt</th><th>Friend Request</th><th>Comments</th><th>Conf #</th></tr>";
+			//20180402-removed confo no. $stud .= "<th>Class</th><th>T-Shirt</th><th>Friend Request</th><th>Comments</th><th>Conf #</th></tr>";
+			$stud .= "<th>Class</th><th>T-Shirt</th><th>Friend Request</th><th>Comments</th></tr>";
 			$stud .= "<tr>";
 			do {
 				$stud .= "<td style='white-space: nowrap;'>" . $s['name'] . "</td>";
@@ -168,12 +220,14 @@ global $vbsDBi;
 				$stud .= "<td style='white-space: nowrap;'>" . $s['shirt_size'] . "</td>";
 				$stud .= "<td style='white-space: nowrap;'>" . $s['buddy'] . "</td>";
 				$stud .= "<td>" . $s['comments'] . "</td>";
-				$stud .= "<td>" . $s['confo'] . "</td>";
+				//20180402-removed confo no.$stud .= "<td>" . $s['confo'] . "</td>";
 				$stud .= "</tr>";
+				$studentTotal++;
 			} while ($s = mysqli_fetch_assoc($result));
 		}
 		else{
 			$stud .= "<tr><td class='center'>No students registered</td></tr>";
+			$studentTotal = 0;
 		}
 		$stud .= "</table>";
 		$stud .= "</div>";
@@ -185,11 +239,11 @@ global $vbsDBi;
 
 
 function formatStaff($famID){
-global $vbsDBi;
+global $vbsDBi, $staffTotal;
 
 	$sql = "SELECT CONCAT(first_name, ' ',last_name) as name, picture, mon, tue, wed, thur, fri, kitchen, craft, classroom, anything,
 			teach_with, shirt_size, age_group, confo, comments, last_name, first_name
-			FROM staff WHERE registered='Y' and family_id=" . $famID . " ORDER BY last_name, first_name";
+			FROM staff WHERE (registered='Y' or registered='C') and family_id=" . $famID . " ORDER BY last_name, first_name";
 	$result = mysqli_query($vbsDBi, $sql);
 	if ($result===false){
 		$sqlErr = mysqli_error($vbsDBi);
@@ -200,8 +254,8 @@ global $vbsDBi;
 		$stf = '<div id="Staff">';
 		$stf .= "<h2>Volunteer Information</h2>";
 		$stf .= '<table cellspacing="0">';
-	
-		if (! is_null($s)){ 
+
+		if (! is_null($s)){
 			/* Add the STAFF SECTION */
 			$stf .= "<tr>";
 			$stf .= "<th>Name</th>";
@@ -209,7 +263,8 @@ global $vbsDBi;
 			$stf .= "<th>Class</th><th>Craft</th><th>Kitchen</th><th>Any</th>";
 			$stf .= "<th>Picture</th>";
 			$stf .= "<th>T-Shirt</th><th>Teach with</th>";
-			$stf .= "<th>Age Group</th><th>Conf #</th></tr>";
+			//20180402-removed confo no. $stf .= "<th>Age Group</th><th>Conf #</th></tr>";
+			$stf .= "<th>Age Group</th></tr>";
 
 			do {
 				$stf .= "<tr>";
@@ -227,16 +282,18 @@ global $vbsDBi;
 				$stf .= "<td>" . $s['shirt_size'] . "</td>";
 				$stf .= "<td>" . $s['teach_with'] . "</td>";
 				$stf .= "<td>" . $s['age_group'] . "</td>";
-				$stf .= "<td>" . $s['confo'] . "</td>";
+				//$stf .= "<td>" . $s['confo'] . "</td>";
 				$stf .= "</tr>";
+				$staffTotal++;
 			} while ($s = mysqli_fetch_assoc($result));
 		}
 		else {
 			$stf .= "<tr><td class='center'>No volunteers registered</td></tr>";
+			$staffTotal=0;
 		}
-		$stf .= "</table></div>";		
+		$stf .= "</table></div>";
 	}
-	
+
 	return $stf;
 }
 
@@ -264,9 +321,7 @@ function getEmail($famID){
 	$sql = "select family_name, email from family where family_id=" . $famID;
 	$result = mysqli_query($vbsDBi, $sql);
 	$family = mysqli_fetch_assoc($result);
-	$answer = $family;
-	@mysqli_free_result($family);		
-	return $answer;
+	return $family;
 }
 
 function getFamilyErrors(){
@@ -275,12 +330,12 @@ function getFamilyErrors(){
 	$notEmpty = Array('family_name'=>'Family Name', 'email'=>'Email', 'address'=>'Address', 'zipcode'=>'Zipcode', 'home_church'=>'Home Church', 'pre_help'=>'Pre-Help');
 
 	/* Pull the family record */
-	$sql = "SELECT family_name, email, address, zipcode, home_church, pre-help from family where family_id=" . $_SESSION['family_id'];
+	$sql = "SELECT family_name, email, address, zipcode, home_church, prehelp from family where family_id=" . $_SESSION['family_id'];
 	$rsResult = mysqli_query($vbsDBi, $sql);
 	if ($rsResult){
 		$rsFamily = mysqli_fetch_assoc($rsResult);
 		$mandatory = array_intersect_key($notEmpty, $rsFamily);
-		
+
 		foreach($mandatory as $key=>$value){
 			if (strlen(trim($value))===0){
 				$error .= $value . ",";
@@ -293,7 +348,7 @@ function getFamilyErrors(){
 		writeErr("Error selecting family name", __FUNCTION__, __LINE__, $sqlErr);
 	}
 	@mysqli_free_result($rsResult);
-	
+
 	$errMsg = trim($errMsg, ',');
 	$errMsg = ((strlen($errMsg)>0) ? " cannot be blank.":"");
 	return $errMsg;
@@ -310,7 +365,7 @@ function getStudentErrors(){
 	$students = mysqli_fetch_all($rsResult, MYSQLI_ASSOC);
 	foreach ($students as $sKey=>$sValue){
 		$mandatory = array_intersect_key($notEmpty, $students);
-		
+
 		foreach($mandatory as $key=>$value){
 			if (strlen(trim($value))===0){
 				$error .= $value . ",";
@@ -331,13 +386,13 @@ function getStaffErrors(){
 					  'craft'=>'Craft','anything'=>'Anything','mon'=>'Monday','tue'=>'Tuesday','wed'=>'Wednesday','thur'=>'Thursday','fri'=>'Friday','age_group'=>'Over 21?');
 
 	/* Pull the family record */
-	$sql = "SELECT first_name, last_name, classroom, shirt_size, picture, kitchen, anything, craft, mon, tue, wed, thur, fri, 
+	$sql = "SELECT first_name, last_name, classroom, shirt_size, picture, kitchen, anything, craft, mon, tue, wed, thur, fri,
 			age_group from staff where family_id=" . $_SESSION['family_id'];
 	$rsResult = mysqli_query($vbsDBi, $sql);
 	$staff = mysqli_fetch_all($rsResult, MYSQLI_ASSOC);
 	foreach ($staff as $sKey=>$sValue){
 		$mandatory = array_intersect_key($notEmpty, $staff);
-		
+
 		foreach($mandatory as $key=>$value){
 			if (strlen(trim($value))===0){
 				$error .= $value . ",";
@@ -360,16 +415,16 @@ return: an unformatted string containing an error message.
 function getPhoneErrors(){
 	global $vbsDBi;
 	$errMsg = "";
-	
+
 	$sqlNone = "SELECT count(*) as c from phone_numbers where phone_type_code <> 'E' AND family_id=" . $_SESSION['family_id'];
 	$sqlEmer = "SELECT count(*) as c from phone_numbers where phone_type_code = 'E' AND family_id=" . $_SESSION['family_id'];
-	
+
 	$result = $vbsDBi->query($sqlNone);
 	$nonEmergency = $result->fetch_object()->c;
 	$result = $vbsDBi->query($sqlEmer);
 	$emergency = $result->fetch_object()->c;
 	$result->free();
-	
+
 	if ($emergency<1){
 		$errMsg = "At least one emergency contact number is required.";
 	}
@@ -406,7 +461,49 @@ function getStudentCount($famID){
  will not be empty.  Jump to the else.
  If the SUBMIT object is empty, then display the validation screen.
  *************************************************************************/
-if (empty($_REQUEST['submit'])){
+if (isset($_POST['submit'])) {
+	switch($_POST['submit']) {
+		case HOME_BUTTON :
+			header("Location: " . HOME_PAGE);
+			break;
+		case PREVIOUS_BUTTON :
+			header("Location: " . STAFF_PAGE);
+			break;
+		case SUBMIT_REGISTRATION :
+			if (confirm($_SESSION['family_id'])){
+				//@@sendConfo($_SESSION['family_id']);
+				//@@writeLog("Sent confirmation email to " . getEmail($_SESSION['family_id'])['family_name']);
+				sendVBSMail($_SESSION['family_id']);
+				header("Location: " . FINAL_PAGE);
+				break;
+			}
+			else
+			{
+				/* Send error notice to vbs mailbox */
+				writeErr("Confirm error", "confirm", __LINE__, 2003);
+				header("Location: " . HOME_PAGE);
+				break;
+			}
+	}
+}
+else
+{
+//if (empty($_REQUEST['submit'])){
+
+	/************************************************************
+	 Here we perform validations section by section.  If we find
+	 an error, we stop and go no further, redirect to the page
+	 with the error and wait for the user to correct and resubmit
+	 ************************************************************/
+	$err = getFamilyErrors();
+	if (strlen(trim($err))>0) header("Location: " . FAMILY_PAGE);
+	$err = "";
+
+
+	$err = getStudentErrors();
+	if (strlen(trim($err))>0) header("location: " . STUDENT_PAGE);
+	$err = "";
+
 ?>
     <!doctype html>
     <!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
@@ -421,42 +518,27 @@ if (empty($_REQUEST['submit'])){
     <title>VBS Confirmation</title>
     <link href="css/boilerplate.css" rel="stylesheet" type="text/css">
     <link href="css/layout.css" rel="stylesheet" type="text/css">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
     </head>
     <body>
     <div id="Confirm" class="gridContainer">
-    <div><h1>VBS-Confirmation</h1></div>
-    <?php 
+    <div><h2>VBS-Registration Summary</h2></div>
+    <?php
         echo formatFamily($_SESSION['family_id']);
-        echo formatConfoPhone($_SESSION['family_id']);
+        //echo formatConfoPhone($_SESSION['family_id']);
         echo formatStudents($_SESSION['family_id']);
         echo formatStaff($_SESSION['family_id']);
     ?>
     <p>&nbsp</p>
     <div id="buttonGroup" class="center">
-    	<form method="post" name="frmStudent" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" style="display:inline-block">
-	        <input type="submit" name="submit" class="button" value="Send Email">
+		<form method="post" name="frmStudent" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" style="display:inline-block">
+			<input type="submit" name="submit" class="button" value="<?php echo HOME_BUTTON?>">&nbsp;
+			<input type="submit" name="submit" class="button" value="<?php echo SUBMIT_REGISTRATION?>">&nbsp;&nbsp;&nbsp;
+			<input type="submit" name="submit" class="button" value="<?php echo PREVIOUS_BUTTON?>">&nbsp;
 		</form>
-        <a href="register.php"><input type="submit" name="submit" class="button" value="Back"></a>
     </div>
     </div>
     </body>
     </html>
 <?php
-} else {
-	/*************************************************
-	 Check the action
-	 Write nothing to the browser so that we can redirect after sending email
-	 ************************************************************************/
-		
-	if ($_POST['submit'] == "Send Email") {
-		sendConfo($_SESSION['family_id']);
-		writeLog("Sent confirmation email to " . getEmail($_SESSION['family_id']));
-		sendVBSMail($_SESSION['family_id']);
-
-		/* Then redirect back to the VBS Home page */
-		header("Location: " . HOME_PAGE);
-	}
-} ?>
+}
+?>

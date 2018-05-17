@@ -13,17 +13,17 @@ function validate($form){
 	if (DEBUG) print "Line " . __LINE__ . "-Validate<br>";
 	$error = false;
 	global $errMsgText;
-	$errMsg = "Correct ";		/* Reset any previous messages */
+	$errMsg = "";		/* Reset any previous messages */
 
 	$notBlank   = array('phone'=>'Phone', 'contact_name'=>'Contact Name', 'phone_type_code'=>'Phone Type');	
 	
 	/* Remove leading and trailing spaces */
-	for ($v=0; $v<count($form); $v++){	
+	for ($v=0; $v<count($form); $v++){
 		foreach ($form[$v] as $key => $value){
 			$form[$v][$key] = trim($value);
 		}
 	}
-
+	
 	/* Assign trim changes back to the $_POST array */
 	$_POST['phone'] = $form;
 
@@ -32,12 +32,12 @@ function validate($form){
 		$blanks = array_intersect_key($form[$v], $notBlank);
 		foreach ($blanks as $key => $value){
 			if (strlen($value)===0){
-				$errMsg .= "missing " . $notBlank[$key] . ",";
+				$errMsg .= "Missing " . $notBlank[$key] . ",";
 				$error = true;
 			}
 			else
 			{
-				if (($blanks=='phone') and (strlen($value)<10)){
+				if (($blanks=='phone') && (strlen($value)<10)){
 					$error = true;
 					$errMsg .= $blanks[$key] . " too short,";
 				}
@@ -51,6 +51,41 @@ function validate($form){
 
 }
 
+function validatePhoneQuantity(){
+
+	/* Perform validation. Count where type = "E" UNION Count where type <> "E" must be > 2 */
+	$sql = "SELECT * FROM phone_numbers WHERE phone_type_code='E' and family_id =" . $_SESSION['family_id'];
+	$rsEmergencyPhones = mysqli_query($vbsDBi, $sql);
+	$ePhoneCount = $rsEmergencyPhones->num_rows;
+
+	$sql = "SELECT * FROM phone_numbers WHERE phone_type_code<>'E' and family_id =" . $_SESSION['family_id'];
+	$rsNormalPhones = mysqli_query($vbsDBi, $sql);
+	$nPhoneCount = $rsNormalPhones->num_rows;
+
+
+	if (DEBUG) print "Line " . __LINE__ . " - ePhones is " . $ePhoneCount;
+	if (DEBUG) print "Line " . __LINE__ . " - nPhones is " . $nPhoneCount;
+
+	if ($ePhoneCount == 0) $errMsgText = "Emergency phone required.";
+	if ($nPhoneCount == 0) $errMsgText .= "Non-emergency phone required.";
+
+	writeLog("Family id " . $_SESSION['family_id'] . " has insufficient contacts.");
+	$phoneError = (($ePhoneCount == 0) || ($nPhoneCount == 0));
+
+	$sqlPhone = "SELECT phone, contact_name, phone_type_code FROM phone_numbers WHERE family_id=" . $_SESSION['family_id'] . " ORDER BY contact_name";
+	$rsResult = mysqli_query($vbsDBi, $sqlPhone);
+	if ($rsResult){
+		$rsPhone = mysqli_fetch_all($rsResult, MYSQLI_ASSOC);}
+	else
+	{
+		if (DEBUG) print "Line: " . __LINE__ . "<br>";	
+		$rsPhone = $blankPhoneArray;
+	}
+	return !phoneError;  /* return true if we validate, i.e. no errors and false if we fail, i.e. we have errors */
+
+	
+}
+
 
 $errMsg = "";
 $blankPhoneArray = Array(Array('phone'=>'', 'contact_name'=>'', 'phone_type_code'=>''));
@@ -62,21 +97,25 @@ if (empty($_POST['submit'])){
 }
 	
 switch ($_POST['submit']){
-	case "Back" :
-		header("Location: family.php");	
+	case HOME_BUTTON :
+		header("Location: " . HOME_PAGE);
+		break;
+	case PREVIOUS_BUTTON :
+		header("Location: " . FAMILY_PAGE);	
 		break;
 	case "Delete" :
 		if (DEBUG) print "Line " . __LINE__ . "-Delete<br>";
 		/* Find out which POST elements have the delete button checked */
 		
 		$phones = $_POST['phone'];
-		$sql = "DELETE FROM phone_numbers WHERE family_id=%d AND phone='%s' AND phone_type_code='%s'";
+		$sql = "DELETE FROM phone_numbers WHERE family_id=%d AND phone='%s' AND phone_type_code='%s' AND contact_name='%s'";
 		foreach($phones as $value) {
 			if (array_key_exists('sel', $value)){
 				$sqlDelete = sprintf($sql, 				
 					mysqli_real_escape_string($vbsDBi, $value['family_id']),
 					mysqli_real_escape_string($vbsDBi, unformatPhone($value['phone'])),
-					mysqli_real_escape_string($vbsDBi, $value['phone_type_code'])
+					mysqli_real_escape_string($vbsDBi, $value['phone_type_code']),
+					mysqli_real_escape_string($vbsDBi, $value['contact_name'])
 				);
 				if (!mysqli_query($vbsDBi, $sqlDelete)){
 					$sqlErr = mysqli_error($vbsDBi);
@@ -95,42 +134,45 @@ switch ($_POST['submit']){
 			$rsPhone = $blankPhoneArray;
 		}
 		break;	
-	case "Done" :
-		if (DEBUG) print "Line " . __LINE__ . "-Done<br>";
+	case NEXT_PAGE :   /* This should not be invoked any more as the button has changed. */
+		if (DEBUG) print "Line " . __LINE__ . "-Old Next Page<br>";
+		
 		/* Perform validation. Count where type = "E" UNION Count where type <> "E" must be > 2 */
-		$sql  = "SELECT phone FROM phone_numbers WHERE phone_type_code='E' and family_id =" . $_SESSION['family_id'] . " LIMIT 1 ";
-		$sql .= "UNION SELECT phone FROM phone_numbers WHERE phone_type_code<>'E' and family_id =" . $_SESSION['family_id'] . " LIMIT 2";
-		$rsPhones = mysqli_query($vbsDBi, $sql);
-		if ($rsPhones){
-			$numPhones = mysqli_num_rows($rsPhones);
-			if (DEBUG) print "NUMBER OF PHONE: " . $numPhones . "<br>";
-			if ($numPhones == 2) {
-				header("Location: " . HOME_PAGE);
-			}
-			else{
-				$errMsgText = "Please provide at least one regular and one emergency contact.";
-				writeLog("Family id " . $_SESSION['family_id'] . " has insufficient contacts.");
-			}
-		}
-		else{
-			if (DEBUG) print "Line: " . __LINE__ . "<br>";	
-			$sqlErr = mysqli_error($vbsDBi);
-			writeErr("Error validating phone", "Switch:Done", __LINE__, $sqlErr);
-		}
+		$sql = "SELECT * FROM phone_numbers WHERE phone_type_code='E' and family_id =" . $_SESSION['family_id'];
+		$rsEmergencyPhones = mysqli_query($vbsDBi, $sql);
+		$ePhoneCount = $rsEmergencyPhones->num_rows;
+
+		$sql = "SELECT * FROM phone_numbers WHERE phone_type_code<>'E' and family_id =" . $_SESSION['family_id'];
+		$rsNormalPhones = mysqli_query($vbsDBi, $sql);
+		$nPhoneCount = $rsNormalPhones->num_rows;
+
+
+		if (DEBUG) print "Line " . __LINE__ . " - ePhones is " . $ePhoneCount;
+		if (DEBUG) print "Line " . __LINE__ . " - nPhones is " . $nPhoneCount;
+
+		if ($ePhoneCount == 0) $errMsgText = "Emergency phone required.";
+		if ($nPhoneCount == 0) $errMsgText .= "Non-emergency phone required.";
+
+		writeLog("Family id " . $_SESSION['family_id'] . " has insufficient contacts.");
+		$phoneError = (($ePhoneCount == 0) || ($nPhoneCount == 0));
+		
+		if (!$phoneError) header("Location: " . STUDENT_PAGE);
+		
 	case "Add" :
 		if (DEBUG) print "Line: " . __LINE__ . "-Add<br>";
 	case "Save" :	
-		if (DEBUG) print "Line: " . __LINE__ . "-Save<br>";		
+		if (DEBUG) print "Line: " . __LINE__ . "-Save<br>";
+		if (DEBUG) print_r($_POST['phone']);
+		if (DEBUG) print "<br>";
 
 		/* First validate the data */
 		$toValidate = $_POST['phone']; 
 		if (validate($toValidate)){
-			if (DEBUG) print "Line: " . __LINE__ . "<br>";
+			if (DEBUG) print "Line " . __LINE__ . " - Validation passed<br>";
 			/* First get rid of all the existing phones contacts for the family.  We don't know what changed on the screen so we reinsert everything! */
 			$sql = "DELETE from phone_numbers WHERE family_id=" . $_SESSION['family_id'];
 			if (mysqli_query($vbsDBi, $sql)){
 				/* Insert the records from the screen */
-				if (DEBUG) print "Line: " . __LINE__ . "<br>";		
 				$newPhone = $_POST['phone']; 
 				/* Loop through the phone array and insert each one into the table */
 				$sql = "INSERT into phone_numbers (phone, family_id, contact_name, phone_type_code, last_update, create_date) ";
@@ -143,7 +185,7 @@ switch ($_POST['submit']){
 						mysqli_real_escape_string($vbsDBi, $newPhone[$i]['contact_name']),
 						mysqli_real_escape_string($vbsDBi, $newPhone[$i]['phone_type_code']));
 					if (mysqli_query($vbsDBi, $sqlInsert)){
-						if (DEBUG) print "Line: " . __LINE__ . "<br>";		
+						if (DEBUG) print "Inserting records at line: " . __LINE__ . "<br>" . $sqlInsert . "<br>";		
 						writeLog("Inserted new phone data as " . $sqlInsert);}
 					else {
 
@@ -151,20 +193,23 @@ switch ($_POST['submit']){
 						$sqlErrMsg = mysqli_error($vbsDBi);
 						if (DEBUG) print "Line: " . __LINE__ . "-" . $sqlErrNum . "<br>";		
 						switch ($sqlErrNum) {
-							case 1062:
+							case 1062:    /* This may go away because the primary key of  phonenumber has been removed 03/27/2018 */
 								if (DEBUG) print __FILE__ . ":" . __FUNCTION__ . "-" . __LINE__ . " Case: 1062, " . $sqlErrMsg . "<br>";
 								writeErr(__FILE__, __FUNCTION__, __LINE__, $sqlErrMsg);
 								/* Do more research to determine if the number is assigned to a different family */
 								$sql = "SELECT family_id, contact_name from phone_numbers where phone='".$newPhone[$i]['phone']."'";
 								$rsResult = mysqli_query($vbsDBi, $sql);
 								if ($rsResult) {
-									if (DEBUG) print "Line: " . __LINE__ . "<br>";
 									$famID = mysqli_fetch_assoc($rsResult);
+									if (DEBUG) {
+										print "Line: " . __LINE__ ;
+										print_r($famID) . "<br>";
+									}
 									if ($famID['family_id']==$_SESSION['family_id']){
 										if (DEBUG) print "Line: " . __LINE__ . "<br>";
-										$errMsg .= "Number " . formatPhone($newPhone[$i]['phone']) . " already exists for " . $famID['contact_name'];}
+										$errMsgText .= "Number " . formatPhone($newPhone[$i]['phone']) . " already assigned to " . $famID['contact_name'];}
 									else {
-										$errMsg .= "Number " . formatPhone($newPhone[$i]['phone']) . " already exists for a different family";
+										$errMsgText .= "Number " . formatPhone($newPhone[$i]['phone']) . " already exists for a different family";
 									}
 								}
 								break;
@@ -182,9 +227,9 @@ switch ($_POST['submit']){
 /*						if (DEBUG) print "Line: " . __LINE__ . "<br>";		
 						writeErr($errMsg, "Switch:Save", __LINE__, $sqlErr); */
 					}
-				}
+				}  /* End of phone insert loop */
 			}
-			else
+			else  /* Unable to delete phone number(s) */
 			{
 				if (DEBUG) print "Line: " . __LINE__ . "Delete before Save failed!<br>";		
 				$sqlErr = mysqli_error($vbsDBi);
@@ -203,10 +248,17 @@ switch ($_POST['submit']){
 		/* no break here if we validated ok */
 	case "Display" :
 		if (DEBUG) print "Line: " . __LINE__ . "-Display<br>";
+		
+
 		$sqlPhone = "SELECT phone, contact_name, phone_type_code FROM phone_numbers WHERE family_id=" . $_SESSION['family_id'] . " ORDER BY contact_name";
 		$rsResult = mysqli_query($vbsDBi, $sqlPhone);
 		if ($rsResult){
 			$rsPhone = mysqli_fetch_all($rsResult, MYSQLI_ASSOC);
+
+			if (DEBUG) {
+				print_r($rsPhone);
+				print "<br>";
+			}
 
 			if (($_POST['submit']=='Add') or (count($rsPhone)<1)){
 				if (DEBUG) print "Line: " . __LINE__ . "<br>";
@@ -240,25 +292,29 @@ $rsPhoneTypes = mysqli_fetch_all($rsResults, MYSQLI_ASSOC);
 <title>VBS-Contact Information</title>
 <link href="css/boilerplate.css" rel="stylesheet" type="text/css">
 <link href="css/layout.css" rel="stylesheet" type="text/css">
-<link href="css/textural.css" rel="stylesheet" type="text/css">
+<!-- @@ <link href="css/textural.css" rel="stylesheet" type="text/css"> -->
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 <script src="respond.min.js"></script>
+<script src="scripts/vbsUtils.js"></script>
 </head>
 <title>VBS-Telephone Contacts</title>
 <body>
 <div id="Phone" class="gridContainer">
 <div><h1>VBS - Contact Info</h1></div>
-<div><h2>Provide at least one regular and one emergency contact.</h2></div>
-<div><h3><?php echo $errMsgText;?></h3></div>
-<div id="dataLayout">
+<?php if (strlen($errMsgText)>0) { ?>
+	<div><h2 class="error"><?php echo $errMsgText;?></h2></div>
+<?php } else { ?>
+	<div><h2>Provide at least one regular and one emergency contact.</h2></div>
+<?php } ?>
+	<div id="dataLayout">
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="POST" name="frmContacts" target="_self">
 <table cellspacing="0">
-	<tr><th>*&nbsp;Name</th><th>*&nbsp;Phone</th><th>*&nbsp;Type</th><th>Sel</th></tr>
+	<tr><th>*&nbsp;Name</th><th>*&nbsp;Phone</th><th>*&nbsp;Type</th><th class="left">Sel</th></tr>
     <?php for ($i=0; $i<count($rsPhone); $i++){ ?>
     <tr>
-        <td><input type="text" name="phone[<?php echo $i;?>][contact_name]" value="<?php echo $rsPhone[$i]['contact_name']; ?>" style="width:99%" maxlength="20"></td>
+        <td><input type="text" name="phone[<?php echo $i;?>][contact_name]" value="<?php echo $rsPhone[$i]['contact_name']; ?>" style="width:99%" maxlength="50"></td>
         <td><input type="text" name="phone[<?php echo $i;?>][phone]" maxlength="12" value="<?php echo formatPhone($rsPhone[$i]['phone']); ?>" style="width:99%"></td>
         <td><select name="phone[<?php echo $i;?>][phone_type_code]">
     	    <?php for ($p=0; $p<count($rsPhoneTypes); $p++) { ?>
@@ -270,15 +326,19 @@ $rsPhoneTypes = mysqli_fetch_all($rsResults, MYSQLI_ASSOC);
         <input type="hidden" name="phone[<?php echo $i;?>][family_id]" value="<?php echo $_SESSION['family_id']?>"></td>
 	</tr>
     <?php } ?>
-    <tr><td colspan="4" class="center">
+    <tr><td colspan="4">* required  <span class="popup" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Enter family contact information on this page.  You may enter as many names and phone numbers as you wish but you must provide at least one emergency and one non-emergency contact.  Each contact must have a name, phone number and type of phone number.<br>To delete a contact, select the line(s) to delete by checking the box(es) at the right then clicking the delete button.</span></span></td></tr>
+	<tr class="center">
+		<td colspan="4">
     	<input type="submit" name="submit" value="Save">&nbsp;
 	    <input type="submit" name="submit" value="Add">&nbsp;
 	    <input type="submit" name="submit" value="Delete">&nbsp;
-	</td></tr>
+		</td>
+	</tr>
 </table>
 <div id="buttonGroup" class="center">
-    <input type="submit" name="submit" class="button" value="Back">&nbsp;
-    <input type="submit" name="submit" class="button" value="Done">
+	<input type="submit" name="submit" class="button" value="<?php echo HOME_BUTTON?>">&nbsp;
+    <input type="submit" name="submit" class="button" value="<?php echo PREVIOUS_BUTTON?>">&nbsp;
+    <input type="submit" name="submit" class="button" value="<?php echo NEXT_PAGE?>">
 </div>
 </form>
 </div>
