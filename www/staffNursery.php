@@ -61,6 +61,7 @@ function check4dupes($form){
 	$recCount = mysqli_query($vbsDBi, $sql);
 	
 }
+
 /*  MAIN */
 require_once('Connections/vbsDB.php');
 include('vbsUtils.inc');
@@ -83,11 +84,14 @@ elseif ($_REQUEST['submit']=='Redisplay'){
 }
 else {
 switch ($_REQUEST['submit']) {
-	case "Back" :
-		header("Location: staff.php");
-		break;
-	case "Done" :
+	case HOME_BUTTON :
 		header("Location: " . HOME_PAGE);
+		break;
+	case PREVIOUS_BUTTON :
+		header("Location: " . STAFF_PAGE);
+		break;
+	case NEXT_PAGE :
+		header("Location: " . SUMMARY_PAGE);
 		break;
 	case "First" :
 		$offset = 0;
@@ -101,7 +105,7 @@ switch ($_REQUEST['submit']) {
 	case "Last"  :
 		$offset = $numStudents -1;
 		break;
-	case "New"   :
+	case NEW_BUTTON   :
 		/* Create a blank array */
 		$row_rsStudent = array();
 		$row_rsStudent['first_name'] = $row_rsStudent['birthdate'] = $row_rsStudent['age'] = $row_rsStudent['class'] = '';
@@ -127,7 +131,7 @@ switch ($_REQUEST['submit']) {
 				mysqli_real_escape_string($vbsDBi, $_POST['birthdate']),
 				mysqli_real_escape_string($vbsDBi, $_POST['class']),
 				mysqli_real_escape_string($vbsDBi, $_POST['shirt_size']),
-				mysqli_real_escape_string($vbsDBi,$_POST['picture']),
+				mysqli_real_escape_string($vbsDBi, $_POST['picture']),
 				mysqli_real_escape_string($vbsDBi, $_POST['buddy']),
 				mysqli_real_escape_string($vbsDBi, $_POST['comments']),
 				$_SESSION['confoNo']
@@ -179,10 +183,10 @@ switch ($_REQUEST['submit']) {
 	case "Register":
 	case "Update" :
 		if (validate($_POST)){
-			if (DEBUG) print "Line " . __LINE__ . "<br>";
+			if (DEBUG) print "Line " . __LINE__ . "-Registered is " . $_REQUEST['registered'] . "<br>";
 			$sql = "UPDATE students SET first_name='%s', last_name='%s', birthdate='%s', 
-					class='%s', shirt_size='%s', picture='%s', buddy='%s', 
-					comments='%s', last_update=now()";
+					class='%s', shirt_size='%s', picture='%s', registered='%s', buddy='%s', 
+					comments='%s', confo='%d', last_update=now()";
 			$sqlWhere = " WHERE student_id = " . $_POST['student_id'];
 			$sqlStmt = sprintf($sql,
 				mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
@@ -191,14 +195,17 @@ switch ($_REQUEST['submit']) {
 				$_POST['class'],
 				$_POST['shirt_size'],
 				mysqli_real_escape_string($vbsDBi, $_POST['picture']),
+				mysqli_real_escape_string($vbsDBi, $_POST['registered']),
 				mysqli_real_escape_string($vbsDBi, $_POST['buddy']),
-				mysqli_real_escape_string($vbsDBi, $_POST['comments'])
+				mysqli_real_escape_string($vbsDBi, $_POST['comments']),
+				mysqli_real_escape_string($vbsDBi, $_SESSION['confoNo'])
 				);
-			if ($_POST['submit']=="Register") {
-				if (DEBUG) print "Line " . __LINE__ . "<br>";
-				/* Append the registered and confo columns to the sql statement */
-				$sqlStmt .= ", registered='Y', confo='" . $_SESSION['confoNo'] . "' ";
-			}
+			//if ($_POST['submit']=="Register") {
+			//	if (DEBUG) print "Line " . __LINE__ . "<br>";
+			//	/* Append the registered and confo columns to the sql statement */
+			//	$sqlStmt .= ", registered='Y', confo='" . $_SESSION['confoNo'] . "' ";
+			//}
+			if (DEBUG) print $sqlStmt;
 			$sqlStmt .= $sqlWhere;				
 			if (mysqli_query($vbsDBi, $sqlStmt)){
 				if (DEBUG) print "Line " . __LINE__ . "<br>";
@@ -307,33 +314,33 @@ $offset = --$offset;
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VBS Student</title>
+<title>VBS Staff Nursery</title>
 <link href="css/boilerplate.css" rel="stylesheet" type="text/css">
 <link href="css/layout.css" rel="stylesheet" type="text/css">
-<link href="css/textural.css" rel="stylesheet" type="text/css">
+<script src="scripts/vbsUtils.js"></script>
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 <script src="scripts/respond.min.js"></script>
 </head>
 <body>
-<div id="Student" class="gridContainer">
+	<div id="Staff" class="gridContainer">
 	<div id="header"><h1>VBS - Staff Nursery</h1></div>
-	<div id="status"><h2>
-	<?php if ($registered) {?>
-		Edit information and click update or unregister.
-    <?php } else { ?>
-		Edit information and click register.	        
-	<?php } ?></h2>
+	<div id="status"><h2>Edit information and click save or update.</h2>
     <h3><?php if ($validateError) echo $errMsgText;?></h3>
 	</div>
 	<div id="dataLayout">
 	<form method="post" name="frmStudent" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
 	<table cellspacing="0">
-		<tr><td class="label">*&nbsp;First Name:</td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']; ?>" maxlength="20"></td></tr>
-		<tr><td class="label">*&nbsp;Last Name:</td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20"></td></tr>
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAtt')">In Nursery?<span class="popuptext" id="hAtt">Select yes if <?php echo (empty($row_rsStudent['first_name']) ? "this child" : $row_rsStudent['first_name']);?> will be in the staff nursery in <?php echo date("Y");?>; otherwise select No.</span></span></td>
+		<td class="value">
+			<label><input type="radio" name="registered" id="reg-yes" value="Y" <?php if (!(strcmp($row_rsStudent['registered'],"Y"))) {echo "checked";} ?>>Yes</label>
+            <label><input type="radio" name="registered" id="reg-no" value="N" <?php if (!(strcmp($row_rsStudent['registered'],"N"))) {echo "checked";} ?>>No</label>
+		</td></tr>
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter your child's first name exactly as you want it to appear on name tags, projects labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']; ?>" maxlength="20"></td></tr>
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter your child's last name exactly as you want it to appear on name tags, projects labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20"></td></tr>
 		<tr><td class="label">*&nbsp;Birthdate:</td><td class="value"><input name="birthdate" type="date" value="<?php echo $row_rsStudent['birthdate']; ?>"></td></tr>
-		<tr><td class="label">*&nbsp;Class:</td><td class="value">
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hGrade')">Class<span class="popuptext" id="hGrade">Not much to select here.  Since you are signing your child up for Staff Nursery, we've already picked that for you.</span></span></td><td class="value">
         <select name="class" id="select">
 		<?php do {  ?>
 			<option value="<?php echo $row_rsClassList['class']?>"<?php if (!(strcmp($row_rsClassList['class'], $row_rsStudent['class']))) {echo "selected=\"selected\"";} ?>>
@@ -347,7 +354,7 @@ $offset = --$offset;
 		}
 ?>
         </select></td></tr>
-    <tr><td class="label">*&nbsp;Shirt Size:</td><td class="value"><select name="shirt_size">
+    <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hShirt')">Shirt Size<span class="popuptext" id="hShirt">Select the size shirt you want for your child in staff nursery. T-shirts are only available to those who register before <?php echo VBS_SHIRT_DEADLINE_MMDDYYYY ?>.</span></span></td><td class="value"><select name="shirt_size">
       <?php
 do {  
 ?>
@@ -362,21 +369,20 @@ do {
 ?>
 		</select>
 		</td></tr>
-		<tr><td class="label">*&nbsp;Picture:</td><td class="value">
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hPic')">Picture<span class="popuptext" id="hPic">May we take and post photos of your child during VBS?</span></span></td><td class="value">
             <label><input type="radio" name="picture" id="pic-yes" value="Y" <?php if (!(strcmp($row_rsStudent['picture'],"Y"))) {echo "checked";} ?>>Yes</label>
             <label><input type="radio" name="picture" id="pic-no" value="N" <?php if (!(strcmp($row_rsStudent['picture'],"N"))) {echo "checked";} ?>>No</label>
     	</td></tr>
 <!--        <tr class="hidden"><td class="label">Buddy:</td><td class="value"><input name="buddy" type="text" value="<?php echo $row_rsStudent['buddy']; ?>" maxlength="20"></td></tr> -->
-        <tr><td class="label">Comments:</td><td class="value"><textarea name="comments" cols="" rows=""><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
-       	<tr><td class="label">Status:</td><td class="value"><?php echo ($registered ? "Registered (#".$row_rsStudent['confo'].")" : "Not registered"); ?></td></tr>
-        <tr><td>*&nbsp;required</td><td class="value">
-   		<?php if ($registered) { ?>
-			<input type="submit" name="submit" value="Update">&nbsp;&nbsp;<input type="submit" name="submit" value="Unregister">
-		<?php } else { if ($studentID==0) { ?>
-			<input type="submit" name="submit" value="Save">
-        <?php } else { ?>
-        	<input type="submit" name="submit" value="Register">
-        <?php } } ?>
+        <tr><td class="label"><span class="popup" onclick="myPopUp('sComment')">&nbsp;Comments<span class="popuptext" id="sComment">Enter comments here that are specifically related to this child.</span></span></td><td class="value"><textarea name="comments" cols="" rows=""><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
+    <!--   	<tr><td class="label">Status:</td><td class="value"><?php echo ($registered ? "Registered (#".$row_rsStudent['confo'].")" : "Not registered"); ?></td></tr> -->
+        <tr><td>*&nbsp;required   <span class="popup" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to register a child in the staff nursery.  To engage the services of the nursery, an adult in the family must be a volunteer.  Click the underlined labels for detailed field level help.  Click the pop-up box to close it.</span></span></td><td class="value">
+   		<?php if ($_REQUEST['submit']==NEW_BUTTON) { ?>
+			<input type="submit" name="submit" value="Save">&nbsp;
+			<input type="submit" name="submit" value="Cancel">
+        <?php } else { ?>			
+			  <input type="submit" name="submit" value="Update">
+        <?php } ?>
 		</td></tr>
 	</table>
     <input name="student_id" type="hidden" value="<?php echo $row_rsStudent['student_id']; ?>">
@@ -387,15 +393,21 @@ do {
     <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
     <input name="offset" type="hidden" value="<?php echo $offset;?>">
     <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
-	<div id="buttonGroup" class="center">
-    	<span>Displaying student <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?> students</span><br>
-		<input type="submit" class="button" name="submit" value="First" <?php echo $button['First'];?>>&nbsp;
-		<input type="submit" class="button" name="submit" value="Previous" <?php echo $button['Previous'];?>>&nbsp;
-		<input type="submit" class="button" name="submit" value="Next" <?php echo $button['Next'];?>>&nbsp;
-		<input type="submit" class="button" name="submit" value="Last" <?php echo $button['Last'];?>><br>
-		<input type="submit" class="button" name="submit" value="Back">&nbsp;
-        <input type="submit" class="button" name="submit" value="New" <?php echo $button['New'];?>>&nbsp;
-        <input type="submit" class="button" name="submit" value="Done">
+	<table style=margin-top:-0.6em><tr><td>
+		<div id="buttonSubGroup" class="center">
+	    	<span>Displaying student <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?> students</span><br>
+			<input type="submit" class="button" name="submit" value="First" <?php echo $button['First'];?>>&nbsp;
+			<input type="submit" class="button" name="submit" value="Previous" <?php echo $button['Previous'];?>>&nbsp;
+			<input type="submit" class="button" name="submit" value="Next" <?php echo $button['Next'];?>>&nbsp;
+			<input type="submit" class="button" name="submit" value="Last" <?php echo $button['Last'];?>>&nbsp;&nbsp;&nbsp;
+			<input type="submit" class="button" name="submit" value="<?php echo NEW_BUTTON?>" <?php echo $button['New'];?>>
+		</div>
+		</td></tr>
+	</table>
+		<div id="buttonSubGroup" class="center">
+			<input type="submit" class="button" name="submit" value="<?php echo HOME_BUTTON?>">&nbsp;
+			<input type="submit" class="button" name="submit" value="<?php echo PREVIOUS_BUTTON?>">&nbsp;
+			<input type="submit" class="button" name="submit" value="<?php echo NEXT_PAGE ?>">
 	</div>
   </form></div>
 </div>
