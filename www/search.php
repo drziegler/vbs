@@ -1,12 +1,12 @@
 <?php
 session_start();
 include_once('vbsUtils.inc');
-define("BACK",		"Back");
+
 define("SEARCH",	"Search");
 
 if (!empty($_POST['submit'])){ 
 switch ($_POST['submit']) {
-	case BACK:
+	case HOME_BUTTON:
 		header ("Location: " . HOME_PAGE);
 		break;
 	case SEARCH:
@@ -42,11 +42,13 @@ switch ($_POST['submit']) {
     <div id="dataLayout">
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post" name="frmPhone" target="_self">
     <table cellspacing="0">
-        <tr><td class="center"><span>Enter your telephone number</span></td></tr>
-        <tr><td class="center"><input name="txtPhone" id="searchPhone" type="number" pattern="[0-9]{10}" autofocus></td></tr>
+        <tr><td class="center"><span>Enter your telephone number using only numbers.</span></td></tr>
+        <!-- <tr><td class="center"><input name="txtPhone" id="searchPhone" type="number" pattern="[0-9]{10}" autofocus></td></tr> -->
+		<tr><td class="center"><input name="txtPhone" id="searchPhone" type="number" pattern="[1-9]" autofocus></td></tr>
     </table>
     <div id="buttonGroup" class="center">
-		<input type="submit" name="submit" class="button" value="<?php echo SEARCH ?>">&nbsp;<input type="submit" name="submit" class="button" value="<?php echo BACK ?>">
+		<input type="submit" name="submit" class="button" value="<?php echo SEARCH ?>">&nbsp;
+		<input type="submit" name="submit" class="button" value="<?php echo HOME_BUTTON ?>">
     </div>
     </form>
   </div>
