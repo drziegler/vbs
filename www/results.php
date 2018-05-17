@@ -13,8 +13,9 @@ switch ($_POST['submit']) {
 	case USE_THIS_RECORD :
 		if (DEBUG) print "Line: " . __LINE__ . "<br>";
 		$_SESSION['family_id'] = $_POST['family_id'];
+		$_SESSION['family_name'] = 
 		insertStats($vbsDBi, $_POST['family_id'], 'reused');
-		header("Location: " . HOME_PAGE);
+		header("Location: " . FAMILY_PAGE);
 		break;
 	case SEARCH_AGAIN :
 		if (DEBUG) print "Line: " . __LINE__ . "<br>";
@@ -30,7 +31,7 @@ switch ($_POST['submit']) {
 			unset($_SESSION['newPhone']);
 		}
 		$_SESSION['family_id']='New';
-		header("Location: family.php");
+		header("Location: " . FAMILY_PAGE);
 		break;
 }
 }
@@ -83,7 +84,7 @@ else {
 <script src="scripts/respond.min.js"></script>
 </head>
 <body>
-<div id="Results" class="gridContainer">
+<div id="Find" class="gridContainer">
 	<div><h1>VBS - Search Results</h1></div>
     <div id="dataLayout">
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post" name="frmResults" target="_self">
