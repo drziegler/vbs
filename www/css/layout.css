@@ -10,16 +10,18 @@ body, input, select, textarea {
 	font-family: sans-serif;
 	color: #222;
 }
-
-
 img, object, embed, video {
 	max-width: 100%;
 }
+
 /* IE 6 does not support max-width so default to width 100% */
 .ie6 img {
 	width:100%;
 }
 /* POPUPS format the popup help text boxes */
+.width-equal-thirds{
+	width:33%;
+}
 .popup {
 	position: relative;
 	display: inline-block;
@@ -66,19 +68,19 @@ h1, h2 {
 	text-align: center;
 	font-size: 8vw;
 }
-h2 {
+h2, .h2 {
 	font-weight:normal;
 	font-size: 6vw;
 }
 h3{
-	font-size:2vw;
+	font-size:5vw;
 	font-weight: normal;
 	text-align: center;
 	margin: 0;
 	color:red;
 }
 textarea{
-	maxlength=256;
+	maxlength:256;
 }
 input {
 	box-sizing: border-box;
@@ -97,10 +99,10 @@ input[type=checkbox], input[type=radio]{
 	color:red;
 }
 .white{
-	color:white:
+	color:white;
 }
 .hidden{
-	visibility:hidden:
+	visibility:hidden;
 	display: none !important;
 }
 .label {
@@ -116,13 +118,18 @@ input[type=checkbox], input[type=radio]{
 .gridContainer {
 	margin-left: auto;
 	margin-right: auto;
-	width: 99.9%;
+	margin-top: 0;
+	padding-top: -2em;
+	width: 98%;
 }
 .center{
 	margin-left:auto;
 	margin-right:auto;
 	width:99%;
 	text-align:center;
+}
+.left{
+	text-align: left;
 }
 #header {
 	clear: both;
@@ -154,8 +161,8 @@ input[type=checkbox], input[type=radio]{
 	display: block;
 }
 #buttonGroup{
-	margin-top: .5em;
-	padding-top: 1%; 
+	margin-top: 0;  /* was .5em */
+	padding-top: 0;  /* was 1% */
 	width:95%;
 	margin-left:auto;
 	margin-right:auto;
@@ -164,9 +171,9 @@ input[type=checkbox], input[type=radio]{
 	font-size:large;
 }
 .button{
-	border-radius:4px;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
+	border-radius:4px;
 	border: solid 1px #20538D;
 	text-shadow: 0 -1px 0 rgba(0,0,0,0.4);
 	-webkit-box-shadow: inset 0 1px 0 rgba(255,255,255, 0.4), 0 1px;
@@ -174,9 +181,8 @@ input[type=checkbox], input[type=radio]{
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgb;
 	font-family: Verdana, Geneva, sans-serif;
 	cursor: pointer;
-	padding: 0.5em 0em;
+	padding: 0.25em 0.5em;
 	display:inline;
-	padding: 5px 15px;
 	margin: .25em .15em;
 	background: #4479BA;
 	color: #FFF;
@@ -187,7 +193,12 @@ input[type=checkbox], input[type=radio]{
 .button{
 	font-size: 3vw;
 }
-
+.home {
+	display: inline;
+	/*position:fixed; 
+	width:100%; 
+	top:50em;*/
+}
 .button:disabled{
 	background-color: LightGray;
 	color: DarkGray;
@@ -207,7 +218,7 @@ td {
 /* Any element inside a tr tag */
 tr *{
 	font-size: 3vw;
-	padding: 0.45em;
+	padding: 0.30em;
 }
 
 #Find table{
@@ -231,12 +242,6 @@ tr *{
 	border-color: rgb(153,51,153);
 	background-color: rgb(230,179,230);
 }
-/* TESTING ONLY */
-/*
-#Staff td{
-	border: 1px solid rgb(153,51,153);
-}
-*/
 #Staff th{
 	background-color: rgb(153,51,153);
 	color:white;
@@ -252,25 +257,12 @@ tr *{
 #Staff td.label {
 	width:33%;
 }
-/* Was first column menu. Now using row
-#Menu1 {
-	float: left;
-	margin-left: 0;
-	width: 47.3684%;
-	display: block;
-} */
 #Menu2 {
 	float: left;
 	margin-left: 5.2631%;
 	width: 47.3684%;
 	display: block;
 }
-/*
-#Menu3{
-	max-width: 50%;
-	margin: auto;
-}
-*/
 #mnuButton{
 	border-radius: 25px;
 	border: thick solid black;
@@ -354,11 +346,12 @@ a:link{
 	clear: both;
 	float: left;
 	margin-left: 0;
-	width: 100%;
+	width: 90%;
 	display: block;
-	padding:15;
+	padding:15px;
 	bottom:0;
 	left:0;
+	font-size: 3vw;
 }
 #LayoutDiv2{
 	clear: both;
@@ -374,7 +367,19 @@ a:link{
 	width: 100%;
 	display: block;
 }
-
+#logo img{
+	display: block;
+	height: 60%;
+	width: 60%;
+	margin: auto;
+}
+#counter{
+	display: block;
+	width: 90%;
+	margin: auto;
+	text-align: center;
+	font-size: 12vw;
+}
 /************************************************ CONFO PAGE *********************************************************************************/
 /* Styles that apply only to the confirmation screen */
 #Family table.confo{
@@ -450,7 +455,13 @@ input[type=checkbox], input[type=radio]{
 	padding-left:.5em;
 }
 #buttonGroup{
-	width:75%
+	width:75%;
+	margin-left:auto;
+	margin-right:auto;
+}
+#buttonSubGroup{
+	width:75%;
+	margin-top:0;
 	margin-left:auto;
 	margin-right:auto;
 }
@@ -468,7 +479,6 @@ input[type=checkbox], input[type=radio]{
 #mnuBtn{
 	font-size: 5vw;
 }
-/*
 #Footer {
 	position: absolute;
 	clear: both;
@@ -479,14 +489,21 @@ input[type=checkbox], input[type=radio]{
 	padding:15;
 	bottom:0;
 	left:0;
+	font-size: 3vw;
 }
-#LayoutDiv2 {
-	clear: both;
-	float: left;
-	margin-left: 0;
-	width: 100%;
+#logo img{
 	display: block;
-}*/
+	height: 60%;
+	width: 60%;
+	margin: auto;
+}
+#counter{
+	display: block;
+	width: 90%;
+	margin: auto;
+	text-align: center;
+	font-size: 12vw;
+}
 }
 
 /* Desktop Layout: 769px to a max of 1232px.  Inherits styles from: Mobile Layout and Tablet Layout. */
@@ -496,7 +513,7 @@ input[type=checkbox], input[type=radio]{
 h1 {
 	font-size: 3vw;
 }
-h2 {
+h2, .h2 {
 	font-weight:normal;
 	font-size: 2vw;
 }
@@ -513,14 +530,18 @@ h3{
 }
 
 .gridContainer {
-	width: 99%;
-/*	max-width: 1232px; */
+	width: 70%;
 	padding-left: 0.75%;
 	padding-right: 0.75%;
 	margin: auto;
 }
 .button{
 	font-size: 0.8vw;
+}
+.home {
+	position:fixed; 
+	width:100%; 
+	top:0;
 }
 tr *{
 	font-size: 1vw;
@@ -530,7 +551,7 @@ input[type=checkbox], input[type=radio]{
 	transform:scale(2,2);
 }
 #header {
-	font-size: 1vm;
+	font-size: 1vh;
 }
 #info{
 	width: 50%;
@@ -574,12 +595,12 @@ input[type=checkbox], input[type=radio]{
 	padding-top: 23%;
 	font-size: 2vw;
 }
-/*
-#mnuBtn span{
-	position: relative;
-	top: 2em;
+
+#mnuBtn span {
+	position:relative;
+	bottom: 10vw;	
 }
-*/
+
 #mnuButton{
 	font-size: 2em;
 }
@@ -593,6 +614,7 @@ input[type=checkbox], input[type=radio]{
 	padding:15;
 	bottom:0;
 	left:0;
+	font-size: .75vw;
 }
 
 #buttonGroup{
@@ -630,3 +652,13 @@ table #schedule{
 }
 
 #schedule tr:nth-child(even) {background-color: rgba(255,255,51,1)}
+
+/* * * * * * * * * * * * * * *   INDEX / SPLASH PAGE * * * * * * * * * * * * * */
+#logo img{
+	height: 40%;
+	width: 40%;
+}
+#counter{
+	font-size: 2vw;
+	margin-top: 8vh;
+}
