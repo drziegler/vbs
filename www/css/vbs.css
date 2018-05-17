@@ -8,8 +8,13 @@ img, object, embed, video {
 }
 body, select, textarea {
 	font-family: sans-serif;
-/*	font-size: medium; */
 	color: #222;
+}	
+body{
+	background-image: url(../images/vbs-logo.png);
+	background-repeat: no-repeat;
+	background-position: bottom;
+	background-size: .5vw;
 }
 /* IE 6 does not support max-width so default to width 100% */
 .ie6 img {
@@ -17,8 +22,11 @@ body, select, textarea {
 }
 
 
-
 /* Mobile Layout: 480px and below. */
+.responsive{
+	max-width: 50%;
+	height: auto;
+}
 .gridContainer {
 	margin-left: auto;
 	margin-right: auto;
@@ -51,6 +59,7 @@ h2 {
 #Footer {
 	position: absolute;
 	text-align:center;
+	font-size: 1vw;
 	clear: both;
 	float: left;
 	margin-left: 0;
@@ -60,7 +69,7 @@ h2 {
 	bottom:0;
 	left:0;
 }
-}
+
 
 /* Tablet Layout: 481px to 768px. Inherits styles from: Mobile Layout. */
 
@@ -74,34 +83,41 @@ h2 {
 
 /* Desktop Layout: 769px to a max of 1232px.  Inherits styles from: Mobile Layout and Tablet Layout. */
 
-@media only screen and (min-width: 769px) {
-.gridContainer {
-	width: 80%;
-	padding-left: 1.98%;
-	padding-right: 1.98%;
-	margin: auto;
-}
-.gridContainer p{
-	font-size:large;
-}
-h1, h2 {
-	width: 99%;
-	margin: auto;
-	text-align: center;
-	font-size: 4vw;
-}
-h2 {
-	font-size: 3vw;
-}
-#logo{
-	padding-top: 3vw;
-}
-#logo div{
-	max-width:25%;	
-}
-#counter{
-	padding-top: 2vw;
-	font-size: 2vw;
-}
+@media only screen and (min-width : 725px ){
+	body{
+		background-position: top center;
+		background-size: 60%;
+	}
+	.gridContainer {
+		width: 80%;
+		padding-left: 1.98%;
+		padding-right: 1.98%;
+		margin: auto;
+	}
+	.gridContainer p{
+		font-size:large;
+	}
+	h1, h2 {
+		width: 99%;
+		margin: auto;
+		text-align: center;
+		font-size: 4vw;
+	}
+	h2 {
+		font-size: 3vw;
+	}
+	#logo{
+		padding-top: 0vw;
+	}
+	#logo div{
+		max-width:25%;	
+	}
+		#vbslogo img{
+			object-fit: scale-down;
+		}
+	#counter{
+		padding-top: 2vw;
+		font-size: 2vw;
+	}
 
 }
