@@ -29,6 +29,7 @@ function quickSave(){
 	$sqlUpdate .= ",thur='" 	  . (isset($_POST['thur']) ? 'Y' : 'N') . "'";
 	$sqlUpdate .= ",fri ='" 	  . (isset($_POST['fri'])  ? 'Y' : 'N') .  "'";
 	$sqlUpdate .= ",classroom ='" . (isset($_POST['classroom']) ? 'Y' : 'N') ."'";
+	$sqlUpdate .= ",nursery ='"   . (isset($_POST['nursery'])  ? 'Y' : 'N') ."'";
 	$sqlUpdate .= ",craft ='"     . (isset($_POST['craft'])     ? 'Y' : 'N') ."'";
 	$sqlUpdate .= ",kitchen ='"   . (isset($_POST['kitchen'])   ? 'Y' : 'N') ."'";
 	$sqlUpdate .= ",anything ='"  . (isset($_POST['anything'])  ? 'Y' : 'N') ."'";
@@ -152,8 +153,8 @@ $staffNurseryExists = false;
 $numStudents =(empty($_POST['numStudents'])) ? 0 : $_POST['numStudents'];
 
 if (DEBUG){
-	if (isset($_POST['sNursery'])) {
-		print "Staff Nursery _POST = " . $_POST['sNursery'] . "<br>";
+	if (isset($_POST['nursery']) ) {
+		print "Staff Nursery _POST = " . $_POST['nursery'] . "<br>";
 	}
 	else
 	{
@@ -188,12 +189,11 @@ switch ($_POST['submit']) {
 		$row_rsStudent['registered'] = $row_rsStudent['teach_with'] = $row_rsStudent['comments'] = $row_rsStudent['picture'] = '';
 		$row_rsStudent['mon'] = $row_rsStudent['tue'] = $row_rsStudent['wed'] = $row_rsStudent['thur'] = $row_rsStudent['fri'] = "Y";
 		$row_rsStudent['classroom'] = $row_rsStudent['craft'] = $row_rsStudent['kitchen'] = $row_rsStudent['anything'] = 'Y';
-		$row_rsStudent['deleted']  = $row_rsStudent['confo'] = '';
+		$row_rsStudent['deleted']  = $row_rsStudent['confo'] = $row_rsStudent['nursery'] = '';
 		$row_rsStudent['shirt_size'] = '';
 		$row_rsStudent['family_id'] = $_SESSION['family_id'];
 		$row_rsStudent['staff_id'] = 0;
 		
-		$_SESSION['staffNursery'] = "";
 		
 		/* Disable the inappropriate buttons so we don't have to do a lot of status checking.
 		   The only valid buttons in new student mode are save and cancel. */
@@ -211,10 +211,10 @@ switch ($_POST['submit']) {
 		if (validate($_POST)) {
 			$errMsg = '';
 			/* Save the staff nursery option to a session variable.  It is only needed for this session */
-			$_SESSION['staffNursery'] = (isset($_POST['sNursery']) ? $_POST['sNursery'] : '');
+			//@@-- $_SESSION['staffNursery'] = (isset($_POST['nursery']) ? $_POST['nursery'] : '');
 			/* This is a new record to insert */
 			$sql = "INSERT into staff (family_id, first_name, last_name, shirt_size, picture, registered, teach_with, confo, ";
-			$sql .= "classroom, craft, kitchen, anything, mon, tue, wed, thur, fri, age_group, create_date, last_update)";
+			$sql .= "classroom, nursery, craft, kitchen, anything, mon, tue, wed, thur, fri, age_group, create_date, last_update)";
 			$sql .= "VALUES (%u,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',now(),now())";
 			$sqlStmt = 	sprintf($sql, 
 				$_SESSION['family_id'],
@@ -226,6 +226,7 @@ switch ($_POST['submit']) {
 				mysqli_real_escape_string($vbsDBi, $_POST['teach_with']),
 				$_SESSION['confoNo'],
 				(isset($_POST['classroom'])?'Y':'N'),
+			    (isset($_POST['nursery'])  ?'Y':'N'),
 				(isset($_POST['craft'])    ?'Y':'N'),
 				(isset($_POST['kitchen'])  ?'Y':'N'),
 				(isset($_POST['anything']) ?'Y':'N'),
@@ -278,10 +279,10 @@ switch ($_POST['submit']) {
 		if (isset($_POST['registered']) && $_POST['registered']=='Y') {
 		
 			if (validate($_POST)){
-				$_SESSION['staffNursery'] = (isset($_POST['sNursery']) ? $_POST['sNursery'] : '');
+				//@@--$_SESSION['staffNursery'] = (isset($_POST['nursery']) ? $_POST['nursery'] : '');
 
 				$sql = "UPDATE staff SET first_name='%s', last_name='%s', shirt_size='%s', picture='%s', registered='%s',teach_with='%s', comments='%s', age_group='%s', ";
-				$sql .= "classroom='%s', craft='%s', kitchen='%s', anything='%s', mon='%s', tue='%s', wed='%s', thur='%s', fri='%s', last_update=now()";
+				$sql .= "classroom='%s',nursery='%s',craft='%s', kitchen='%s', anything='%s', mon='%s', tue='%s', wed='%s', thur='%s', fri='%s', last_update=now()";
 				$sqlWhere = " WHERE staff_id = " . $_POST['staff_id'];
 				$sqlStmt = sprintf($sql,
 					mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
@@ -293,6 +294,7 @@ switch ($_POST['submit']) {
 					mysqli_real_escape_string($vbsDBi, $_POST['comments']),
 					(isset($_POST['age_group'])  ? $_POST['age_group'] : ''),
 					(isset($_POST['classroom'])  ? 'Y' : 'N'),
+				    (isset($_POST['nursery'])   ? 'Y' : 'N'),
 					(isset($_POST['craft'])      ? 'Y' : 'N'),
 					(isset($_POST['kitchen'])    ? 'Y' : 'N'),
 					(isset($_POST['anything'])   ? 'Y' : 'N'),
@@ -341,7 +343,7 @@ switch ($_POST['submit']) {
 				header("Location: " . HOME_PAGE);
 				break;
 			case NEXT_PAGE :
-				header("Location: " . ($_SESSION['staffNursery']=='on' ? STAFF_NURSERY_PAGE : SUMMARY_PAGE));
+				header("Location: " . (isset($_POST['nursery']) ? STAFF_NURSERY_PAGE : SUMMARY_PAGE));
 				break;
 			case PREVIOUS_BUTTON :
 				header("Location: " . STUDENT_PAGE);
@@ -368,19 +370,25 @@ else {
 	else {
 		if (DEBUG) print "Line " . __LINE__ . "-Validation OK: Redisplay<br>";
 		//$query_rsStudent = "SELECT * FROM staff WHERE family_id=".$_SESSION['family_id'];
-		$query_rsStudent = "SELECT staff_id, family_id, first_name, last_name, Assignment, picture, mon, tue, wed, thur, fri, kitchen, craft, classroom, anything, shirt_size, teach_with, age_group, confo, registered, comments, create_date, last_update, deleted FROM staff WHERE family_id=".$_SESSION['family_id'];
+		$query_rsStudent = "SELECT staff_id, family_id, first_name, last_name, Assignment, picture, mon, tue, wed, thur, fri, kitchen, craft, classroom, nursery, anything, shirt_size, teach_with, age_group, confo, registered, comments, create_date, last_update, deleted FROM staff WHERE family_id=".$_SESSION['family_id'];
 		$all_rsStudent = mysqli_query($vbsDBi, $query_rsStudent);
 		$numStudents = mysqli_num_rows($all_rsStudent);
 		if ($_REQUEST['submit']=='Redisplay') $offset = $numStudents-1;  /* Go to last record */
 		$query_limit_rsStudent = sprintf("%s LIMIT %d, %d", $query_rsStudent, $offset, $numStudents);
 		$rsStudent = mysqli_query($vbsDBi, $query_limit_rsStudent);
 		$row_rsStudent = mysqli_fetch_assoc($rsStudent);
+		/*
+		 * TEST DEBUG STATEMENT
+		 */
+		Print "* * * " . $row_rsStudent['first_name'] . " - " .$row_rsStudent['nursery'] . " * * *<br>";
+		
 		/*Set the registered radio button variables here */
 		$yesVal = ($row_rsStudent['registered']=='C') ? 'C' : 'Y';
 		$yesChk = ($row_rsStudent['registered']=='Y' or $row_rsStudent['registered']=='C') ? ' checked ' : '';
 		$noChk  = ($row_rsStudent['registered']=='N') ? ' checked ' : '';
 
-		if (isset($_SESSION['staffNursery']) && $_SESSION['staffNursery']=='on'){
+/* * * * * * *		
+		if (isset($_POST['nursery']) && $_POST['nursery']=='on'){
 		} 
 		else {
 			$sql = "Select count(*) from students WHERE class='Staff Nursery' AND (registered='Y' or registered='C') AND family_id = " . $_SESSION['family_id'];
@@ -405,6 +413,7 @@ else {
 			}
 			
 		}
+* * * * */
 	}
 }
 
@@ -437,6 +446,7 @@ else{
  *         If no session variable exists, initialize it to blank.
  *         If a session variable does exist, then use that value to check the box
  */
+/* * * * * * * *
 $sql = "Select count(*) from students WHERE class='Staff Nursery' AND (registered='Y' or registered='C') AND family_id = " . $_SESSION['family_id'];
 $recCount = mysqli_query($vbsDBi, $sql);
 if ($recCount==false) {
@@ -460,7 +470,7 @@ else {
 	unset($recArray);
 	mysqli_free_result($recCount);
 }
-
+* * * * * * * */
 
 
 $staffID = $row_rsStudent['staff_id'];
@@ -546,7 +556,7 @@ do {
             <label><input type="radio" name="age_group" value="Youth" <?php echo (strcasecmp($row_rsStudent['age_group'],"Youth")==0 ? "checked" : "");?>>&nbsp;No</label>
     	</td></tr>
         <tr><td class="label"><span class="popup" onclick="myPopUp('nursery')">I need staff nursery<span class="popuptext" id="nursery">Check this box if you have a child under 3 and want to place them in the staff nursery.  You will be guided to register the child on the next page.  Leave box unchecked if you do not need these services. If a staff nursery record already exists, the text "Staff nursery registrant exists" will appear adjacent to the check box.</span></span></td><td class="value">
-            <label><input type="checkbox" name="sNursery" <?php echo ($_SESSION['staffNursery']=='on' ? 'checked' : '')?>></label> <?php if ($staffNurseryExists) echo "Staff nursery registrant exists"?>
+            <label><input type="checkbox" name="nursery" <?php echo (strcasecmp($row_rsStudent['nursery'],"Y")==0 ? "checked" : '')?>></label> <?php if ($staffNurseryExists) echo "Staff nursery registrant exists"?>
     	</td></tr>
 		<tr>
           <td class="label"><span class="popup" onclick="myPopUp('hClass')">I want to help in my child's class<span class="popuptext" id="hClass">If you want to be in the same class as your child, enter the child's name in this space.</span></span></td><td class="value"><input type="text" name="teach_with" placeholder="Your child's name and grade" value="<?php echo $row_rsStudent['teach_with'];?>"></td></tr>
