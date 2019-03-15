@@ -4,6 +4,49 @@ if (empty($_SESSION['family_id'])){
 	/* Send the user to the search page if no family is selected */
 	header("Location: search.php");
 }
+
+function quickSave(){
+    global $vbsDBi;
+
+    if (empty($_POST['student_id'])) return;
+    
+    /* Note:  For all Inserts and Updates ...
+       All Checkboxes must use isset to determine state and explicitly set Y | N
+       All Radiobuttons must use isset to determine state and use variable content or N
+       This is to avoid resetting the buttons' state back to that from the data base
+    */
+    $sql = "UPDATE students SET first_name='%s', last_name='%s', birthdate='%s',class='%s',shirt_size='%s',
+           picture='%s',registered='%s',comments='%s',confo='%d',last_update=now()";
+    $sqlWhere = " WHERE student_id = " . $_POST['student_id'];
+    $sqlStmt = sprintf($sql,
+        mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
+        mysqli_real_escape_string($vbsDBi, $_POST['last_name']),
+        mysqli_real_escape_string($vbsDBi, $_POST['birthdate']),
+        $_POST['class'],
+        (isset($_POST['shirt_size']) ? $_POST['shirt_size'] : ''),
+        (isset($_POST['picture'])    ? $_POST['picture']    : ''),
+        (isset($_POST['registered']) ? $_POST['registered'] : ''),
+        mysqli_real_escape_string($vbsDBi, $_POST['comments']),
+        mysqli_real_escape_string($vbsDBi, $_SESSION['confoNo'])
+        );
+    $sqlUpdate = $sqlStmt . $sqlWhere;
+
+    
+    if (mysqli_query($vbsDBi, $sqlUpdate)){
+        if (DEBUG) print "Line " . __LINE__ . "-Updated Staff Nursery record ".$_POST['student_id']."<br>";
+        writeLog($sqlUpdate);
+    }
+    else {
+        if (DEBUG) print "Line " . __LINE__ . "Update error in Quick save.  See log file.<br>";
+        $sqlErr = mysqli_error($vbsDBi);
+        writeErr("Error:", "StaffNursery:QuickSave", __LINE__, $sqlErr);
+        writeErr("SQL Statement:", __FUNCTION__, __LINE__, $sqlUpdate);
+    }
+    
+    return;
+    
+}
+
 function validate($form){
 	/* 	Validate the form.
 		Return true if the form passed validation and is ready to save.
@@ -11,11 +54,11 @@ function validate($form){
 	*/
 	$error = false;
 	global $errMsgText;
-	$errMsg = "";		/* clear out an previous messages */
+	$errMsg = "";		/* clear out any previous messages */
 	/* Mandatory form elements */	
 	$mustExist  = array('picture'=>'Picture opt out');
 	$notBlank   = array('first_name'=>'First Name', 'last_name'=>'Last Name', 'birthdate'=>'Birthdate');
-	$selectLst  = array('shirt_size'=>'Shirt size', 'class'=>'Select classroom');
+	// Removed 3-13-19 $selectLst  = array('shirt_size'=>'Shirt size', 'class'=>'Select classroom');
 
 	/* Remove leading and trailing spaces */
 	foreach ($form as $key => $value){
@@ -43,15 +86,19 @@ function validate($form){
 	$_POST = array_merge($form, $missing);	
 		
 	/* Check for options not selected */
+	/* Removed 3-13-19
 	$selected = array_intersect_assoc($selectLst, $form);
 	foreach ($selected as $element){
 		$errMsg .= $element . ",";
 	}
-
+    */
+	
 	/* This assigns the error text to a variable outside the function */
 	$errMsgText = "Check: " . trim($errMsg, ",");
 	return !$error;
 }
+
+
 function check4dupes($form){
 	
 	$sql = "Select count(*) from students ";
@@ -62,14 +109,27 @@ function check4dupes($form){
 	
 }
 
-/*  MAIN */
+/* * * * * * * *    MAIN    * * * * * * * * * * * * * * * * */
 require_once('Connections/vbsDB.php');
 include('vbsUtils.inc');
+
+if (DEBUG) {
+    print '$_POST - ';
+    print_r($_POST);
+    print "<br>";
+}
 
 $offset = (empty($_POST['offset'])) ? 0 : $_POST['offset'];
 $validateError = false;
 $errMsgText = "";
 $numStudents =(empty($_POST['numStudents'])) ? 0 : $_POST['numStudents'];
+
+/* Turn on the button display by default */
+$button['New'] = '';
+$button['Home'] = '';
+$button['Back'] = '';
+$button['NextPage'] = '';
+
 
 if (!isset($_REQUEST['submit']) or (empty($_REQUEST['submit']))){
 	if (DEBUG) print "Line " . __LINE__ . "<br>";
@@ -84,88 +144,156 @@ elseif ($_REQUEST['submit']=='Redisplay'){
 }
 else {
 switch ($_REQUEST['submit']) {
-	case HOME_BUTTON :
-		header("Location: " . HOME_PAGE);
-		break;
-	case PREVIOUS_BUTTON :
-		header("Location: " . STAFF_PAGE);
-		break;
-	case NEXT_PAGE :
-		header("Location: " . SUMMARY_PAGE);
-		break;
-	case "First" :
-		$offset = 0;
-		break;
-	case "Next"  :
-		$offset = $offset + 1;
-		break;
-	case "Previous" :
-		$offset = $offset - 1;
-		break;
-	case "Last"  :
-		$offset = $numStudents -1;
-		break;
-	case NEW_BUTTON   :
-		/* Create a blank array */
-		$row_rsStudent = array();
-		$row_rsStudent['first_name'] = $row_rsStudent['birthdate'] = $row_rsStudent['age'] = $row_rsStudent['class'] = '';
-		$row_rsStudent['registered'] = $row_rsStudent['buddy'] = $row_rsStudent['comments'] = $row_rsStudent['picture'] = '';
-		$row_rsStudent['deleted'] = $row_rsStudent['last_name'] = $row_rsStudent['confo'] = '';
-		$row_rsStudent['shirt_size'] = '';
-		$row_rsStudent['family_id'] = $_SESSION['family_id'];
-		$row_rsStudent['student_id'] = 0;
-		$numStudents = 0;
-		break;
-	case "Save" :
-		if (validate($_POST)) {
-			if (DEBUG) print "Line " . __LINE__ . "<br>";
-			$errMsg = '';
-			/* This is a new record to insert */
-			$sql = "INSERT into students (family_id, first_name, last_name, birthdate, class, ";
-			$sql .= "shirt_size, picture, registered, buddy, comments, confo, create_date, last_update) ";
-			$sql .= "VALUES (%u,'%s','%s','%s','%s','%s','Y','%s','%s','%s','%s', now(), now())";
-			$sqlStmt = 	sprintf($sql, 
-				$_SESSION['family_id'],
-				mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
-				mysqli_real_escape_string($vbsDBi, $_POST['last_name']),
-				mysqli_real_escape_string($vbsDBi, $_POST['birthdate']),
-				mysqli_real_escape_string($vbsDBi, $_POST['class']),
-				mysqli_real_escape_string($vbsDBi, $_POST['shirt_size']),
-				mysqli_real_escape_string($vbsDBi, $_POST['picture']),
-				mysqli_real_escape_string($vbsDBi, $_POST['buddy']),
-				mysqli_real_escape_string($vbsDBi, $_POST['comments']),
-				$_SESSION['confoNo']
-				);
-			/* Get the new student id after insert */
-			if (mysqli_query($vbsDBi, $sqlStmt)){
-				if (DEBUG) print "Line " . __LINE__ . "<br>";	
-				$row_rsStudent['student_id'] = mysqli_insert_id($vbsDBi);
-				$offset = ++$offset;		/* Advance by one so the new record displays */
-				writeLog("Inserted student id as " . $sqlStmt);}
-			else {
-				if (DEBUG) print "Line " . __LINE__ . "<br>";
-				$sqlErr = mysqli_error($vbsDBi);
-				writeErr("Error writing insert statement", "Switch:Save", __LINE__, $sqlErr);
-			}
-		}
-		else{
-			if (DEBUG) print "Line " . __LINE__ . "<br>";
-			writeLog("Validation failed for " . $_POST['student_id']);
-			$validateError = true;
-		}
-			/* Here we must redirect back to ourself to prevent a duplicate if the user refreshes the browser 
-			Redisplay just forces the code past the switch statement as there is no Redisplay option
-			Offset defines which record to display.  Since we added one, the offset will be one less than the total number of students*/
-//@@		header("Location: student.php?submit=Redisplay&offset=".($_POST['numStudents']));
-			header("Location: " . $_SERVER['PHP_SELF'] . "?submit=Redisplay");
+    case NEW_BUTTON   :
+        /* Create a blank array */
+        $row_rsStudent = array();
+        $row_rsStudent['first_name'] = $row_rsStudent['birthdate'] = $row_rsStudent['age'] = $row_rsStudent['class'] = '';
+        $row_rsStudent['registered'] = $row_rsStudent['buddy'] = $row_rsStudent['comments'] = $row_rsStudent['picture'] = '';
+        $row_rsStudent['deleted'] = $row_rsStudent['last_name'] = $row_rsStudent['confo'] = '';
+        $row_rsStudent['shirt_size'] = '';
+        $row_rsStudent['family_id'] = $_SESSION['family_id'];
+        $row_rsStudent['student_id'] = 0;
+        $numStudents = 0;
+        
+        /* Disable the inappropriate buttons so we don't have to do a lot of status checking.
+         The only valid buttons in new student mode are save and cancel. */
+        $button['Home'] = ' disabled';
+        $button['Back'] = ' disabled';
+        $button['NextPage'] = ' disabled';
+        $button['New'] = ' disabled';
+        
+        /* Disabled 3-13-19 Set the registered button variables
+        $yesVal = 'Y';
+        $yesChk = ' checked ';
+        $noChk  = ''; */
+        break;
 
-		/********************************************************************************** 
-		   We need to redirect to a GET to prevent multipe inserts if browser is refreshed
-		   1) Increase the number of students in POST by 1 since we just added one.
-		   2) Set the submit valie to "Last" so the last entry we made displays 
-		 ***********************************************************************************/
-//@@		header("Location: " . $_SERVER['PHP_SELF'] . "?submit=Last&numStudents=" . ($numStudents + 1));
-		break;
+    case "Save" :
+        if (validate($_POST)) {
+            if (DEBUG) print "Line " . __LINE__ . "<br>";
+            $errMsg = '';
+            /* This is a new record to insert */
+            $sql = "INSERT into students (family_id, first_name, last_name, birthdate, class, ";
+            $sql .= "shirt_size, picture, registered, comments, confo, create_date, last_update) ";
+            $sql .= "VALUES (%u,'%s','%s','%s','%s','%s','%s','%s','%s','%s', now(), now())";
+            $sqlStmt = 	sprintf($sql,
+                $_SESSION['family_id'],
+                mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
+                mysqli_real_escape_string($vbsDBi, $_POST['last_name']),
+                mysqli_real_escape_string($vbsDBi, $_POST['birthdate']),
+                mysqli_real_escape_string($vbsDBi, $_POST['class']),
+                mysqli_real_escape_string($vbsDBi, $_POST['shirt_size']),
+                (isset($_POST['picture'])        ? $_POST['picture']    : ''),
+                (isset($_POST['registered'])     ? $_POST['registered'] : ''),
+                mysqli_real_escape_string($vbsDBi, $_POST['comments']),
+                $_SESSION['confoNo']
+                );
+            
+            /* Get the new student id after insert */
+            if (mysqli_query($vbsDBi, $sqlStmt)){
+                if (DEBUG) print "Line " . __LINE__ . "<br>";
+                $row_rsStudent['student_id'] = mysqli_insert_id($vbsDBi);
+                $offset = ++$offset;		/* Advance by one so the new record displays */
+                writeLog("Inserted student id as " . $sqlStmt);}
+                else {
+                    if (DEBUG) print "Line " . __LINE__ . "<br>";
+                    $sqlErr = mysqli_error($vbsDBi);
+                    writeErr("Error writing insert statement", "Switch:Save", __LINE__, $sqlErr);
+                }
+        }
+        else{
+            if (DEBUG) print "Line " . __LINE__ . "<br>";
+            writeLog("Validation failed for " . $_POST['student_id']);
+            $validateError = true;
+        }
+        
+        /* Here we must redirect back to ourself to prevent a duplicate if the user refreshes the browser
+         Redisplay just forces the code past the switch statement as there is no Redisplay option
+        */
+        //@@-- header("Location: " . $_SERVER['PHP_SELF'] . "?submit=Redisplay");
+        
+        /**********************************************************************************
+         We need to redirect to a GET to prevent multipe inserts if browser is refreshed
+         1) Increase the number of students in POST by 1 since we just added one.
+         2) Set the submit valie to "Last" so the last entry we made displays
+         ***********************************************************************************/
+        //@@--		header("Location: " . $_SERVER['PHP_SELF'] . "?submit=Last&numStudents=" . ($numStudents + 1));
+        break;
+        
+    case HOME_BUTTON :
+    case PREVIOUS_BUTTON :
+    case NEXT_PAGE :
+    case FIRST_RECORD :
+    case PREVIOUS_RECORD :
+    case NEXT_RECORD :
+    case LAST_RECORD :
+/* Removed 3-13-19    case "Register":  */
+    case "Update" :
+        // Removed 3-13-19 quickSave();
+        
+        if (validate($_POST)){
+            if (DEBUG) print "Line " . __LINE__ . "-Registered is " . $_POST['registered'] . "<br>";
+            if (DEBUG) print_r($_POST);
+            $sql = "UPDATE students SET first_name='%s', last_name='%s', birthdate='%s',
+					class='%s', shirt_size='%s', picture='%s', registered='%s',comments='%s', confo='%d', last_update=now()";
+            $sqlWhere = " WHERE student_id = " . $_POST['student_id'];
+            $sqlStmt = sprintf($sql,
+                mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
+                mysqli_real_escape_string($vbsDBi, $_POST['last_name']),
+                mysqli_real_escape_string($vbsDBi, $_POST['birthdate']),
+                $_POST['class'],
+                $_POST['shirt_size'],
+                (isset($_POST['picture'])    ? $_POST['picture']    : ''),
+                (isset($_POST['registered']) ? $_POST['registered'] : ''),
+                mysqli_real_escape_string($vbsDBi, $_POST['comments']),
+                mysqli_real_escape_string($vbsDBi, $_SESSION['confoNo'])
+                );
+            $sqlStmt .= $sqlWhere;
+            if (DEBUG) print $sqlStmt;
+            
+            quickSave();
+            
+            if (mysqli_query($vbsDBi, $sqlStmt)){
+                if (DEBUG) print "Line " . __LINE__ . "<br>";
+                writeLog(__FILE__ . " Updated as " . $sqlStmt);
+            }
+            else {
+                if (DEBUG) print "Line " . __LINE__ . "<br>";
+                $sqlErr = mysqli_error($vbsDBi);
+                writeErr(__FILE__ . " Error writing update statement", "Switch:Update", __LINE__, $sqlErr);
+            }
+        }
+        else {
+            if (DEBUG) print "Line " . __LINE__ . "<br>";
+            writeLog("Validatition failed on Student:Update");
+            $validateError = true;
+        }
+        
+        switch ($_REQUEST['submit']) {
+            case FIRST_RECORD :
+                $offset = 0;
+                break;
+            case PREVIOUS_RECORD :
+                $offset = $offset - 1;
+                break;
+            case NEXT_RECORD :
+                $offset = $offset + 1;
+                break;
+            case LAST_RECORD :
+                $offset = $numStudents -1;
+                break;
+            case HOME_BUTTON :
+                header("Location: " . HOME_PAGE);
+                break;
+            case NEXT_PAGE :
+                header("Location: " . SUMMARY_PAGE);
+                break;
+            case PREVIOUS_BUTTON :
+                header("Location: " . STAFF_PAGE);
+                break;
+        }
+        break;
+/*  Disabled 3-13-19 NO LONGER USED 
 	case "Unregister" :
 		if (DEBUG) print "Line " . __LINE__ . "<br>";
 		$sql = "UPDATE students SET registered = 'N' WHERE student_id = " . $_POST['student_id'];
@@ -180,49 +308,7 @@ switch ($_REQUEST['submit']) {
 			writeErr("Error writing update statement", "Switch:Unregister", $failedLine, $sqlErr);
 		}
 		break;
-	case "Register":
-	case "Update" :
-		if (validate($_POST)){
-			if (DEBUG) print "Line " . __LINE__ . "-Registered is " . $_REQUEST['registered'] . "<br>";
-			$sql = "UPDATE students SET first_name='%s', last_name='%s', birthdate='%s', 
-					class='%s', shirt_size='%s', picture='%s', registered='%s', buddy='%s', 
-					comments='%s', confo='%d', last_update=now()";
-			$sqlWhere = " WHERE student_id = " . $_POST['student_id'];
-			$sqlStmt = sprintf($sql,
-				mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
-				mysqli_real_escape_string($vbsDBi, $_POST['last_name']),
-				mysqli_real_escape_string($vbsDBi, $_POST['birthdate']),
-				$_POST['class'],
-				$_POST['shirt_size'],
-				mysqli_real_escape_string($vbsDBi, $_POST['picture']),
-				mysqli_real_escape_string($vbsDBi, $_POST['registered']),
-				mysqli_real_escape_string($vbsDBi, $_POST['buddy']),
-				mysqli_real_escape_string($vbsDBi, $_POST['comments']),
-				mysqli_real_escape_string($vbsDBi, $_SESSION['confoNo'])
-				);
-			//if ($_POST['submit']=="Register") {
-			//	if (DEBUG) print "Line " . __LINE__ . "<br>";
-			//	/* Append the registered and confo columns to the sql statement */
-			//	$sqlStmt .= ", registered='Y', confo='" . $_SESSION['confoNo'] . "' ";
-			//}
-			if (DEBUG) print $sqlStmt;
-			$sqlStmt .= $sqlWhere;				
-			if (mysqli_query($vbsDBi, $sqlStmt)){
-				if (DEBUG) print "Line " . __LINE__ . "<br>";
-				writeLog("Updated student as " . $sqlStmt);
-			}
-			else {
-				if (DEBUG) print "Line " . __LINE__ . "<br>";
-				$sqlErr = mysqli_error($vbsDBi);
-				writeErr("Error writing update statement", "Switch:Update", __LINE__, $sqlErr);
-			}
-		}
-		else {
-			if (DEBUG) print "Line " . __LINE__ . "<br>";
-			writeLog("Validatition failed on Student:Update");
-			$validateError = true;
-		}
-		break;
+*/
 }
 }
 /*  The above switch statement will set the offset if doing pagination.
@@ -279,18 +365,20 @@ else{
 	writeErr("Unable to get class list", "Student.php", __LINE__, $sqlErr);
 }
 
-$query_rsStudentShirtList = "SELECT shirt_size FROM list_shirts WHERE student_opt = TRUE ORDER BY disp_order ";
+$query_rsStudentShirtList = "SELECT shirt_size FROM list_shirts WHERE shirt_size='Childs 6-8' ORDER BY disp_order ";
 $rsStudentShirtList = mysqli_query($vbsDBi, $query_rsStudentShirtList);
 $row_rsStudentShirtList = mysqli_fetch_assoc($rsStudentShirtList);
 $totalRows_rsStudentShirtList = mysqli_num_rows($rsStudentShirtList);
 
 $_SESSION['student_id'] = $row_rsStudent['student_id'];
 
+/* Disabled 3-13-19 
 if ($row_rsStudent['registered']=="Y") {
 	$registered = true;}
 else{
 	$registered = false;
 }
+*/
 
 $studentID = $row_rsStudent['student_id'];
 
@@ -303,6 +391,12 @@ $button['Next'] = ($numStudents > 1 and $offset<($numStudents)) ? '' : ' disable
 $button['Last'] = ($numStudents > 2 and $offset<($numStudents-1)) ? '' : ' disabled';
 $button['New'] = '';
 $offset = --$offset;
+
+if (DEBUG) {
+    print '$row_rsStudent = ';
+    print_r($row_rsStudent);
+    print "<br>";
+}
 ?>
 <!doctype html>
 <!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
@@ -334,11 +428,11 @@ $offset = --$offset;
 	<table cellspacing="0">
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAtt')">In Nursery?<span class="popuptext" id="hAtt">Select yes if <?php echo (empty($row_rsStudent['first_name']) ? "this child" : $row_rsStudent['first_name']);?> will be in the staff nursery in <?php echo date("Y");?>; otherwise select No.</span></span></td>
 		<td class="value">
-			<label><input type="radio" name="registered" id="reg-yes" value="Y" <?php if (!(strcmp($row_rsStudent['registered'],"Y"))) {echo "checked";} ?>>Yes</label>
-            <label><input type="radio" name="registered" id="reg-no" value="N" <?php if (!(strcmp($row_rsStudent['registered'],"N"))) {echo "checked";} ?>>No</label>
+			<label><input type="radio" name="registered" id="reg-yes" value="Y" <?php if (!(strcasecmp($row_rsStudent['registered'],"Y"))) {echo "checked";} ?>>Yes</label>
+            <label><input type="radio" name="registered" id="reg-no" value="N" <?php if (!(strcasecmp($row_rsStudent['registered'],"N"))) {echo "checked";} ?>>No</label>
 		</td></tr>
-		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter your child's first name exactly as you want it to appear on name tags, projects labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']; ?>" maxlength="20"></td></tr>
-		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter your child's last name exactly as you want it to appear on name tags, projects labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20"></td></tr>
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter your child's first name exactly as you want it to appear on name tags, project labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']; ?>" maxlength="20"></td></tr>
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter your child's last name exactly as you want it to appear on name tags, project labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20"></td></tr>
 		<tr><td class="label">*&nbsp;Birthdate:</td><td class="value"><input name="birthdate" type="date" value="<?php echo $row_rsStudent['birthdate']; ?>"></td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hGrade')">Class<span class="popuptext" id="hGrade">Not much to select here.  Since you are signing your child up for Staff Nursery, we've already picked that for you.</span></span></td><td class="value">
         <select name="class" id="select">
@@ -354,7 +448,7 @@ $offset = --$offset;
 		}
 ?>
         </select></td></tr>
-    <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hShirt')">Shirt Size<span class="popuptext" id="hShirt">Select the size shirt you want for your child in staff nursery. T-shirts are only available to those who register before <?php echo VBS_SHIRT_DEADLINE_MMDDYYYY ?>.</span></span></td><td class="value"><select name="shirt_size">
+    <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hShirt')">Shirt Size<span class="popuptext" id="hShirt">We selected the only size appropriate for staff nursery children.  T-shirts are only available to those who register before <?php echo VBS_SHIRT_DEADLINE_MMDDYYYY ?>.</span></span></td><td class="value"><select name="shirt_size">
       <?php
 do {  
 ?>
@@ -370,11 +464,11 @@ do {
 		</select>
 		</td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hPic')">Picture<span class="popuptext" id="hPic">May we take and post photos of your child during VBS?</span></span></td><td class="value">
-            <label><input type="radio" name="picture" id="pic-yes" value="Y" <?php if (!(strcmp($row_rsStudent['picture'],"Y"))) {echo "checked";} ?>>Yes</label>
-            <label><input type="radio" name="picture" id="pic-no" value="N" <?php if (!(strcmp($row_rsStudent['picture'],"N"))) {echo "checked";} ?>>No</label>
+            <label><input type="radio" name="picture" id="pic-yes" value="Y" <?php if (!(strcasecmp($row_rsStudent['picture'],"Y"))) {echo "checked";} ?>>Yes</label>
+            <label><input type="radio" name="picture" id="pic-no" value="N" <?php if (!(strcasecmp($row_rsStudent['picture'],"N"))) {echo "checked";} ?>>No</label>
     	</td></tr>
 <!--        <tr class="hidden"><td class="label">Buddy:</td><td class="value"><input name="buddy" type="text" value="<?php echo $row_rsStudent['buddy']; ?>" maxlength="20"></td></tr> -->
-        <tr><td class="label"><span class="popup" onclick="myPopUp('sComment')">&nbsp;Comments<span class="popuptext" id="sComment">Enter comments here that are specifically related to this child.</span></span></td><td class="value"><textarea name="comments" cols="" rows=""><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
+        <tr><td class="label"><span class="popup" onclick="myPopUp('sComment')">Comments<span class="popuptext" id="sComment">Enter comments here that are specifically related to this child. Allergies, medications, preferred nap times and other important information should be included.</span></span></td><td class="value"><textarea name="comments" cols="" rows=""><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
     <!--   	<tr><td class="label">Status:</td><td class="value"><?php echo ($registered ? "Registered (#".$row_rsStudent['confo'].")" : "Not registered"); ?></td></tr> -->
         <tr><td>*&nbsp;required   <span class="popup" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to register a child in the staff nursery.  To engage the services of the nursery, an adult in the family must be a volunteer.  Click the underlined labels for detailed field level help.  Click the pop-up box to close it.</span></span></td><td class="value">
    		<?php if ($_REQUEST['submit']==NEW_BUTTON) { ?>
@@ -387,7 +481,6 @@ do {
 	</table>
     <input name="student_id" type="hidden" value="<?php echo $row_rsStudent['student_id']; ?>">
     <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
-    <input name="registered" type="hidden" value="<?php echo $row_rsStudent['registered']; ?>">
     <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
     <input name="buddy" type="hidden" value="">
     <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
