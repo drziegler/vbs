@@ -37,7 +37,6 @@ function quickSave(){
 	$sqlUpdate .= ",registered='" . (isset($_POST['registered']) ? $_POST['registered'] : 'N') . "'";
 	$sqlUpdate .= ",shirt_size='" . (isset($_POST['shirt_size']) ? $_POST['shirt_size'] : '') . "'" ;
 	$sqlUpdate .= ",age_group='"  . (isset($_POST['age_group'])  ? $_POST['age_group'] : '') . "'";
-	//if (isset($_POST['shirt_size']) && !$_POST['shirt_size']=="Select size") $sqlUpdate .= ",shirt_size='" . $_POST['shirt_size'] . "'";
 	$sqlUpdate .= ",confo='" . $_SESSION['confoNo'] . "'";
 	$sqlUpdate .= ",last_update=now() ";
 	$sqlUpdate .= " WHERE staff_id = " . $_POST['staff_id'];
@@ -146,10 +145,10 @@ function checkStaffNursery(){
 
 /*  MAIN */
 $offset = (empty($_POST['offset'])) ? 0 : $_POST['offset'];
-$validateError = false;
+$validateError = FALSE;
 $yesVal = $yesChk = $noChk = '';
 $errMsgText = "";
-$staffNurseryExists = false;
+$staffNurseryExists = FALSE;
 $numStudents =(empty($_POST['numStudents'])) ? 0 : $_POST['numStudents'];
 
 if (DEBUG){
@@ -210,8 +209,6 @@ switch ($_POST['submit']) {
 	case "Save" :
 		if (validate($_POST)) {
 			$errMsg = '';
-			/* Save the staff nursery option to a session variable.  It is only needed for this session */
-			//@@-- $_SESSION['staffNursery'] = (isset($_POST['nursery']) ? $_POST['nursery'] : '');
 			/* This is a new record to insert */
 			$sql = "INSERT into staff (family_id, first_name, last_name, shirt_size, picture, registered, teach_with, confo, ";
 			$sql .= "classroom, nursery, craft, kitchen, anything, mon, tue, wed, thur, fri, age_group, create_date, last_update)";
@@ -279,9 +276,8 @@ switch ($_POST['submit']) {
 		if (isset($_POST['registered']) && $_POST['registered']=='Y') {
 		
 			if (validate($_POST)){
-				//@@--$_SESSION['staffNursery'] = (isset($_POST['nursery']) ? $_POST['nursery'] : '');
 
-				$sql = "UPDATE staff SET first_name='%s', last_name='%s', shirt_size='%s', picture='%s', registered='%s',teach_with='%s', comments='%s', age_group='%s', ";
+			    $sql = "UPDATE staff SET first_name='%s', last_name='%s', shirt_size='%s', picture='%s', registered='%s',teach_with='%s', comments='%s', age_group='%s', ";
 				$sql .= "classroom='%s',nursery='%s',craft='%s', kitchen='%s', anything='%s', mon='%s', tue='%s', wed='%s', thur='%s', fri='%s', last_update=now()";
 				$sqlWhere = " WHERE staff_id = " . $_POST['staff_id'];
 				$sqlStmt = sprintf($sql,
