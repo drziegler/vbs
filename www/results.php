@@ -8,6 +8,10 @@ define("NEW_FAMILY",		"New family");
 $totalRows_rsFamily = 0;
 
 /* We are coming back to ourselves, process as necessary */
+print_r($_POST);
+if ((DEBUG) and !empty($_POST['submit'])) {
+    print '$_POST[\'submit\'] = ' . $_POST['submit'] . "<br>";
+}
 if (!empty($_POST['submit'])){
 switch ($_POST['submit']) {
 	case USE_THIS_RECORD :
