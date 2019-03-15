@@ -31,7 +31,7 @@ mysqli_free_result($result);
     <div id="logo"><a href="register.php"><img src="images/vbs-logo.png"></a></div>
 	<div id="counter"><?php echo $registered['registered']?>&nbsp;students&nbsp;shipwrecked</div>
 	<!--FOR TEST ONLY
-	<div id="counter">Over&nbsp;20,000&nbsp;students&nbsp;shipwrecked</div>
+	<div id="counter">Over&nbsp;20,000&nbsp;students&nbsp;marooned on Mars</div>
 	-->
 	<div id="Footer">&copy;<?php echo date("Y") ?> David R. Ziegler &amp; Hope Lutheran Church</div>
 </div>
