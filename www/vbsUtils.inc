@@ -1,9 +1,8 @@
 <?php
 // Defines for this file
 
-$logPath = $_SERVER['DOCUMENT_ROOT'];
-define("DEBUG", 		false);
-define("SEND_TEXT",		true);
+define("DEBUG", 		TRUE);
+define("SEND_TEXT",		TRUE);
 
 /* Pagination constants */
 define("HOME_PAGE",		'register.php');
@@ -30,19 +29,25 @@ define("NEXT_RECORD", 		"Next");
 define("LAST_RECORD",		"Last");
 
 
+//PROD
 define("LOG_FILE",  	'./logs/vbs.log');
-define("ERR_FILE", 		'./logs/err.log'); 
+define("ERR_FILE", 	    './logs/vbs_error.log');
+//DEV
+//define("LOG_FILE",  	'C:/Users/David/git/vbs/www/vbs.log');
+//define("ERR_FILE", 		'C:/Users/David/git/vbs/www/vbs_error.log'); 
 define("START_PAGE", 	"index.php");
 define("REGISTER",		"Register");
 define("UNREGISTER",	"Unregister");
 
 
 #Date constants
-define("VBS_DATE",						'2018-07-09');
-define("VBS_DATE_MAX",					'2015-07-09');
-define("VBS_DATE_MIN",					'2006-07-09');
-define("VBS_SHIRT_DEADLINE",			'2018-06-17');
-define("VBS_SHIRT_DEADLINE_MMDDYYYY",	'06-17-2018');
+define("VBS_DATE",                          '2019-07-08');
+define("VBS_DATE_MAX",                      '2016-07-01');
+define("VBS_DATE_MIN",                      '2006-09-01');
+define("VBS_SHIRT_DEADLINE",                '2019-06-16');
+define("VBS_SHIRT_DEADLINE_MMDDYYYY",	    '06-16-2019');
+define("VBS_MOM_ME_DEADLINE",               '2019-06-24');
+define("VBS_MOM_ME_DEADLINE_MMDDYYYY",      '06-24-2019');
 
 #Validation constants
 define("NO_DUPES",		false);
@@ -54,13 +59,6 @@ define("VBS_TEXT",		"6102629198@vtext.com");
 //define("VBS_EMAIL",		"david@the-zieglers.com");
 //define("VBS_TEXT",		"6102629199@vtext.com");
 
-
-$done = array("family_id" => 0, "family" => false, "student" => false, "volunteer" => false);
-$state = array("family_id" => 0,
-			   "family" => false,
-			   "contact" => false,
-			   "student" => false,
-			   "volunteer" => false);
 
 function formatPhone($rawPhone){
 	//$delimiter = "&#8209;";
@@ -105,7 +103,7 @@ function registrationCount(){
 	$rsResult=mysqli_query($vbsDBi, $sql);
 	if ($rsResult){
 		$rsCount = mysqli_fetch_assoc($rsResult);
-print_r($rsCount);
+        print_r($rsCount);
 		$regCount = $rsCount['COUNT(*)'];
 	}
 	return $regCount;
