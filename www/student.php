@@ -1,6 +1,9 @@
 <?php 
 session_start();
 
+print_r($_POST); 
+print "<br>";
+
 if (empty($_SESSION['family_id'])){
 	/* Send the user to the search page if no family is selected */
 	header("Location: search.php");
@@ -9,7 +12,7 @@ if (empty($_SESSION['family_id'])){
 function quickSave(){
 	global $vbsDBi;
 	if (DEBUG) print "Quick Save<br>";
-	if (DEBUG) print_r($_POST);
+	if (DEBUG) print_r($_POST); print "<br>";
 	if (empty($_POST['student_id'])) return;
 	
 	$sqlUpdate = "update students set ";
@@ -49,7 +52,7 @@ function validate($form){
 	global $errMsgText;
 	$errMsg = "";		/* clear out an previous messages */
 	/* Mandatory form elements */	
-	$mustExist  = array('picture'=>'Picture', 'registered'=>'Registered?');
+	$mustExist  = array('picture'=>'Picture', 'registered'=>'Attending VBS?');
 	$notBlank   = array('first_name'=>'First Name', 'last_name'=>'Last Name', 'birthdate'=>'Birthdate');
 	$selectLists  = array('shirt_size'=>'Shirt size', 'class'=>'Class');
 
@@ -113,7 +116,7 @@ function check4dupes($form){
 	return $dupeExists;
 	
 }
-/*  MAIN */
+/* * * * * * * * *    MAIN   * * * * * * * * * * * * * * * * * */
 require_once('Connections/vbsDB.php');
 include('vbsUtils.inc');
 
@@ -331,7 +334,12 @@ switch ($_POST['submit']) {
 
 if ($validateError){
 	/* Restore the submitted values to redislay for fixing */
-	if (DEBUG) print "Line " . __LINE__ . " Validate Error<br>";
+    if (DEBUG) {
+        print "Line " . __LINE__ . " Validate Error<br>";
+        print_r($_POST);
+        print "<br>";
+    }
+	
 	$row_rsStudent = $_POST;
 }
 else {
@@ -341,7 +349,7 @@ else {
 	}
 	else {
 		if (DEBUG) print "Line " . __LINE__ . "-Validation OK: Redisplay<br>";
-		$query_rsStudent = 	"SELECT student_id, family_id, first_name, last_name, birthdate, class, shirt_size, picture, buddy, comments, confo, create_date, last_update, registered FROM students WHERE family_id=" .$_SESSION['family_id']	. " AND deleted=0";
+		$query_rsStudent = 	"SELECT student_id, family_id, first_name, last_name, birthdate, class, shirt_size, picture, buddy, comments, confo, create_date, last_update, registered FROM students WHERE family_id=" .$_SESSION['family_id'] . " AND deleted=0 AND class<>'Staff Nursery'";
 		$all_rsStudent = mysqli_query($vbsDBi, $query_rsStudent);
 		$numStudents = mysqli_num_rows($all_rsStudent);	
 		if ($_REQUEST['submit']=='Redisplay') $offset = $numStudents-1;  /* Go to last record */
@@ -351,15 +359,27 @@ else {
 		$yesVal = ($row_rsStudent['registered']=='C') ? 'C' : 'Y';
 		$yesChk = ($row_rsStudent['registered']=='Y' or $row_rsStudent['registered']=='C') ? ' checked ' : '';
 		$noChk  = ($row_rsStudent['registered']=='N') ? ' checked ' : '';
+		
+		if (DEBUG) print "Number of students: " . $numStudents . "<br>";
+		if ($numStudents==0) $_REQUEST['submit']=NEW_BUTTON;
 	}
 }
 if (DEBUG) print "Pagination at line " . __LINE__ > ": " . $offset . " of " . $numStudents . "<br>";
 
-$query_rsClassList = "SELECT class FROM class_types WHERE student_opt = true ORDER BY disp_order";
+$query_rsClassList = "SELECT class FROM class_types WHERE student_opt = true ";
+//@@--
+print "Today " . iDate('z') . "<br>";
+print "Deadline " . iDate('z', strtotime(VBS_MOM_ME_DEADLINE)) . "<br>";
+if (iDate('z') > iDate('z', strtotime(VBS_MOM_ME_DEADLINE))){
+    $query_rsClassList .= "AND class<>'Mom and Me' ";
+}
+
+$query_rsClassList .= "ORDER BY disp_order";
+
 $rsClassList = mysqli_query($vbsDBi, $query_rsClassList);
 if ($rsClassList) {
 	$row_rsClassList = mysqli_fetch_assoc($rsClassList);}
-	if (DEBUG) print_r($row_rsClassList);
+	if (DEBUG) {print_r($row_rsClassList); print "<br>";}
 else{
 	writeErr("Unable to get class list", "Student.php", __LINE__, mysqli_errno($vbsDBi));
 }
@@ -375,7 +395,7 @@ if (DEBUG) {
 	print "Session student id is" . $_SESSION['student_id'] . "<br>";
 }
 
-
+/* disabled 3-13-19 
 if ($row_rsStudent['registered']=="Y") {
 	$registered = true;
 	$waitlisted = false;}
@@ -387,6 +407,7 @@ else{
 	$registered = false;
 	$waitlisted = false;
 }
+*/
 
 $studentID = $row_rsStudent['student_id'];
 if (DEBUG) print "Pagination at line " . __LINE__ . ": " . $offset . " of " . $numStudents . "<br>";
@@ -427,15 +448,15 @@ $offset = --$offset;
 	<div id="dataLayout">
 	<form method="post" name="frmStudent" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
 	<table>
-		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAtt')">Attending VBS?<span class="popuptext" id="hAtt">Select yes if <?php echo (empty($row_rsStudent['first_name']) ? "your child" : $row_rsStudent['first_name']);?> is attending VBS in <?php echo date("Y");?>; otherwise select No.</span></span></td>
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAtt')">Attending VBS?<span class="popuptext" id="hAtt">Select yes if <?php echo (empty($row_rsStudent['first_name']) ? "this child" : $row_rsStudent['first_name']);?> is attending VBS in <?php echo date("Y");?>; otherwise select No.</span></span></td>
 		<td class="value">
-			<label><input type="radio" name="registered" id="reg-yes" value="<?php echo $yesVal?>" <?php echo $yesChk?>> Yes</label>
-            <label><input type="radio" name="registered" id="reg-no" value="N" <?php echo $noChk?>> No</label>
+			<label><input type="radio" name="registered" id="reg-yes" value="Y" <?php if ($row_rsStudent['registered']=='Y') print "checked" ?>> Yes</label>
+            <label><input type="radio" name="registered" id="reg-no" value="N" <?php if ($row_rsStudent['registered']=='N') print "checked" ?>> No</label>
 		</td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter your child's first name exactly as you want it to appear on name tags, projects labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']; ?>" maxlength="20"></td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter your child's last name exactly as you want it to appear on name tags, projects labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20"></td></tr>
 		<tr><td class="label">*&nbsp;Birthdate</td><td class="value"><input name="birthdate" type="date" value="<?php echo $row_rsStudent['birthdate']; ?>" min="<?php echo VBS_DATE_MIN?>" max="<?php echo VBS_DATE_MAX?>"></td></tr>
-		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hGrade')">Grade Completed<span class="popuptext" id="hGrade">Select the grade your child is in right now or just completed.  DO NOT select the grade your child is going to in the fall.</span></span></td><td class="value">
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hGrade')">Grade Completed<span class="popuptext" id="hGrade">Select the grade your child is in right now or just completed.  DO NOT select the grade your child is going to in the fall.  Mom and Me students must register by <?php echo VBS_MOM_ME_DEADLINE_MMDDYYYY ?> because of the requirement for security clearances to be completed.</span></span></td><td class="value">
         <select name="class">
 		<?php do {  ?>
 			<option value="<?php echo $row_rsClassList['class']?>"<?php if (!(strcmp($row_rsClassList['class'], $row_rsStudent['class']))) {echo "selected=\"selected\"";} ?>>
@@ -468,7 +489,7 @@ do {
         <tr><td class="label"><span class="popup" onclick="myPopUp('hBud')">Friend<span class="popuptext" id="hBud">If your child wants to be with a specific friend, enter their name here.  Their friend must be in the same grade.  We will do our best to accommodate your request.</span></span></td><td class="value"><input name="buddy" type="text" value="<?php echo $row_rsStudent['buddy']; ?>" maxlength="20"></td></tr>
         <tr>
           <td class="label"><span class="popup" onclick="myPopUp('sComment')">&nbsp;Comments:<span class="popuptext" id="sComment">Enter comments here that are related to this child.</span></span></td><td class="value"><textarea name="comments" cols="" rows=""><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
-<!--<tr><td class="label"><span class="popup" onclick="myPopUp('hStatus')">Status<span class="popuptext" id="hStatus">Status indicates if this student is registered. If the form was completed correctly and submitted, a confirmation number will appear after the status. You may also unregister a student after registering.</span></span></td><td class="value"><?php echo ($registered ? "Registered (#".$row_rsStudent['confo'].")" : "Not registered"); ?></td></tr>
+<!--  disabled 3-13-19 <tr><td class="label"><span class="popup" onclick="myPopUp('hStatus')">Status<span class="popuptext" id="hStatus">Status indicates if this student is registered. If the form was completed correctly and submitted, a confirmation number will appear after the status. You may also unregister a student after registering.</span></span></td><td class="value"><?php echo ($registered ? "Registered (#".$row_rsStudent['confo'].")" : "Not registered"); ?></td></tr>
 -->
         <tr>
           <td>*&nbsp;required <span class="popup" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to register students for VBS.  Click the first row of navigation buttons to move between children in your family.  Use the bottom row of navigation buttons to move between pages.  Click the underlined labels for each item ot get detailed help. Click again to close the popup..</span></span></td>
@@ -493,8 +514,6 @@ do {
 	</table>
     <input name="student_id" type="hidden" value="<?php echo $row_rsStudent['student_id']; ?>">
     <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
-    <!--<input name="registered" type="hidden" value="<?php echo $row_rsStudent['registered']; ?>"> -->
-    <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
     <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
     <input name="offset" type="hidden" value="<?php echo $offset;?>">
     <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
