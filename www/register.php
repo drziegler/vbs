@@ -41,7 +41,7 @@ mysqli_free_result($result);
     <a href="student.php"><div id="mnuBtn" class="student"><span>Students</span></div></a>
     <a href="staff.php"><div id="mnuBtn" class="staff"><span>Volunteers</span></div></a>
 </div>
-<div id="counter">Over&nbsp;<?php echo $registered['registered']?>&nbsp;students&nbsp;shipwrecked</div>
+<div id="counter">Over&nbsp;<?php echo $registered['registered']?>&nbsp;students&nbsp;marooned on Mars</div>
 <!-- FOR TEST ENV ONLY <div id="counter">Over 20,000 Shipwrecked!</div> -->
 <div id="Footer">&copy; <?php echo date("Y");?> David R Ziegler &amp; Hope Lutheran Church</div>
 </div>
