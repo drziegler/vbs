@@ -302,7 +302,7 @@ if (DEBUG) print (mysqli_num_rows($rsChurchResult) . " Church rows fetched.");
     <?php } while ($rsChurchList = mysqli_fetch_assoc($rsChurchResult)); ?>
     </select></td></tr>
 	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hPrepH')">Prep help<span class="popuptext" id="hPrepH">If you are able to help prepare for VBS with tasks that can be done from home, check the yes box.  We'll contact you.  We guarantee it.</span></span></td><td class="value"><input <?php if (!(strcmp($rsFam['prehelp'],"Y"))) {echo "checked=\"checked\"";} ?> name="prehelp" type="radio" value="Y">&nbsp;Yes <input <?php if (!(strcmp($rsFam['prehelp'],"N"))) {echo "checked=\"checked\"";} ?> name="prehelp" type="radio" value="N">&nbsp;No</td></tr>
-	<tr><td class="label">Comments:</td><td class="value"><textarea name="comments" cols="" rows="3" style="width:90%;"><?php echo $rsFam['comments']; ?></textarea></td></tr>
+	<tr><td class="label">Family Comments:</td><td class="value"><textarea name="comments" cols="" rows="3" style="width:90%;"><?php echo $rsFam['comments']; ?></textarea></td></tr>
     <tr><td>* required  <span class="popup" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to update family information.  When done, click 'Next' to continue. Click the underlined labels for detailed popup help. Click again to close it.</span></span></td><td><input type="submit" name="submit" value="Save"></td></tr>
 </table>
 	<input type="hidden" name="family_id" value="<?php echo $rsFam['family_id'];?>">
