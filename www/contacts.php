@@ -79,15 +79,6 @@ if (empty($_POST['submit'])){
 }
 	
 switch ($_POST['submit']){
-	case HOME_BUTTON :
-		header("Location: " . HOME_PAGE);
-		break;
-	case PREVIOUS_BUTTON :
-		header("Location: " . FAMILY_PAGE);	
-		break;
-	case NEXT_PAGE :
-	    if (validatePhoneQuantity()) header("Location: " . STUDENT_PAGE);
-        break;
 	case "Delete" :
 		if (DEBUG) print "Line " . __LINE__ . "-Delete<br>";
 		/* Find out which POST elements have the delete button checked */
@@ -107,7 +98,15 @@ switch ($_POST['submit']){
 				}
 			}
 		}
-		break;	
+		break;
+    /* No validation on backwards moves */
+	case HOME_BUTTON :
+	    header("Location: " . HOME_PAGE);
+	    break;
+	case PREVIOUS_BUTTON :
+	    header("Location: " . FAMILY_PAGE);
+	    break;
+	case NEXT_PAGE :
 	case "Add" :
 	case "Save" :	
 		if (DEBUG) print "Line: " . __LINE__ . "-Save<br>";
@@ -174,6 +173,13 @@ switch ($_POST['submit']){
 						}
 					}
 				}  /* End of phone insert loop */
+				
+				/* ADD PAGE NAVIGATION HERE */
+				switch ($_POST['submit']){
+				    case NEXT_PAGE :
+				        header("Location: " . STUDENT_PAGE);
+				        break;
+				}
 			}
 			else  /* Unable to delete phone number(s) */
 			{
@@ -247,6 +253,12 @@ else {
     if (DEBUG) print "Line: " . __LINE__ . "<br>";
     $rsPhone = $blankPhoneArray;
 }
+if (DEBUG) {
+    print "Session: ";
+    print_r($_SESSION);
+    print "<br>";
+}
+
 ?>
 
 <!doctype html>
