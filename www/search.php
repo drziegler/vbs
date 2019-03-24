@@ -41,9 +41,8 @@ switch ($_POST['submit']) {
     <div><h2>Search for previous registration records using your telephone number.</h2></div>
     <div id="dataLayout">
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post" name="frmPhone" target="_self">
-    <table cellspacing="0">
+    <table>
         <tr><td class="center"><span>Enter your telephone number using only numbers.</span></td></tr>
-        <!-- <tr><td class="center"><input name="txtPhone" id="searchPhone" type="number" pattern="[0-9]{10}" autofocus></td></tr> -->
 		<tr><td class="center"><input name="txtPhone" id="searchPhone" type="number" pattern="[1-9]" autofocus></td></tr>
     </table>
     <div id="buttonGroup" class="center">
