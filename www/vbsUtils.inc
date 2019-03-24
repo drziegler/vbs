@@ -30,11 +30,11 @@ define("LAST_RECORD",		"Last");
 
 
 //PROD
-define("LOG_FILE",  	'./logs/vbs.log');
-define("ERR_FILE", 	    './logs/vbs_error.log');
+//define("LOG_FILE",  	'./logs/vbs.log');
+//define("ERR_FILE", 	    './logs/vbs_error.log');
 //DEV
-//define("LOG_FILE",  	'C:/Users/David/git/vbs/www/vbs.log');
-//define("ERR_FILE", 		'C:/Users/David/git/vbs/www/vbs_error.log'); 
+define("LOG_FILE",  	'C:/Users/David/git/vbs/www/vbs.log');
+define("ERR_FILE", 		'C:/Users/David/git/vbs/www/vbs_error.log'); 
 define("START_PAGE", 	"index.php");
 define("REGISTER",		"Register");
 define("UNREGISTER",	"Unregister");
@@ -53,11 +53,15 @@ define("VBS_MOM_ME_DEADLINE_MMDDYYYY",      '06-24-2019');
 define("NO_DUPES",		false);
 define("WAITLIST_ONLY",	false);
 //PROD
+/*
 define("VBS_EMAIL",		"vbs@hopecherryville.org");
 define("VBS_TEXT",		"6102629198@vtext.com");
+define("VBS_CLEARANCES","clearances@hopecherryville.org");
+*/
 //DEV
-//define("VBS_EMAIL",		"david@the-zieglers.com");
-//define("VBS_TEXT",		"6102629199@vtext.com");
+define("VBS_EMAIL",		"david@the-zieglers.com");
+define("VBS_TEXT",		"6102629199@vtext.com");
+define("VBS_CLEARANCES",  "david@the-zieglers.com");
 
 
 function formatPhone($rawPhone){
