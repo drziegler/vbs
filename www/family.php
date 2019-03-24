@@ -2,6 +2,17 @@
 session_start();
 include('vbsUtils.inc');
 require_once('Connections/vbsDB.php');
+if (DEBUG){
+    print "Session variables: ";
+    print_r($_SESSION);
+    print "<br>";
+}
+
+/* For Eclipse editor 
+ * 
+ * var string $vbsDBi
+ * 
+ */
 $errMsgText="";
 
 if (DEBUG) print "_SESSION[familyID] = " . $_SESSION['family_id'] . "<br>";
@@ -252,7 +263,8 @@ switch ($_POST['submit']) {
 $query_rsChurchList = "SELECT HOME_CHURCH FROM churches ORDER BY DISP_ORDER, HOME_CHURCH";
 $rsChurchResult = mysqli_query($vbsDBi, $query_rsChurchList);
 $rsChurchList = mysqli_fetch_assoc($rsChurchResult);
-if (DEBUG) print (mysqli_num_rows($rsChurchResult) . " Church rows fetched.");
+if (DEBUG) print (mysqli_num_rows($rsChurchResult) . " Church rows fetched.<br>");
+if (DEBUG) print_r($_SESSION);
 
 ?>
 <!doctype html>
@@ -284,20 +296,15 @@ if (DEBUG) print (mysqli_num_rows($rsChurchResult) . " Church rows fetched.");
 <?php } ?>
 <div id="dataLayout">
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post" name="frmFamily" target="_self">
-<table cellspace="0">
-	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFamName')">Family Name<span class="popuptext" id="hFamName">Enter your family name in the format you want it to appear on correspondence to you, e.g. Mr &amp; Mrs John Doe.</span></span></td><td class="value"><input name="family_name" type="text" value="<?php echo $rsFam['family_name'];?>"></td></tr>
+<table>
+	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFamName')">Family Name<span class="popuptext" id="hFamName">Enter your family name in the format you want it to appear on correspondence to you, e.g. Mr &amp; Mrs John Doe.</span></span></td><td class="value"><input name="family_name" type="text" value="<?php echo $rsFam['family_name']; ?>"></td></tr>
 	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAddress')">Address<span class="popuptext" id="hAddress">Enter your street address or mailing address.</span></span></td><td class="value"><input name="address" type="text" value="<?php echo $rsFam['address'];?>"></td></tr>
 	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hZip')">Zipcode<span class="popuptext" id="hZip">Enter your 5-digit zipcode.  We'll look up the city and state.</span></span></td><td class="value"><input name="zipcode" type="number" min="0" max="99999" value="<?php echo $rsFam['zipcode'];?>" ></td></tr>
-	<!--@@ <?php //if (intval($totalRows_rsCityState)>0){ ?> -->
     <tr><td class="label"><span class="popup" onclick="myPopUp('hCity')">City, State<span class="popuptext" id="hCity">You can't enter anything here.  We will calculate your city and state from your zipcode. Eh?  You're from Canada?  Call us to make sure you can still enter our country!</span></span></td><td class="value"><span><?php echo (strlen($city)>0 || strlen($state)>0) ? $city . ', ' . $state : ""; ?></span></td></tr>
-    <!-- @@ <?php //} ?> -->
     <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hEmail')">Email<span class="popuptext" id="hEmail">Enter the email address to use for vbs correspondence.</span></span></td><td class="value"><input name="email" type="email" value="<?php echo $rsFam['email'];?>"></td></tr>
     <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hChurch')">Home Church<span class="popuptext" id="hChurch">Select your home church from the drop down list.  If not listed, select other and enter your home church into the comments box.</span></span></td><td class="value"><select name="lstHomeChurch" style="width:90%;">
     <option value="">Select Home Church</option>
 	<?php do { ?>
-<?php //@@REMOVE AFTER DEBUGGING
-	 	print "Line " . __LINE__ . " rsFam = ";
-	    print_r($rsFam); ?>
 	<option value="<?php echo $rsChurchList['HOME_CHURCH'];?>"<?php if (!(strcmp($rsChurchList['HOME_CHURCH'], $rsFam['home_church']))) {echo "selected=\"selected\"";} ?>><?php echo $rsChurchList['HOME_CHURCH']?></option>
     <?php } while ($rsChurchList = mysqli_fetch_assoc($rsChurchResult)); ?>
     </select></td></tr>
