@@ -135,15 +135,16 @@ function check4dupes($form){
 	$recCount = mysqli_query($vbsDBi, $sql);
 	
 }
-function checkStaffNursery(){
-	if (DEBUG) print "vbsDBi is " . $vbsDBi;
-	$sql = "Select count(*) from students WHERE class='Staff Nursery' AND family_id = " . $_SESSION['family_id'];
-	//$recCount = mysqli_query($vbsDBi, $sql);
-	//return ($recCount>0?"checked":"");
+function countStaffNursery(){
+    global $vbsDBi;
+    $sql = "Select count(*) from students WHERE class='Staff Nursery' AND family_id = " . $_SESSION['family_id'];
+    $result = mysqli_query($vbsDBi, $sql);
+    $recCount = mysqli_fetch_row($result);
+	return $recCount[0];
 
 }
 
-/*  MAIN */
+/* * * * * * *  MAIN * * * * * * * * */
 $offset = (empty($_POST['offset'])) ? 0 : $_POST['offset'];
 $validateError = FALSE;
 $yesVal = $yesChk = $noChk = '';
@@ -212,7 +213,7 @@ switch ($_POST['submit']) {
 			/* This is a new record to insert */
 			$sql = "INSERT into staff (family_id, first_name, last_name, shirt_size, picture, registered, teach_with, confo, ";
 			$sql .= "classroom, nursery, craft, kitchen, anything, mon, tue, wed, thur, fri, age_group, create_date, last_update)";
-			$sql .= "VALUES (%u,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',now(),now())";
+			$sql .= "VALUES (%u,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',now(),now())";
 			$sqlStmt = 	sprintf($sql, 
 				$_SESSION['family_id'],
 				mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
@@ -339,7 +340,8 @@ switch ($_POST['submit']) {
 				header("Location: " . HOME_PAGE);
 				break;
 			case NEXT_PAGE :
-				header("Location: " . (isset($_POST['nursery']) ? STAFF_NURSERY_PAGE : SUMMARY_PAGE));
+			    writeLog('Staff:NEXT_PAGE case processed where countStaffNursery = ') . countStaffNursery();
+				header("Location: " . ((countStaffNursery()>0) ? STAFF_NURSERY_PAGE : SUMMARY_PAGE));
 				break;
 			case PREVIOUS_BUTTON :
 				header("Location: " . STUDENT_PAGE);
@@ -373,43 +375,12 @@ else {
 		$query_limit_rsStudent = sprintf("%s LIMIT %d, %d", $query_rsStudent, $offset, $numStudents);
 		$rsStudent = mysqli_query($vbsDBi, $query_limit_rsStudent);
 		$row_rsStudent = mysqli_fetch_assoc($rsStudent);
-		/*
-		 * TEST DEBUG STATEMENT
-		 */
-		Print "* * * " . $row_rsStudent['first_name'] . " - " .$row_rsStudent['nursery'] . " * * *<br>";
 		
 		/*Set the registered radio button variables here */
 		$yesVal = ($row_rsStudent['registered']=='C') ? 'C' : 'Y';
 		$yesChk = ($row_rsStudent['registered']=='Y' or $row_rsStudent['registered']=='C') ? ' checked ' : '';
 		$noChk  = ($row_rsStudent['registered']=='N') ? ' checked ' : '';
 
-/* * * * * * *		
-		if (isset($_POST['nursery']) && $_POST['nursery']=='on'){
-		} 
-		else {
-			$sql = "Select count(*) from students WHERE class='Staff Nursery' AND (registered='Y' or registered='C') AND family_id = " . $_SESSION['family_id'];
-			$recCount = mysqli_query($vbsDBi, $sql);
-			if ($recCount==false) {
-				$_SESSION['staffNursery']='';
-				$staffNurseryExists =false;
-				if (DEBUG) print "RecCount is false";
-			}
-			else {
-				$recArray = mysqli_fetch_array($recCount);
-				if ($recArray[0] > 0) {
-					$staffNurseryExists = true;
-					$_SESSION['staffNursery'] = 'on';
-				}
-				else {
-					$staffNurseryExists = false;
-					$_SESSION['staffNursery'] = '';
-				}
-				unset($recArray);
-				mysqli_free_result($recCount);
-			}
-			
-		}
-* * * * */
 	}
 }
 
@@ -436,49 +407,14 @@ else{
 	$registered = false;
 }
 
-/* Count the existing staff nursery registrants for this family
- * Logic:  If a staff nursery record exists, check the box and set the session variable 
- *         If no staff nursery record exists, examine the session variable.
- *         If no session variable exists, initialize it to blank.
- *         If a session variable does exist, then use that value to check the box
- */
-/* * * * * * * *
-$sql = "Select count(*) from students WHERE class='Staff Nursery' AND (registered='Y' or registered='C') AND family_id = " . $_SESSION['family_id'];
-$recCount = mysqli_query($vbsDBi, $sql);
-if ($recCount==false) {
-	$staffNurseryExists =false;
-}
-else {
-	$recArray = mysqli_fetch_array($recCount);
-	if ($recArray[0] > 0) {
-		$staffNurseryExists = true;
-		$_SESSION['staffNursery'] = 'on';
-	}
-	else {
-		if (!isset($_SESSION['staffNursery'])){
-			$staffNurseryExists = false;
-			$_SESSION['staffNursery']='';
-		}
-		else {
-			$staffNurseryExists = ($_SESSION['staffNursery']=='on' ? true : false);
-		}
-	}
-	unset($recArray);
-	mysqli_free_result($recCount);
-}
-* * * * * * * */
-
-
 $staffID = $row_rsStudent['staff_id'];
 
 /* Set the button disabled properties */
 $offset = ++$offset;
-//@@$button['Back'] = '';
 $button['First'] = ($numStudents > 2 and $offset > 2) ? '' : ' disabled';
 $button['Previous'] = ($numStudents > 1 and $offset > 1) ? '' : ' disabled';
 $button['Next'] = ($numStudents > 1 and $offset<($numStudents)) ? '' : ' disabled';
 $button['Last'] = ($numStudents > 2 and $offset<($numStudents-1)) ? '' : ' disabled';
-//@@$button['New'] = '';
 $offset = --$offset;
 ?>
 <!doctype html>
