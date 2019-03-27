@@ -489,8 +489,6 @@ do {
         <tr><td class="label"><span class="popup" onclick="myPopUp('hBud')">Friend<span class="popuptext" id="hBud">If your child wants to be with a specific friend, enter their name here.  Their friend must be in the same grade.  We will do our best to accommodate your request.</span></span></td><td class="value"><input name="buddy" type="text" value="<?php echo $row_rsStudent['buddy']; ?>" maxlength="20"></td></tr>
         <tr>
           <td class="label"><span class="popup" onclick="myPopUp('sComment')">&nbsp;Comments:<span class="popuptext" id="sComment">Enter comments here that are related to this child.</span></span></td><td class="value"><textarea name="comments" cols="" rows=""><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
-<!--  disabled 3-13-19 <tr><td class="label"><span class="popup" onclick="myPopUp('hStatus')">Status<span class="popuptext" id="hStatus">Status indicates if this student is registered. If the form was completed correctly and submitted, a confirmation number will appear after the status. You may also unregister a student after registering.</span></span></td><td class="value"><?php echo ($registered ? "Registered (#".$row_rsStudent['confo'].")" : "Not registered"); ?></td></tr>
--->
         <tr>
           <td>*&nbsp;required <span class="popup" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to register students for VBS.  Click the first row of navigation buttons to move between children in your family.  Use the bottom row of navigation buttons to move between pages.  Click the underlined labels for each item ot get detailed help. Click again to close the popup..</span></span></td>
           <td class="value">
