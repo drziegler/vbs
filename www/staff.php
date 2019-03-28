@@ -135,12 +135,35 @@ function check4dupes($form){
 	$recCount = mysqli_query($vbsDBi, $sql);
 	
 }
-function countStaffNursery(){
+
+/*
+ * This function returns true if we should display the staff nursery registration page.
+ * There are two (2) conditions where this should display.
+ * 1. Existing staff nursery entries exist for the current family_id or
+ * 2. One of the registered staff for this family_id has the staff nursery box checked.
+ * If either condition is true, then the function returns true; otherwise false.
+ */
+function gotoStaffNursery(){
     global $vbsDBi;
+    $displayStaffNurseryPage = FALSE;
     $sql = "Select count(*) from students WHERE class='Staff Nursery' AND family_id = " . $_SESSION['family_id'];
     $result = mysqli_query($vbsDBi, $sql);
     $recCount = mysqli_fetch_row($result);
-	return $recCount[0];
+    writelog("Staff Nursery Record count: " . $recCount[0]);
+    if ($recCount[0] == 0){
+        $sql = "Select count(*) from staff WHERE nursery='Y' AND family_id = " . $_SESSION['family_id'];
+        $result = mysqli_query($vbsDBi, $sql);
+        $recCount = mysqli_fetch_row($result);
+        writelog("Staff Nursery Record count: " . $recCount[0]);
+        if (!$recCount[0]==0){
+            $displayStaffNurseryPage=TRUE;
+        }
+    }
+    else {
+        $displayStaffNurseryPage = TRUE;        
+    }
+    
+	return $displayStaffNurseryPage;
 
 }
 
@@ -340,8 +363,8 @@ switch ($_POST['submit']) {
 				header("Location: " . HOME_PAGE);
 				break;
 			case NEXT_PAGE :
-			    writeLog('Staff:NEXT_PAGE case processed where countStaffNursery = ') . countStaffNursery();
-				header("Location: " . ((countStaffNursery()>0) ? STAFF_NURSERY_PAGE : SUMMARY_PAGE));
+			    writeLog('Staff:NEXT_PAGE case processed where countStaffNursery = ') . gotoStaffNursery();
+				header("Location: " . (gotoStaffNursery() ? STAFF_NURSERY_PAGE : SUMMARY_PAGE));
 				break;
 			case PREVIOUS_BUTTON :
 				header("Location: " . STUDENT_PAGE);
