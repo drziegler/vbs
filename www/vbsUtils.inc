@@ -12,8 +12,9 @@ define("CONTACT_PAGE",	'contacts.php');
 define("STUDENT_PAGE",	'student.php');
 define("STAFF_PAGE",	'staff.php');
 define("STAFF_NURSERY_PAGE", 'staffNursery.php');
-define("SUMMARY_PAGE",	"confirm.php");
-define("FINAL_PAGE",	"done.php");
+define("SUMMARY_PAGE",	'confirm.php');
+define("CLEARANCE_PAGE",'clearances.php');
+define("FINAL_PAGE",	'done.php');
 
 /* Button Constants */
 define("NEXT_PAGE",			"Next Page");
@@ -27,6 +28,9 @@ define("FIRST_RECORD",		"First");
 define("PREVIOUS_RECORD",	"Previous");
 define("NEXT_RECORD", 		"Next");
 define("LAST_RECORD",		"Last");
+
+define("ADULT_VOLUNTEERS",  TRUE);
+define("ALL_VOLUNTEERS",    FALSE);
 
 
 //PROD
@@ -61,7 +65,7 @@ define("VBS_CLEARANCES","clearances@hopecherryville.org");
 //DEV
 define("VBS_EMAIL",		"david@the-zieglers.com");
 define("VBS_TEXT",		"6102629199@vtext.com");
-define("VBS_CLEARANCES",  "david@the-zieglers.com");
+define("CLEARANCES_EMAIL",  "david@the-zieglers.com");
 
 
 function formatPhone($rawPhone){
