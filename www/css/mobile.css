@@ -1,0 +1,429 @@
+@charset "utf-8";
+/* Simple fluid media
+   Note: Fluid media requires that you remove the media's height and width attributes from the HTML
+   http://www.alistapart.com/articles/fluid-images/ 
+*/
+html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+body { margin: 0; line-height: 1.231; }
+/* DO NOT REMOVE - IN USE */
+body, input, select, textarea {
+	font-family: sans-serif;
+	color: #222;
+	color: purple;
+}
+img, object, embed, video {
+	max-width: 100%;
+}
+
+/* IE 6 does not support max-width so default to width 100% */
+.ie6 img {
+	width:100%;
+}
+/* POPUPS format the popup help text boxes */
+.width-equal-thirds{
+	width:33%;
+}
+.popup {
+	position: relative;
+	display: inline-block;
+	color:blue;
+	text-decoration:underline;
+	cursor: help;
+}
+.popup .popuptext {
+	visibility: hidden;
+	/* default width, overrides are in tablet and desktop media types */
+    width: 160px;
+    background-color: #555;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 8px 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    margin-left: -80px;	
+}
+/* This displays the little down arrow from the text box */
+.popup .popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 35%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+/* This allows the JS to toggle the popup visibility */
+.popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s
+} 
+
+
+textarea{
+	maxlength:256;
+}
+input {
+	box-sizing: border-box;
+}
+input[type=checkbox], input[type=radio]{
+	transform:scale(1.25,1.25);
+}
+.popup .popuptext{
+	width:160px;	
+	left:100%;
+}
+.red{
+	color:red;
+}
+.error{
+	color:red;
+}
+.white{
+	color:white;
+}
+.hidden{
+	visibility:hidden;
+	display: none !important;
+}
+.label {
+	width: 30%;
+	padding-right: 0;
+	text-align: right;
+}
+.value{
+	text-align: left;
+	padding-right: 0;
+	padding-left: 0.5em;
+}
+.gridContainer {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 0;
+	padding-top: -2em;
+	width: 98%;
+}
+.center{
+	margin-left:auto;
+	margin-right:auto;
+	width:99%;
+	text-align:center;
+}
+.left{
+	text-align: left;
+}
+#header {
+	clear: both;
+	float: left;
+	padding-top: 0;
+	margin: 0 1em;
+	margin-left: 0;
+	width: 100%;
+	display: block;
+	font-size: 7vw;
+	text-align: center;
+}
+#error {
+	color:red;
+}
+#status{
+	font-family:Verdana, Geneva, sans-serif;
+	text-align:center;
+	font-size: 5vw;
+	font-weight:normal;
+	padding: 0.25em 0em;
+}
+#dataLayout{
+	clear: both;
+	float: left;
+	margin-left: 0;
+	margin-top: .5em;
+	width: 100%;
+	display: block;
+}
+#buttonGroup{
+	margin-top: 0;  /* was .5em */
+	padding-top: 0;  /* was 1% */
+	width:95%;
+	margin-left:auto;
+	margin-right:auto;
+}
+#buttonGroup span{
+	font-size:large;
+}
+.button{
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius:4px;
+	border: solid 1px #20538D;
+	text-shadow: 0 -1px 0 rgba(0,0,0,0.4);
+	-webkit-box-shadow: inset 0 1px 0 rgba(255,255,255, 0.4), 0 1px;
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px; 
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgb;
+	font-family: Verdana, Geneva, sans-serif;
+	cursor: pointer;
+	padding: 0.25em 0.5em;
+	display:inline;
+	margin: .25em .15em;
+	background: #4479BA;
+	color: #FFF;
+	-webkit-transition-duration: 0.2s;
+	-moz-transition-duration: 0.2s;
+	transition-duration: 0.2s;
+}
+.button{
+	font-size: 3vw;
+}
+.home {
+	display: inline;
+	/*position:fixed; 
+	width:100%; 
+	top:50em;*/
+}
+.button:disabled{
+	background-color: LightGray;
+	color: DarkGray;
+	cursor: default;
+}
+/* All table elements basic display */
+table {
+	width:99%;
+	margin:auto;
+	margin-top:1em;
+	border:.25em solid;
+	border-collapse:collapse;
+	border-spacing:0px;
+}
+td {
+	padding: 0.45em;
+}
+/* Any element inside a tr tag */
+tr *{
+	font-size: 3vw;
+	padding: 0.30em;
+}
+
+#Find table{
+	border-color:rgba(255,102,0,1);
+	background-color: rgba(255,102,0,0.25)
+}
+#Family table{
+	border-color: rgba(68, 121, 186, 1);
+	background-color: rgba(0,0,255,0.25);
+}
+#Student table{
+	border-color: rgb(31,122,31);
+	background-color: rgb(153,255,153);
+}
+/* Only the summary screen has a th for Student */
+#Student th{
+	background-color: rgb(31,122,31);
+	color: white;
+}
+#Staff table{
+	border-color: rgb(153,51,153);
+	background-color: rgb(230,179,230);
+}
+#Staff th{
+	background-color: rgb(153,51,153);
+	color:white;
+}
+#Phone table{
+	border-color: rgba(68, 121, 186, 1);
+	background-color: rgba(0,0,255,0.25);
+}
+#Phone th{
+	background-color: #4479BA;
+	color:white;
+}
+#Staff td.label {
+	width:33%;
+}
+#Menu2 {
+	float: left;
+	margin-left: 5.2631%;
+	width: 47.3684%;
+	display: block;
+}
+#mnuButton{
+	border-radius: 25px;
+	border: thick solid black;
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 4vh;
+	padding: 5px;
+	font-family:Tahoma, Geneva, sans-serif;
+	font-size: 1.5em;
+	text-align: center;
+}
+
+#mnuBtn {
+	display: inline-block;
+	border-radius: 25px;
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 45%;
+	height: 25%;
+	padding-top: 35%;
+	margin:.1em;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 6vw;
+	color: black;
+	text-align: center;
+	background-size: contain;
+}
+#mnuBtn span {
+	position: relative;
+	font-size: 125%;
+	bottom: 12vw;
+}
+.find{
+	background-image:url("../images/find.jpg");
+	border: thick solid rgba(255,102,0,1);
+}
+.student{
+	background-image: url("../images/students.jpg");
+	border: thick solid rgba(31,122,31,1);
+}
+.family{
+	background-image: url("../images/family.jpg");
+	border: thick solid rgba(68,121,186,1);
+}
+.staff{
+	background-image: url("../images/volunteer.jpg");
+	border: thick solid rgba(153,51,153,1);
+}
+.register{
+	background-image: url("../images/register.jpg");
+}
+.schedule{
+	background-image: url("../images/schedule.png");
+}
+.pictures{
+	background-image: url("../images/photos.jpg");
+}
+.stats{
+	background-image: url("../images/stats.jpg");
+}
+.bottom{
+/* Used to place the bottom menu at the bottom */
+	clear:both;
+	display:block;
+	width: 84%;
+	margin-left: 0;
+	float: left;
+	margin: 5px 14px;
+	padding: 12px;
+	max-height: 25px;
+}
+#Footer {
+	position: absolute;
+	text-align:center;
+	clear: both;
+	float: left;
+	margin-left: 0;
+	width: 90%;
+	display: block;
+	padding:15px;
+	bottom:0;
+	left:0;
+	font-size: 3vw;
+}
+#LayoutDiv2{
+	clear: both;
+	float: left;
+	margin-left: 0;
+	width: 100%;
+	display: block;
+}
+#Button0{
+	clear: both;
+	float: left;
+	margin-left: 0;
+	width: 100%;
+	display: block;
+}
+#logo img{
+	display: block;
+	height: 60%;
+	width: 60%;
+	margin: auto;
+}
+#counter{
+	display: block;
+	width: 90%;
+	margin: auto;
+	text-align: center;
+	font-size: 6vw;
+}
+/************************************************ CONFO PAGE *********************************************************************************/
+/* Styles that apply only to the confirmation screen */
+#Family table.confo{
+	width: 99%;
+	float: left;
+}
+#Family .confo td{
+	padding: .25em;
+/*	font-size: 1vw; */
+}
+
+
+
+
+/********************************* PORTRAIT MODE *********************************************/
+@media screen and (max-width: 320px){
+	
+h1, h2 {
+	width: 99%;
+	margin: auto;
+	text-align: center;
+	font-size: 6vw;
+	color: green;
+}
+h2 {
+	font-weight:normal;
+	font-size: 6vw;
+}
+h3 {
+	font-size:5vw;
+	font-weight: normal;
+	text-align: center;
+	margin: 0;
+	color:red;
+}
+	
+	
+}
+
+
+/********************************* LANDSCAPE MODE *********************************************/
+@media screen and (min-width: 321px){
+h1, h2 {
+	width: 99%;
+	margin: auto;
+	text-align: center;
+	font-size: 6vw;
+	color: blue;
+}
+h2 {
+	font-weight:normal;
+	font-size: 3vw;
+}
+	
+
+	
+	
+}
+
+
+
+
+
+/* Don't display the footer if we don't have enought height */
+@media screen and (max-height:800px) {
+	#Footer {display:none;}
+}

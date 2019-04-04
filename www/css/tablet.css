@@ -1,0 +1,233 @@
+/* Tablet Layout: 481px to 768px. Inherits styles from: Mobile Layout. */
+/********************************************************  TABLET LAYOUT ********************* TABLET LAYOUT ************************************/
+
+
+@charset "utf-8";
+/* Simple fluid media
+   Note: Fluid media requires that you remove the media's height and width attributes from the HTML
+   http://www.alistapart.com/articles/fluid-images/ 
+*/
+html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+body { margin: 0; line-height: 1.231; }
+/* DO NOT REMOVE - IN USE */
+body, input, select, textarea {
+	font-family: sans-serif;
+	color: #222;
+	color: green;
+}
+
+img, object, embed, video {
+	max-width: 100%;
+}
+
+/* IE 6 does not support max-width so default to width 100% */
+.ie6 img {
+	width:100%;
+}
+/* POPUPS format the popup help text boxes */
+.width-equal-thirds{
+	width:33%;
+}
+.popup {
+	position: relative;
+	display: inline-block;
+	text-color:blue;
+	text-decoration:underline;
+	cursor: help;
+}
+.popup .popuptext {
+	visibility: hidden;
+	/* default width, overrides are in tablet and desktop media types */
+    width: 160px;
+    background-color: #555;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 8px 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    margin-left: -80px;	
+}
+/* This displays the little down arrow from the text box */
+.popup .popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 35%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+/* This allows the JS to toggle the popup visibility */
+.popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+} 
+/************************************ LANDSCAPE ***********************************/
+@media screen and (orientation:landscape){
+	h1, h2{
+		width: 99%;
+		margin: auto;
+		text-align: center;
+		font-size: 4vw;
+		color: red;
+	}
+	h2 {
+		font-weight:normal;
+		font-size: 3vw;
+	}
+	p {font-size:1.75vw;}
+	#logo img{
+		display: block;
+		height: 35%;
+		width: 35%;
+		margin: auto;
+	}
+	#counter{
+		display: block;
+		width: 90%;
+		margin: auto;
+		text-align: center;
+		font-size: 2vw;
+	}
+	#Footer {
+		position: absolute;
+		clear: both;
+		float: left;
+		width: 100%;
+		display: block;
+		padding:15;
+		bottom:0;
+		left:0;
+		font-size: 2vw;
+	}
+
+}
+/************************************ PORTRAIT ***********************************/
+@media screen and (orientation:portrait){
+	h1, h2{
+		width: 99%;
+		margin: auto;
+		text-align: center;
+		font-size: 6vw;
+		color: orange;
+	}
+	h2 {
+		font-weight:normal;
+		font-size: 5vw;
+	}
+	p {font-size:3vw;}
+	#logo img{
+		display: block;
+		height: 75%;
+		width: 75%;
+		margin: auto;
+	}
+	#counter{
+		display: block;
+		width: 90%;
+		margin: auto;
+		text-align: center;
+		font-size: 4vw;
+	}
+	#Footer {
+		position: absolute;
+		clear: both;
+		float: left;
+		width: 90%;
+		display: block;
+		text-align: center;
+		padding:15;
+		bottom:0;
+		left:0;
+		font-size: 2vw;
+	}
+}
+
+
+h3{
+	font-size: 2.5vw;
+}
+textarea{
+	width:90%;
+	height:6em;
+	font-size: 2vw;
+	rows:6;
+}
+.button{
+	font-size: 2.5vw;
+}
+table{
+	border:.5em solid;
+}
+tr *{
+	font-size: 2.5vw;
+	padding: 0.25em;
+}
+td *{
+	font-size: 2.5vw;
+}
+input[type=checkbox], input[type=radio]{
+	transform:scale(1.5,1.5);
+}
+#status{
+	font-size: 1vw;
+}
+.gridContainer {
+	width: 90.675%;
+	padding-left: 1.1625%;
+	padding-right: 1.1625%;
+	margin:auto;
+}
+#header {
+	font-size: 5vw;
+}
+#dataLayout {
+	clear: both;
+	float: left;
+	margin-left: 0;
+	width: 100%;
+	display: block;
+}
+#Results table{
+	font-size: 3vw;
+}
+#Family td.label {
+	width:30%;
+}
+#Family td.value{
+	padding-left:.5em;
+}
+#buttonGroup{
+	width:75%;
+	margin-left:auto;
+	margin-right:auto;
+}
+#buttonSubGroup{
+	width:75%;
+	margin-top:0;
+	margin-left:auto;
+	margin-right:auto;
+}
+#Menu1 {
+	float: left;
+	margin-left: 0;
+	width: 48.7179%;
+	display: inline-block;
+}
+#Menu2 {
+	float: right;
+	margin-left: 2.5641%;
+	width: 48.7179%;
+}
+#mnuBtn{
+	font-size: 5vw;
+}
+@media screen and (max-height: 799px){
+	#counter{display: none;}
+	#Footer{display:none;}
+}
+
