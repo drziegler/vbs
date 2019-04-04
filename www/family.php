@@ -41,7 +41,7 @@ function validate($form){
 	$errMsg = "";		/* clear out an previous messages */
 
 	/* Mandatory form elements */	
-	$mustExist  = array('prehelp'=>'Prehelp');
+	/*$mustExist  = array('prehelp'=>'Prehelp'); */
 	$notBlank   = array('family_name'=>'Family Name', 'address'=>'Address', 'zipcode'=>'Zip code', 'email'=>'Email', 'lsthomechurch'=>'Home Church');
 
 	
@@ -64,20 +64,6 @@ function validate($form){
 			$errMsg .= $notBlank[$key] . ",";
 			$error = true;
 		}
-	}
-
-	/* Check for missing element, i.e. check boxes, radio boxes */
-	$missing = array_diff_key($mustExist, $form);		/* returns keys in mustExist but not in form */
-	foreach ($missing as $key => $value){
-		$errMsg .= $value . ",";
-		$error = true;
-	}
-	/* If the element is missing, add a blank one to the array to avoid display errors */
-	$_POST = array_merge($form, $missing);	
-	if (DEBUG) {
-		print "Line " .__LINE__ . "-"; 
-		print_r($_POST);
-		print "<br>";
 	}
 
 	/* Check for options not selected */
@@ -115,7 +101,7 @@ switch ($_POST['submit']) {
 		break;
 	case 'New' :
 		if (DEBUG) print "Line: " . __LINE__ . "-New<br>";
-		$rsFam = array('family_name'=>'','email'=>'','address'=>'','zipcode'=>'','prehelp'=>'','home_church'=>'','comments'=>'','family_id'=>'',								'city'=>'','state'=>'');
+		$rsFam = array('family_name'=>'','email'=>'','address'=>'','zipcode'=>'','home_church'=>'','comments'=>'','family_id'=>'',								'city'=>'','state'=>'');
 		$city = $state = '';
 		$_SESSION['family_id']='0';
 		$_SESSION['family_name'] = '';
@@ -129,14 +115,14 @@ switch ($_POST['submit']) {
 				/* This is a new family to insert */
 				if (DEBUG) print "Line: " . __LINE__ . "-Save:Insert<br>";
 				$sqlStmt = sprintf("INSERT INTO family (family_name, email, address,
-					 zipcode, home_church, prehelp, comments, confo, create_date, last_update)
+					 zipcode, home_church, comments, confo, create_date, last_update)
 					VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', now(), now())", 
 				mysqli_real_escape_string($vbsDBi, $_POST['family_name']),
 				mysqli_real_escape_string($vbsDBi, $_POST['email']),
 				mysqli_real_escape_string($vbsDBi, $_POST['address']),
 				mysqli_real_escape_string($vbsDBi, $_POST['zipcode']),
 				mysqli_real_escape_string($vbsDBi, $_POST['lstHomeChurch']),
-				mysqli_real_escape_string($vbsDBi, $_POST['prehelp']),
+				/*@@ mysqli_real_escape_string($vbsDBi, $_POST['prehelp']), */
 				mysqli_real_escape_string($vbsDBi, $_POST['comments']),
 				$_SESSION['confoNo']
 				);
@@ -178,13 +164,13 @@ switch ($_POST['submit']) {
 			}
 			else { /* We have an update */
 				if (DEBUG) print "Line: " . __LINE__ . "-Save:Update<br>";
-				$sqlStmt = sprintf("UPDATE family SET family_name='%s', email='%s', address='%s', zipcode='%s', home_church='%s', prehelp='%s', comments='%s' WHERE family_id=%s",
+				$sqlStmt = sprintf("UPDATE family SET family_name='%s', email='%s', address='%s', zipcode='%s', home_church='%s', comments='%s' WHERE family_id=%s",
 					mysqli_real_escape_string($vbsDBi, trim($_POST['family_name'])),
 					mysqli_real_escape_string($vbsDBi, trim($_POST['email'])),
 					mysqli_real_escape_string($vbsDBi, trim($_POST['address'])),
 					mysqli_real_escape_string($vbsDBi, trim($_POST['zipcode'])),
 					mysqli_real_escape_string($vbsDBi, trim($_POST['lstHomeChurch'])),
-					mysqli_real_escape_string($vbsDBi, trim($_POST['prehelp'])),
+					/* @@mysqli_real_escape_string($vbsDBi, trim($_POST['prehelp'])), */
 					mysqli_real_escape_string($vbsDBi, trim($_POST['comments'])),
 					mysqli_real_escape_string($vbsDBi, $_POST['family_id']));
 
@@ -297,18 +283,17 @@ if (DEBUG) print_r($_SESSION);
 <div id="dataLayout">
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post" name="frmFamily" target="_self">
 <table>
-	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFamName')">Family Name<span class="popuptext" id="hFamName">Enter your family name in the format you want it to appear on correspondence to you, e.g. Mr &amp; Mrs John Doe.</span></span></td><td class="value"><input name="family_name" type="text" value="<?php echo $rsFam['family_name']; ?>"></td></tr>
-	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAddress')">Address<span class="popuptext" id="hAddress">Enter your street address or mailing address.</span></span></td><td class="value"><input name="address" type="text" value="<?php echo $rsFam['address'];?>"></td></tr>
-	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hZip')">Zipcode<span class="popuptext" id="hZip">Enter your 5-digit zipcode.  We'll look up the city and state.</span></span></td><td class="value"><input name="zipcode" type="number" min="0" max="99999" value="<?php echo $rsFam['zipcode'];?>" ></td></tr>
+	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFamName')">Family Name<span class="popuptext" id="hFamName">Enter your family name in the format you want it to appear on correspondence to you, e.g. Mr &amp; Mrs John Doe.</span></span></td><td class="value"><input name="family_name" type="text" value="<?php echo $rsFam['family_name']; ?>" style="width:60%" maxlength='40'></td></tr>
+	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAddress')">Address<span class="popuptext" id="hAddress">Enter your street address or mailing address.</span></span></td><td class="value"><input name="address" type="text" value="<?php echo $rsFam['address'];?>"  style="width:60%;" maxlength='64'></td></tr>
+	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hZip')">Zipcode<span class="popuptext" id="hZip">Enter your 5-digit zipcode.  We'll look up the city and state.</span></span></td><td class="value"><input name="zipcode" type="number" min="0" max="99999" value="<?php echo $rsFam['zipcode'];?>" style="width:5em;" maxlength='5'></td></tr>
     <tr><td class="label"><span class="popup" onclick="myPopUp('hCity')">City, State<span class="popuptext" id="hCity">You can't enter anything here.  We will calculate your city and state from your zipcode. Eh?  You're from Canada?  Call us to make sure you can still enter our country!</span></span></td><td class="value"><span><?php echo (strlen($city)>0 || strlen($state)>0) ? $city . ', ' . $state : ""; ?></span></td></tr>
-    <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hEmail')">Email<span class="popuptext" id="hEmail">Enter the email address to use for vbs correspondence.</span></span></td><td class="value"><input name="email" type="email" value="<?php echo $rsFam['email'];?>"></td></tr>
+    <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hEmail')">Email<span class="popuptext" id="hEmail">Enter the email address to use for vbs correspondence.</span></span></td><td class="value"><input name="email" type="email" value="<?php echo $rsFam['email'];?>" style="width:90%;" maxlength='75'></td></tr>
     <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hChurch')">Home Church<span class="popuptext" id="hChurch">Select your home church from the drop down list.  If not listed, select other and enter your home church into the comments box.</span></span></td><td class="value"><select name="lstHomeChurch" style="width:90%;">
     <option value="">Select Home Church</option>
 	<?php do { ?>
 	<option value="<?php echo $rsChurchList['HOME_CHURCH'];?>"<?php if (!(strcmp($rsChurchList['HOME_CHURCH'], $rsFam['home_church']))) {echo "selected=\"selected\"";} ?>><?php echo $rsChurchList['HOME_CHURCH']?></option>
     <?php } while ($rsChurchList = mysqli_fetch_assoc($rsChurchResult)); ?>
     </select></td></tr>
-	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hPrepH')">Prep help<span class="popuptext" id="hPrepH">If you are able to help prepare for VBS with tasks that can be done from home, check the yes box.  We'll contact you.  We guarantee it.</span></span></td><td class="value"><input <?php if (!(strcmp($rsFam['prehelp'],"Y"))) {echo "checked=\"checked\"";} ?> name="prehelp" type="radio" value="Y">&nbsp;Yes <input <?php if (!(strcmp($rsFam['prehelp'],"N"))) {echo "checked=\"checked\"";} ?> name="prehelp" type="radio" value="N">&nbsp;No</td></tr>
 	<tr><td class="label">Family Comments:</td><td class="value"><textarea name="comments" cols="" rows="3" style="width:90%;"><?php echo $rsFam['comments']; ?></textarea></td></tr>
     <tr><td>* required  <span class="popup" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to update family information.  When done, click 'Next' to continue. Click the underlined labels for detailed popup help. Click again to close it.</span></span></td><td><input type="submit" name="submit" value="Save"></td></tr>
 </table>
