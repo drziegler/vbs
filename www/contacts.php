@@ -168,7 +168,7 @@ switch ($_POST['submit']){
 							default:
 								if (DEBUG) print __FILE__ . ":" . __FUNCTION__ . "-" . __LINE__ . " Case: default<br>";
 								writeErr(__FILE__, __FUNCTION__, __LINE__, $sqlErrMsg);
-								$errMsg = "Error inserting phone " . $newPhone[$i]['phone'] . ". Record not added.";
+								$errMsg = "Error inserting phone " . $newPhone[$i]['phone'] . " Record not added. SQLError: " . $sqlErrNum;
 								break;
 						}
 					}
