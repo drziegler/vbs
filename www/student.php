@@ -169,7 +169,7 @@ switch ($_POST['submit']) {
 		$yesVal = 'Y';
 		$yesChk = ' checked ';
 		$noChk  = '';
-
+		
 		break;
 	case "Save" :   /* Only happens on a new record */
 		if (validate($_POST) && (check4dupes($_POST) === NO_DUPES)) {
@@ -227,16 +227,16 @@ switch ($_POST['submit']) {
 			$_REQUEST['submit']=NEW_BUTTON;
 			$numStudents = 0;
 			$validateError = true;
-			$yesVal = 'Y';
+			/* Set value and checked for the registered attribute.  We do not need to account for
+			 a 'C' value here because this is a new record.  It can only be Y | N */
 			if ($_POST['registered']=='Y'){
-				$yesChk = ' checked ';
-				$noChk  = '';
+			    $yesChk = ' checked ';
+			    $noChk  = '';
 			}
 			else {
-				$yesChk = '';
-				$noChk  = ' checked ';
+			    $yesChk = '';
+			    $noChk  = ' checked ';
 			}
-
 		}
 		break;
 	case HOME_BUTTON :
@@ -356,10 +356,11 @@ else {
 		$query_limit_rsStudent = sprintf("%s LIMIT %d, %d", $query_rsStudent, $offset, $numStudents);
 		$rsStudent = mysqli_query($vbsDBi, $query_limit_rsStudent);
 		$row_rsStudent = mysqli_fetch_assoc($rsStudent);
+		/*Set the registered radio button variables here */
 		$yesVal = ($row_rsStudent['registered']=='C') ? 'C' : 'Y';
 		$yesChk = ($row_rsStudent['registered']=='Y' or $row_rsStudent['registered']=='C') ? ' checked ' : '';
 		$noChk  = ($row_rsStudent['registered']=='N') ? ' checked ' : '';
-		
+
 		if (DEBUG) print "Number of students: " . $numStudents . "<br>";
 		if ($numStudents==0) $_REQUEST['submit']=NEW_BUTTON;
 	}
@@ -450,8 +451,8 @@ $offset = --$offset;
 	<table>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAtt')">Attending VBS?<span class="popuptext" id="hAtt">Select yes if <?php echo (empty($row_rsStudent['first_name']) ? "this child" : $row_rsStudent['first_name']);?> is attending VBS in <?php echo date("Y");?>; otherwise select No.</span></span></td>
 		<td class="value">
-			<label><input type="radio" name="registered" id="reg-yes" value="Y" <?php if ($row_rsStudent['registered']=='Y') print "checked" ?>> Yes</label>
-            <label><input type="radio" name="registered" id="reg-no" value="N" <?php if ($row_rsStudent['registered']=='N') print "checked" ?>> No</label>
+			<label><input type="radio" name="registered" id="reg-yes" value="<?php echo $yesVal?>" <?php echo $yesChk?>> Yes</label>
+            <label><input type="radio" name="registered" id="reg-no" value="N" <?php echo $noChk?>> No</label>
 		</td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter your child's first name exactly as you want it to appear on name tags, projects labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']; ?>" maxlength="20"></td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter your child's last name exactly as you want it to appear on name tags, projects labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20"></td></tr>
