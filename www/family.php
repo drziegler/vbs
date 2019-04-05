@@ -123,7 +123,6 @@ switch ($_POST['submit']) {
 				mysqli_real_escape_string($vbsDBi, $_POST['address']),
 				mysqli_real_escape_string($vbsDBi, $_POST['zipcode']),
 				mysqli_real_escape_string($vbsDBi, $_POST['lstHomeChurch']),
-				/*@@ mysqli_real_escape_string($vbsDBi, $_POST['prehelp']), */
 				mysqli_real_escape_string($vbsDBi, $_POST['comments']),
 				$_SESSION['confoNo']
 				);
