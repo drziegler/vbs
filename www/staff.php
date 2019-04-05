@@ -2,6 +2,7 @@
 session_start();
 require_once('Connections/vbsDB.php');
 include('vbsUtils.inc');
+define("FILE_NAME", '[STAFF] ');
 
 if (empty($_SESSION['family_id'])){
 	/* Send the user to the search page if no family is selected */
@@ -44,13 +45,13 @@ function quickSave(){
 
 	if (mysqli_query($vbsDBi, $sqlUpdate)){
 		if (DEBUG) print "Line " . __LINE__ . "-Updated Staff record ".$_POST['staff_id']."<br>";
-		writeLog($sqlUpdate);
+		writeLog(FILE_NAME . $sqlUpdate);
 	}
 	else {
 		if (DEBUG) print "Line " . __LINE__ . "Update error in Quick save.  See log file.<br>";
 		$sqlErr = mysqli_error($vbsDBi);
-		writeErr("Error:", "Staff:QuickSave", __LINE__, $sqlErr);
-		writeErr("SQL Statement:", __FUNCTION__, __LINE__, $sqlUpdate);
+		writeErr(FILE_NAME . "Error:", "Staff:QuickSave", __LINE__, $sqlErr);
+		writeErr(FILE_NAME . "SQL Statement:", __FUNCTION__, __LINE__, $sqlUpdate);
 	}
 
 	return;
@@ -146,15 +147,18 @@ function check4dupes($form){
 function gotoStaffNursery(){
     global $vbsDBi;
     $displayStaffNurseryPage = FALSE;
+    
+    /* Check for existing Staff Nursery records that may required update or edit */
     $sql = "Select count(*) from students WHERE class='Staff Nursery' AND family_id = " . $_SESSION['family_id'];
     $result = mysqli_query($vbsDBi, $sql);
     $recCount = mysqli_fetch_row($result);
-    writelog("Staff Nursery Record count: " . $recCount[0]);
+    writelog(FILE_NAME . __LINE__ . "-Staff Nursery Record count (existing): " . $recCount[0]);
     if ($recCount[0] == 0){
+        /* Now count staff where need staff nursery is checked */
         $sql = "Select count(*) from staff WHERE nursery='Y' AND family_id = " . $_SESSION['family_id'];
         $result = mysqli_query($vbsDBi, $sql);
         $recCount = mysqli_fetch_row($result);
-        writelog("Staff Nursery Record count: " . $recCount[0]);
+        writelog(FILE_NAME . __LINE__ . "-Staff Nursery Record count (by flag): " . $recCount[0]);
         if (!$recCount[0]==0){
             $displayStaffNurseryPage=TRUE;
         }
@@ -363,7 +367,7 @@ switch ($_POST['submit']) {
 				header("Location: " . HOME_PAGE);
 				break;
 			case NEXT_PAGE :
-			    writeLog('Staff:NEXT_PAGE case processed where countStaffNursery = ') . gotoStaffNursery();
+			    writeLog(FILE_NAME . __LINE__ .'NEXT_PAGE case processed where countStaffNursery = ') . gotoStaffNursery();
 				header("Location: " . (gotoStaffNursery() ? STAFF_NURSERY_PAGE : SUMMARY_PAGE));
 				break;
 			case PREVIOUS_BUTTON :
