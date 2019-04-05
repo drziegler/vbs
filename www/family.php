@@ -2,6 +2,7 @@
 session_start();
 include('vbsUtils.inc');
 require_once('Connections/vbsDB.php');
+define("FILE_NAME", "[FAMILY] ");
 if (DEBUG){
     print "Session variables: ";
     print_r($_SESSION);
@@ -116,7 +117,7 @@ switch ($_POST['submit']) {
 				if (DEBUG) print "Line: " . __LINE__ . "-Save:Insert<br>";
 				$sqlStmt = sprintf("INSERT INTO family (family_name, email, address,
 					 zipcode, home_church, comments, confo, create_date, last_update)
-					VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', now(), now())", 
+					VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', now(), now())", 
 				mysqli_real_escape_string($vbsDBi, $_POST['family_name']),
 				mysqli_real_escape_string($vbsDBi, $_POST['email']),
 				mysqli_real_escape_string($vbsDBi, $_POST['address']),
@@ -134,7 +135,7 @@ switch ($_POST['submit']) {
 					$rsFamily['family_id'] = $_SESSION['family_id'];
 					$_SESSION['family_name'] = $_POST['family_name'];
 					insertStats($vbsDBi, $_SESSION['family_id'], 'new');
-					writeLog("Inserted new family id " . $_SESSION['family_id'] . " for " . $_POST['family_name']);
+					writeLog(FILE_NAME . __LINE__ . " Inserted new family id " . $_SESSION['family_id'] . " for " . $_POST['family_name']);
 					
 					/* IF we have a search phone number saved, create a reference phone number against this family id for future retrieval */
 					if (!empty($_SESSION['newPhone'])){
@@ -148,18 +149,18 @@ switch ($_POST['submit']) {
 						if (!mysqli_query($vbsDBi, $sqlInsert)){
 							if (DEBUG) print "Line: " . __LINE__ . " Fam:Phone:Ins<br>";					
 							$sqlErr = mysqli_error($vbsDBi);
-							writeErr("Error writing phone insert", " Family:Switch:Save", __LINE__, $sqlErr);
+							writeLog(FILE_NAME . __LINE__ . " Error writing phone insert", " Family:Switch:Save", __LINE__, $sqlErr);
 						}
 						else {
 							if (DEBUG) print "Line: " . __LINE__ . "-Updated:phone<br>";
-							writeLog("Inserted new phone number as " . $sqlInsert);
+							writeLog(FILE_NAME . __LINE__ . " Inserted new phone number as " . $sqlInsert);
 						}
 					}
 				}
 				else {
 					if (DEBUG) print "Line " . __LINE__ . "<br>";
 					$sqlErr = mysqli_error($vbsDBi);
-					writeErr("Error writing insert statement", "Switch:Save", __LINE__, $sqlErr);
+					writeLog(FILE_NAME . __LINE__ . " Error writing insert statement", "Switch:Save", __LINE__, $sqlErr);
 				}
 			}
 			else { /* We have an update */
@@ -177,11 +178,11 @@ switch ($_POST['submit']) {
 				if (!mysqli_query($vbsDBi, $sqlStmt)){
 					if (DEBUG) print "Line: " . __LINE__ . "-Update(2)<br>";					
 					$sqlErr = mysqli_error($vbsDBi);
-					writeErr("Error writing family update statement", "Switch:Save", __LINE__, $sqlErr);
+					writeLog(FILE_NAME . __LINE__ . " Error writing family update statement", "Switch:Save", __LINE__, $sqlErr);
 				}
 				else {
 					if (DEBUG) print "Line: " . __LINE__ . "-Updated:family<br>";
-					writeLog("Updated family id as " . $sqlStmt);
+					writeLog(FILE_NAME . __LINE__ ."Updated family id as " . $sqlStmt);
 					$_SESSION['family_name'] = $_POST['family_name'];
 				}
 			}
