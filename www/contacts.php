@@ -2,6 +2,7 @@
 session_start();
 require_once('./Connections/vbsDB.php');
 include_once('vbsUtils.inc');
+define("FILE_NAME", "[CONTACTS] ");
 $errMsgText = '';
 
 if ($_SESSION['family_id']==0){
@@ -60,7 +61,7 @@ function validatePhoneQuantity(){
     $rsPhoneCount = mysqli_fetch_row(mysqli_query($vbsDBi, $sql))[0];
     
     if ($rsPhoneCount < 2){
-    	writeLog("Family id " . $_SESSION['family_id'] . " has insufficient contacts.");
+    	writeLog(FILE_NAME . __LINE__ . " Family id " . $_SESSION['family_id'] . " has insufficient contacts.");
         $validatedOK = FALSE;
     }
 
@@ -94,7 +95,7 @@ switch ($_POST['submit']){
 				);
 				if (!mysqli_query($vbsDBi, $sqlDelete)){
 					$sqlErr = mysqli_error($vbsDBi);
-					writeErr("Error deleting phone", "Switch:Delete", __LINE__, $sqlErr);
+					writeLog(FILE_NAME . __LINE__ . " Error deleting phone", "Switch:Delete", __LINE__, $sqlErr);
 				}
 			}
 		}
@@ -133,7 +134,7 @@ switch ($_POST['submit']){
 						mysqli_real_escape_string($vbsDBi, $newPhone[$i]['contact_name']));
 					if (mysqli_query($vbsDBi, $sqlInsert)){
 						if (DEBUG) print "Inserting records at line: " . __LINE__ . "<br>" . $sqlInsert . "<br>";		
-						writeLog("Inserted new phone data as " . $sqlInsert);}
+						writeLog(FILE_NAME . __LINE__ . " Inserted new phone data as " . $sqlInsert);}
 					else {
 
 						$sqlErrNum = mysqli_errno($vbsDBi);
@@ -184,15 +185,15 @@ switch ($_POST['submit']){
 			else  /* Unable to delete phone number(s) */
 			{
 				if (DEBUG) print "Line: " . __LINE__ . "Delete before Save failed!<br>";		
-				$sqlErr = mysqli_error($vbsDBi);
-				writeErr("Error deleting phone records for family id " . $_SESSION['family_id'], "Contacts:Save", __LINE__, $sqlErr);
+				//@@ $sqlErr = mysqli_error($vbsDBi);
+				writeLog(FILE_NAME . __LINE__ . " Error deleting phone records for family id " . $_SESSION['family_id'], "Contacts:Save", __LINE__, mysqli_error($vbsDBi));
 			}
 		}
 		else{
 			/* Not validated */
 			if (DEBUG) print "Line: " . __LINE__ . " Validation error<br>";
 			$errMsg = "Please correct missing data.";
-			writeLog("Validation failed for family id contacts (".$_SESSION['family_id'].")");
+			writeLog(FILE_NAME . __LINE__ . " Validation failed for family id contacts (".$_SESSION['family_id'].")");
 			/* Restore the POSTed data to the screen, break out of here to avoid a requery */
 			$rsPhone = $_POST['phone'];
 			break;
