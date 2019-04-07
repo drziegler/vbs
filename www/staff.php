@@ -11,7 +11,7 @@ if (empty($_SESSION['family_id'])){
 
 function quickSave(){
 	global $vbsDBi;
-	if (DEBUG) print "Quick Save<br>";
+	if (DEBUG) print __LINE__ . "-Quick Save<br>";
 	if (empty($_POST['staff_id'])) return;
 	
 	/* Note:  For all Inserts and Updates ...
@@ -44,11 +44,11 @@ function quickSave(){
 	mysqli_real_escape_string($vbsDBi, $sqlUpdate);
 
 	if (mysqli_query($vbsDBi, $sqlUpdate)){
-		if (DEBUG) print "Line " . __LINE__ . "-Updated Staff record ".$_POST['staff_id']."<br>";
+		if (DEBUG) print  __LINE__ . "-Updated Staff record ".$_POST['staff_id']."<br>";
 		writeLog(FILE_NAME . $sqlUpdate);
 	}
 	else {
-		if (DEBUG) print "Line " . __LINE__ . "Update error in Quick save.  See log file.<br>";
+		if (DEBUG) print  __LINE__ . "Update error in Quick save.  See log file.<br>";
 		$sqlErr = mysqli_error($vbsDBi);
 		writeErr(FILE_NAME . "Error:", "Staff:QuickSave", __LINE__, $sqlErr);
 		writeErr(FILE_NAME . "SQL Statement:", __FUNCTION__, __LINE__, $sqlUpdate);
@@ -71,8 +71,11 @@ function validate($form){
 	/* First check if the registration flag is on.  If this person is not registering this year,
 	 * don't both validating the form and frustrating the user.
 	 */
-	if (DEBUG) print_r($form);
-	if (DEBUG) print "<br>";
+	if (DEBUG){
+        print __LINE__;
+        print_r($form);
+        print "<br>";
+	}
 	if (isset($form['registered']) && $form['registered'] == 'N') return true;
 	
 	/* Mandatory form elements */	
@@ -98,7 +101,7 @@ function validate($form){
 
 	/* Check for missing element, i.e. check boxes, radio boxes */
 	$missing = array_diff_key($mustExist, $form);		/* returns keys in mustExist but not in form */
-	if (DEBUG) print "Line " . __LINE__ . "-Validate:radiobutton<br>";
+	if (DEBUG) print __LINE__ . "-Validate:radiobutton<br>";
 	foreach ($missing as $key => $value){
 		$errMsg .= $value . ",";
 		$error = true;
@@ -109,7 +112,7 @@ function validate($form){
 	/* Check for options not selected */
 	$selected = array_intersect_key($form,$selectedLists);
 	foreach ($selected as $key=>$value){
-		if (DEBUG) print "Selected key: " . $key . "-" . $value ."<br>";
+		if (DEBUG) print __LINE__ . "-Selected key: " . $key . "-" . $value ."<br>";
 		if (contains_substr($value, "Select")){
 			$error = true;
 			$errMsg .= $selectedLists[$key] . ",";
@@ -181,11 +184,11 @@ $numStudents =(empty($_POST['numStudents'])) ? 0 : $_POST['numStudents'];
 
 if (DEBUG){
 	if (isset($_POST['nursery']) ) {
-		print "Staff Nursery _POST = " . $_POST['nursery'] . "<br>";
+		print __LINE__ . "-Staff Nursery _POST = " . $_POST['nursery'] . "<br>";
 	}
 	else
 	{
-		print "Staff Nursery _POST is null";
+		print __LINE__ . "-Staff Nursery _POST is null<br>";
 	}
 }
 
@@ -197,19 +200,19 @@ $button['NextPage'] = '';
 
 
 if (empty($_REQUEST['submit'])){	
-	if (DEBUG) print "Line " . __LINE__ . "<br>";
+	if (DEBUG) print __LINE__ . '$_REQUEST[\'submit\'] is empty <br>';
 	/* Entering from registration menu.  Perform initial population */
-	$_REQUEST['submit']='';		/* Set this to blank to avoid unset errors and skip the switch statement */
-	$offset = 0;	/* Display the first record of the series */
+	$_REQUEST['submit']='';    /* Set this to blank to avoid unset errors and skip the switch statement */
+	$offset = 0;                       /* Display the first record of the series */
 }
 elseif ($_REQUEST['submit']=='Redisplay'){
-	if (DEBUG) print "Line " . __LINE__ . "<br>";
+	if (DEBUG) print __LINE__ . '$_REQUEST[\'submit\'] is ' . $_REQUEST['submit'] . "<br>";
 	/* We really do nothing here except skip the whole switch statement section */
 }
 else {
+if (DEBUG) print __LINE__ . " " . $_POST['submit'] . "<br>";
 switch ($_POST['submit']) {
 	case NEW_BUTTON :
-		if (DEBUG) print "Line " . __LINE__ . "-New<br>";
 		/* Create a blank array */
 		$row_rsStudent = array();
 		$row_rsStudent['first_name'] = $row_rsStudent['last_name'] = $row_rsStudent['age_group'] = $row_rsStudent['classroom'] = '';
@@ -263,19 +266,19 @@ switch ($_POST['submit']) {
 				(isset($_POST['age_group'])?$_POST['age_group']:'')
 				);
 			if (mysqli_query($vbsDBi, $sqlStmt)){
-				if (DEBUG) print "Line " . __LINE__ . "<br>";
-				writeLog($sqlStmt);
 				/* Here we must redirect back to ourself to prevent a duplicate if the user refreshes the browser */
 				header("Location: staff.php?submit=Redisplay");
 			}
 			else {
-				$sqlErr = mysqli_error($vbsDBi);
-				if (DEBUG) print "Line " . __LINE__ . " " . $sqlErr . "<br>";
-				writeErr("Error: ", "Staff:Save", __LINE__, $sqlErr);
+			    if (DEBUG) print __LINE__ . "-Error: " . $sqlStmt . "<br>";
+			    writeLog(FILE_NAME . __LINE__ . " " . $sqlStmt);
+			    $sqlErr = mysqli_error($vbsDBi);
+				if (DEBUG) print __LINE__ . " " . $sqlErr . "<br>";
+				writeErr("Error: ", FILE_NAME, __LINE__, $sqlErr);
 			}
 		}
 		else{
-			writeLog("Validation failed for " . $_POST['staff_id']);
+			writeLog(FILE_NAME . __LINE__ . " Validation failed for " . $_POST['staff_id']);
 			$validateError = true;
 			/* Set value and checked for the registered attribute.  We do not need to account for
 			   a 'C' value here because this is a new record.  It can only be Y | N */
@@ -299,7 +302,6 @@ switch ($_POST['submit']) {
 	case NEXT_RECORD :
 	case LAST_RECORD :
 	case "Update" :
-		if (DEBUG) print "Line " . __LINE__ . "<br>";
 		/* Get outta here if this staff person is not registering */
 		if (isset($_POST['registered']) && $_POST['registered']=='Y') {
 		
@@ -329,14 +331,14 @@ switch ($_POST['submit']) {
 					(isset($_POST['fri'])  ? 'Y' : 'N')
 				);
 				$sqlStmt .= $sqlWhere;
-				if (DEBUG) print $sqlStmt;
+				if (DEBUG) __LINE__ . "-" . print $sqlStmt;
 				if (mysqli_query($vbsDBi, $sqlStmt)){
-					if (DEBUG) print "Line " . __LINE__ . "<br>";
-					writeLog($sqlStmt);
+					if (DEBUG) print __LINE__ . "<br>";
+					writeLog(FILE_NAME . __LINE__ . " " . $sqlStmt);
 				}
 				else {
 					$sqlErr = mysqli_error($vbsDBi);
-					writeErr("Error update staff ", "Staff:Update", __LINE__, $sqlErr);
+					writeErr("Error updating staff ", FILE_NAME, __LINE__, $sqlErr);
 				}
 			}
 			else {
@@ -345,32 +347,39 @@ switch ($_POST['submit']) {
 		}
 		/* Case wthin a case.  This sub-case controls the pagination, i.e. where we go next
 		  while consolidating all the update functionality within the same piece of code */
-		quickSave();
+		
 		switch ($_REQUEST['submit']) {
 			case FIRST_RECORD :
-				if (DEBUG) print "Line " . __LINE__ . "-First<br>";
+			    quickSave();
+				if (DEBUG) print __LINE__ . "-First<br>";
 				$offset = 0;
 				break;
 			case PREVIOUS_RECORD :
-				if (DEBUG) print "Line " . __LINE__ . "-Previous<br>";
+				if (DEBUG) print __LINE__ . "-Previous<br>";
+				quickSave();
 				$offset = $offset - 1;
 				break;
 			case NEXT_RECORD :		
-				if (DEBUG) print "Line " . __LINE__ . "-Next<br>";
+				if (DEBUG) print __LINE__ . "-Next";
+				quickSave();
 				$offset = $offset + 1;
 				break;
 			case LAST_RECORD :
-				if (DEBUG) print "Line " . __LINE__ . "-Last<br>";
+				if (DEBUG) print __LINE__ . "-Last";
+				quickSave();
 				$offset = $numStudents -1;
 				break;
 			case HOME_BUTTON :
+			    quickSave();
 				header("Location: " . HOME_PAGE);
 				break;
 			case NEXT_PAGE :
-			    writeLog(FILE_NAME . __LINE__ .'NEXT_PAGE case processed where countStaffNursery = ') . gotoStaffNursery();
+			    quickSave();
+			    writeLog(FILE_NAME . __LINE__ .' NEXT_PAGE case processed where countStaffNursery = ') . gotoStaffNursery();
 				header("Location: " . (gotoStaffNursery() ? STAFF_NURSERY_PAGE : SUMMARY_PAGE));
 				break;
 			case PREVIOUS_BUTTON :
+			    quickSave();
 				header("Location: " . STUDENT_PAGE);
 				break;
 		}
@@ -378,27 +387,30 @@ switch ($_POST['submit']) {
 	}
 }
 /*  The above switch statement will set the offset if doing pagination.
-    If entering the first time, pagination will be set to display the first student.
+    If entering the first time, pagination will be set to display the first staff member.
 	If updating or registering, pagination will remain the same and the same record will display.
 	We always requery the database to update the screen except when validate error is true.
 */
 
 if ($validateError){
-	if (DEBUG) print "Line " . __LINE__ . "-Validation Error<br>";
+	if (DEBUG) print __LINE__ . "-Validation Error<br>";
 	/* Restore the submitted values to redislay for fixing */
 	$row_rsStudent = $_POST;
 	}
 else {
 	if ($_REQUEST['submit']=="New"){
-		if (DEBUG) print "Line " . __LINE__ . "-New<br>";
+		if (DEBUG) print __LINE__ . "-New<br>";
 		$numStudents = 0;}
 	else {
-		if (DEBUG) print "Line " . __LINE__ . "-Validation OK: Redisplay<br>";
-		//$query_rsStudent = "SELECT * FROM staff WHERE family_id=".$_SESSION['family_id'];
+		if (DEBUG) print __LINE__ . "-Validation Passed. Selecting record from database for family_id " . $_SESSION['family_id'] . "<br>";
 		$query_rsStudent = "SELECT staff_id, family_id, first_name, last_name, Assignment, picture, mon, tue, wed, thur, fri, kitchen, craft, classroom, nursery, anything, shirt_size, teach_with, age_group, confo, registered, comments, create_date, last_update, deleted FROM staff WHERE family_id=".$_SESSION['family_id'];
+		if (DEBUG) writeLog(FILE_NAME . __LINE__ . "-" . $query_rsStudent);
 		$all_rsStudent = mysqli_query($vbsDBi, $query_rsStudent);
+		if (DEBUG and $all_rsStudent===FALSE) writeLog(FILE_NAME . __LINE__ . "-SQL Query failed.");
 		$numStudents = mysqli_num_rows($all_rsStudent);
-		if ($_REQUEST['submit']=='Redisplay') $offset = $numStudents-1;  /* Go to last record */
+		if (DEBUG) print __LINE__ . "-Number of staff rows selected: $numStudents <br>";
+
+		if ($_REQUEST['submit']=='Redisplay') $offset = $numStudents-1;  /* Go to current record */
 		$query_limit_rsStudent = sprintf("%s LIMIT %d, %d", $query_rsStudent, $offset, $numStudents);
 		$rsStudent = mysqli_query($vbsDBi, $query_limit_rsStudent);
 		$row_rsStudent = mysqli_fetch_assoc($rsStudent);
@@ -434,6 +446,11 @@ else{
 	$registered = false;
 }
 
+/* Trick:  Here we test for an existing staff_id.  If not a number, then we default to zero.  This tricks
+ *         the code into behaving like someone clicked the 'new' button and properly processes the data.
+ */
+//@@
+print "Staff id: " . $row_rsStudent['staff_id'] . "<br>";
 $staffID = $row_rsStudent['staff_id'];
 
 /* Set the button disabled properties */
