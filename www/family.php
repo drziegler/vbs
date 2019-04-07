@@ -3,6 +3,8 @@ session_start();
 include('vbsUtils.inc');
 require_once('Connections/vbsDB.php');
 define("FILE_NAME", "[FAMILY] ");
+/* Initialize here in case we don't find a zip code match */
+$city = $state = '';
 if (DEBUG){
     print "Session variables: ";
     print_r($_SESSION);
