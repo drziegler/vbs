@@ -45,9 +45,9 @@ function validate($form){
 		Return true if the form passed validation and is ready to save.
 		Return false if the form failed validation and cannot be saved.
 	*/
-	$error = false;
+	$error = FALSE;
 	global $errMsgText;
-	$errMsg = "";		/* clear out an previous messages */
+	$errMsg = "";		/* clear out any previous messages */
 	/* Mandatory form elements */	
 	$mustExist  = array('picture'=>'Picture', 'registered'=>'Attending VBS?');
 	$notBlank   = array('first_name'=>'First Name', 'last_name'=>'Last Name', 'birthdate'=>'Birthdate');
@@ -65,7 +65,7 @@ function validate($form){
 	foreach ($blanks as $key => $value){
 		if (strlen($value)===0){
 			$errMsg .= $notBlank[$key] . ",";
-			$error = true;
+			$error = TRUE;
 		}
 	}
 
@@ -73,7 +73,7 @@ function validate($form){
 	$missing = array_diff_key($mustExist, $form);		/* returns keys in mustExist but not in form */
 	foreach ($missing as $key => $value){
 		$errMsg .= $value . ",";
-		$error = true;
+		$error = TRUE;
 	}
 	/* If the element is missing, add a blank one to the array to avoid display errors */
 	$_POST = array_merge($_POST, $missing);	
@@ -82,7 +82,7 @@ function validate($form){
 	$selected = array_intersect_key($form,$selectLists);
 	foreach ($selected as $key=>$value){
 		if (contains_substr($value, "Select")){
-			$error = true;
+			$error = TRUE;
 			$errMsg .= $selectLists[$key] . ",";
 		}
 	}
@@ -93,7 +93,7 @@ function validate($form){
 }
 function check4dupes($form){
 	
-	$dupeExists = false;
+	$dupeExists = FALSE;
 	$sql = "Select count(*) from students ";
 	$sql .= "WHERE first_name='" . $form['first_name'] . "'";
 	$sql .= " AND last_name='" . $form['last_name'] . "'";
@@ -106,7 +106,7 @@ function check4dupes($form){
 		print_r($rowCount);
 		print "<br>";
 	}
-	if ($rowCount[0] > 1) $dupeExists = true;
+	if ($rowCount[0] > 1) $dupeExists = TRUE;
 	$recCount->close();
 	
 	$GLOBALS['errMsgText'] = "Duplicate student. Update existing record.";
@@ -116,9 +116,9 @@ function check4dupes($form){
 /* * * * * * * * *    MAIN   * * * * * * * * * * * * * * * * * */
 require_once('Connections/vbsDB.php');
 include('vbsUtils.inc');
-define('FILE_NAME', 'STUDENT');
+define('FILE_NAME', '[STUDENT] ');
 
-$validateError = false;
+$validateError = FALSE;
 $yesVal = $yesChk = $noChk = $fldEnabled = $errMsgText = "";
 $numStudents =(empty($_POST['numStudents'])) ? 0 : $_POST['numStudents'];
 
@@ -130,9 +130,9 @@ $button['NextPage'] = '';
 
 
 if (empty($_REQUEST['submit'])){	
-	if (DEBUG) print "Line " . __LINE__ . "<br>";
-	/* Entering from registration menu.  Perform initial population */
-	$_REQUEST['submit']='';		/* Set this to blank to avoid unset errors */
+    /* Entering from another page.  $_REQUEST[submit] will be empty. Perform initial population */
+    if (DEBUG) print "Line " . __LINE__ . "<br>";
+	$_REQUEST['submit']='';		/* Set this to blank to prevent unset errors */
 	$offset = 0;				/* Display the first record of the series */
 }
 elseif ($_REQUEST['submit']=='Redisplay' || $_REQUEST['submit']=='Cancel'){
@@ -141,6 +141,9 @@ elseif ($_REQUEST['submit']=='Redisplay' || $_REQUEST['submit']=='Cancel'){
     $offset = 0;
 }
 else {
+    /* We are rePOSTing from _SELF, so the 'submit' action will be populated.  
+     * Take the action defined by each case statment for the action in 'submit' value.
+     */
 	$offset = $_POST['offset'];
 	if (DEBUG) print "Offset: at line " . __LINE__ . " is " . $offset . "<br>";
 switch ($_POST['submit']) {
@@ -172,6 +175,10 @@ switch ($_POST['submit']) {
 		
 		break;
 	case "Save" :   /* Only happens on a new record */
+	    /* If registered is not set to YES, then just do a quickSave with no validations */
+	    if (isset($_POST['registered']) && ($_POST['registered']=='Y' || $_POST['registered']=='C')) {
+	    
+	    }
 		if (validate($_POST) && (check4dupes($_POST) === NO_DUPES)) {
 				if (DEBUG) print "Line " . __LINE__ . "<br>";
 				$errMsg = '';
@@ -225,7 +232,7 @@ switch ($_POST['submit']) {
 			$button['New'] = ' disabled';
 			$_REQUEST['submit']=NEW_BUTTON;
 			$numStudents = 0;
-			$validateError = true;
+			$validateError = TRUE;
 			/* Set value and checked for the registered attribute.  We do not need to account for
 			 a 'C' value here because this is a new record.  It can only be Y | N */
 			if ($_POST['registered']=='Y'){
@@ -238,18 +245,15 @@ switch ($_POST['submit']) {
 			}
 		}
 		break;
-/*@@case HOME_BUTTON :
-	case PREVIOUS_BUTTON :
-	case NEXT_PAGE :
-	case FIRST_RECORD :
-	case PREVIOUS_RECORD :
-	case NEXT_RECORD :
-	case LAST_RECORD :
-	case "Update" :
-*/
 	default:
-		if (isset($_POST['registered'])) {
-			if (validate($_POST)){
+	    /* Any other 'submit' condition requires an update of the record.
+	     * If the registered flag is not set or equal to 'N', then only a quickUpdate() is performed without validation.
+	     * If registered flag is set and not 'N', then a validate is performed before the update.
+	     * If the record updates sucessfully, then we redirect or rePOST as per the 'submit' action.
+	     */
+	    if (isset($_POST['registered']) && !($_POST['registered']=='N')) {
+		    /* Validate only records where the registered value is true.  No use validating someone who is not attending! */
+			if (validate($_POST)){           /* Validation passed */
 				if (DEBUG) print "Line " . __LINE__ . " - Update<br>";
 				$sql = "UPDATE students SET first_name='%s', last_name='%s', birthdate='%s', 
 						class='%s', shirt_size='%s', picture='%s', registered='%s', buddy='%s', comments='%s', last_update=now()";
@@ -266,26 +270,39 @@ switch ($_POST['submit']) {
             				mysqli_real_escape_string($vbsDBi, $_POST['comments'])
                             );
 				$sqlStmt .= $sqlWhere;				
-				if (mysqli_query($vbsDBi, $sqlStmt)){
+				if (mysqli_query($vbsDBi, $sqlStmt)){   /* Update GOOD */
 					if (DEBUG) print "Line " . __LINE__ . "-Updated Student<br>";
 					writeLog(FILE_NAME . __LINE__ . "-Updated student as " . $sqlStmt);
 				}
-				else {
+				else {                                  /* Update FAILED */
 					if (DEBUG) print "Line " . __LINE__ . "Update error.  See log file.<br>";
 					$sqlErr = mysqli_error($vbsDBi);
 					writeErr("Error writing update statement", "Switch:Update", FILE_NAME . __LINE__, $sqlErr);
 					writeErr("SQL Statement: ", "Switch:Update", FILE_NAME . __LINE__, $sqlStmt);
 				}
 			}
-			else {
+			else { /* $_POST Record Validation FAILED */
 				if (DEBUG) print "Line " . __LINE__ . "-Failed validaton<br>";
-				writeLog(FILE_NAME . __LINE__ . "-Validatition failed on Student:Update");
-				$validateError = true;
+				writeLog(FILE_NAME . __LINE__ . "-Validatition failed on update");
+				$validateError = TRUE;
+				/* On error, break out of outer select case statement.
+				 * This prevents moving to another page on failure of a 
+				 * registered student.   All the pagination in the next
+				 * case statement will be skipped. */
+				break;
 			}
 		}
-		/* Do not move QuickSave() here as it will execute upon entry from another form 
-		   The switch statement below ensures it runs only when called from itself.   */
-		quickSave();
+		else {
+		    /* Registered flag is either 1) not set or 2) set to 'N'.  Validation was not performed.
+		     * Do a quickSave to preserve the screen values.  This fixes an issue where changes 
+		     * revert to the database values when registered is set to 'N' or not set at all.   Fixed 4-8-19
+		     */
+		    /* Do not move QuickSave() here as it will execute upon entry from another form
+		     The switch statement below ensures it runs only when called from itself.
+		     4-7-19 : Restesting this logic. Do we need to quickSave because we just updated above?  */
+		    quickSave();
+		    
+		}
 		switch ($_REQUEST['submit']) {
 			case FIRST_RECORD :
 				//quickSave();
@@ -330,16 +347,20 @@ switch ($_POST['submit']) {
 */
 
 if ($validateError){
-	/* Restore the submitted values to redislay for fixing */
+	/* On validation error, restore the submitted values to the row_rsStudent array for redisplay */
     if (DEBUG) {
-        print "Line " . __LINE__ . " Validate Error<br>";
+        print "Line " . __LINE__ . " Validation Error<br>";
         print_r($_POST);
         print "<br>";
     }
-	
 	$row_rsStudent = $_POST;
+    /* Need to reset the registered value variables so the proper state is maintained and displayed */
+	$yesVal = ($row_rsStudent['registered']=='C') ? 'C' : 'Y';
+	$yesChk = ($row_rsStudent['registered']=='Y' || $row_rsStudent['registered']=='C') ? ' checked ' : '';
+	$noChk  = ($row_rsStudent['registered']=='N') ? ' checked ' : '';
+	
 }
-else {
+else {   /* Passed validation */
 	if ($_REQUEST['submit']==NEW_BUTTON){
 		if (DEBUG) print "Line " . __LINE__ . "-New<br>";
 		$numStudents = 0;
@@ -369,7 +390,7 @@ else {
 }
 if (DEBUG) print "Pagination at line " . __LINE__ > ": " . $offset . " of " . $numStudents . "<br>";
 
-$query_rsClassList = "SELECT class FROM class_types WHERE student_opt = true ";
+$query_rsClassList = "SELECT class FROM class_types WHERE student_opt = TRUE ";
 if (iDate('z') > iDate('z', strtotime(VBS_MOM_ME_DEADLINE))){
     $query_rsClassList .= "AND class<>'Mom and Me' ";
 }
