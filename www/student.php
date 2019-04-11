@@ -10,7 +10,7 @@ function quickSave(){
 	global $vbsDBi;
 	if (DEBUG) print "Quick Save<br>";
 	if (DEBUG) print_r($_POST); print "<br>";
-	if (empty($_POST['student_id'])) return;
+	if (empty($_POST['student_id'])) return;       /* New student condition */
 	
 	$sqlUpdate = "update students set ";
 	$sqlUpdate .= "first_name='" . ((strlen(trim($_POST['first_name']))>0) ? trim($_POST['first_name'])  : "") . "'";
@@ -301,8 +301,8 @@ switch ($_POST['submit']) {
 		     The switch statement below ensures it runs only when called from itself.
 		     4-7-19 : Restesting this logic. Do we need to quickSave because we just updated above?  */
 		    quickSave();
-		    
 		}
+		/* Now handle the pagination */
 		switch ($_REQUEST['submit']) {
 			case FIRST_RECORD :
 				//quickSave();
@@ -348,11 +348,6 @@ switch ($_POST['submit']) {
 
 if ($validateError){
 	/* On validation error, restore the submitted values to the row_rsStudent array for redisplay */
-    if (DEBUG) {
-        print "Line " . __LINE__ . " Validation Error<br>";
-        print_r($_POST);
-        print "<br>";
-    }
 	$row_rsStudent = $_POST;
     /* Need to reset the registered value variables so the proper state is maintained and displayed */
 	$yesVal = ($row_rsStudent['registered']=='C') ? 'C' : 'Y';
