@@ -46,6 +46,8 @@ function validate($form){
 		}
 	}
 
+	if (!validatePhoneQuantity()) $errMsgText .= "Need a minimum of two unique phone numbers.";
+	
 	/* This assigns the error text to a variable outside the function */
 	if ($error) $errMsgText = trim($errMsg, ",");
 	return !$error;
@@ -59,6 +61,7 @@ function validatePhoneQuantity(){
 	/* Perform validation. Count must be > 1 */
     $sql = "SELECT count(distinct phone) from phone_numbers where family_id = " . $_SESSION['family_id'];
     $rsPhoneCount = mysqli_fetch_row(mysqli_query($vbsDBi, $sql))[0];
+    if (DEBUG) writelog(FILE_NAME . __LINE__ . "-Unique phone count for fam ID " . $_SESSION['family_id'] . " is " . $rsPhoneCount);
     
     if ($rsPhoneCount < 2){
     	writeLog(FILE_NAME . __LINE__ . " Family id " . $_SESSION['family_id'] . " has insufficient contacts.");
@@ -116,7 +119,7 @@ switch ($_POST['submit']){
 
 		/* First validate the data */
 		$toValidate = $_POST['phone']; 
-		if (validate($toValidate)){
+		if (validate($toValidate)===TRUE){
 			if (DEBUG) print "Line " . __LINE__ . " - Validation passed<br>";
 			/* First get rid of all the existing phones contacts for the family.  We don't know what changed on the screen so we reinsert everything! */
 			$sql = "DELETE from phone_numbers WHERE family_id=" . $_SESSION['family_id'];
@@ -191,7 +194,10 @@ switch ($_POST['submit']){
 		}
 		else{
 			/* Not validated */
-			if (DEBUG) print "Line: " . __LINE__ . " Validation error<br>";
+		    if (DEBUG) {
+		        print "Line: " . __LINE__ . " Validation error<br>";
+		        writeLog(FILE_NAME . __LINE__ . "-Validation error");
+		    }
 			$errMsg = "Please correct missing data.";
 			writeLog(FILE_NAME . __LINE__ . " Validation failed for family id contacts (".$_SESSION['family_id'].")");
 			/* Restore the POSTed data to the screen, break out of here to avoid a requery */
