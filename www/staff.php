@@ -74,7 +74,7 @@ function validate($form){
 	/* Mandatory form elements */	
 	$mustExist  = array('picture'=>'Indicate picture','age_group'=>'Indicate age group','registered'=>'Select \'Yes\' if helping.');
 	$notBlank   = array('first_name'=>'Enter first name', 'last_name'=>'Enter last name');
-	$selectedLists  = array('shirt_size'=>'Shirt size');
+	$selectedLists  = array('shirt_size'=>'Select shirt size');
 	/* Arrays for looping through check boxes */
 	$chkDays = array("mon"=>1, "tue"=>2, "wed"=>3,"thur"=>4,"fri"=>5);
 	$chkAct  = array("classroom"=>1,"craft"=>2,"kitchen"=>3,"anything"=>4);
@@ -97,7 +97,6 @@ function validate($form){
 
 	/* Check for missing element, i.e. check boxes, radio boxes */
 	$missing = array_diff_key($mustExist, $form);		/* returns keys in mustExist but not in form */
-	if (DEBUG) print 'Line '.__LINE__ . " Validate:radiobutton<br>";
 	foreach ($missing as $key => $value){
 		$errMsg .= $value . ",";
 		$error = TRUE;
@@ -119,12 +118,12 @@ function validate($form){
 	if (count(array_intersect_key($chkDays, $form))==0){
 	    if (DEBUG) print "No days selected";
 	    $error = TRUE;
-	    $errMsg .= " Select availability.";
+	    $errMsg .= " Select availability,";
 	}
 	if (count(array_intersect_key($chkAct, $form))==0){
 	    if (DEBUG) print "No areas selected";
 	    $error = TRUE;
-	    $errMsg .= " Select a preference.";
+	    $errMsg .= " Select a preference";
 	}
 	
 	/* This assigns the error text to a variable outside the function */
