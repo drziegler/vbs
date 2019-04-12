@@ -10,10 +10,9 @@ if (empty($_SESSION['family_id'])){
 function quickSave(){
 	global $vbsDBi;
 	if (DEBUG) {
-	    print 'Line '.__LINE.' Quick Save. $_POST = ';
+	    print 'Line '.__LINE__.' Quick Save. $_POST = ';
 		print_r($_POST);
 		print "<br>";
-		print 'Line '.__LINE__.' $row_rsStudent[ ] is_array = ' . (is_array($row_rsStudent)?'TRUE':'FALSE') . '<br>';
 	}
 	
 	if (empty($_POST['staff_id'])) return;       /* New staff condition */
@@ -385,31 +384,25 @@ switch ($_POST['submit']) {
 		/* Now handle the pagination */
 		switch ($_REQUEST['submit']) {
 			case FIRST_RECORD :
-			    //quickSave();
 				if (DEBUG) print __LINE__ . "-First<br>";
 				$offset = 0;
 				break;
 			case PREVIOUS_RECORD :
 				if (DEBUG) print __LINE__ . "-Previous<br>";
-				//quickSave();
 				$offset = $offset - 1;
 				break;
 			case NEXT_RECORD :		
 				if (DEBUG) print __LINE__ . "-Next";
-				//quickSave();
 				$offset = $offset + 1;
 				break;
 			case LAST_RECORD :
 				if (DEBUG) print __LINE__ . "-Last";
-				//quickSave();
 				$offset = $numStudents -1;
 				break;
 			case HOME_BUTTON :
-			    //quickSave();
 				header("Location: " . HOME_PAGE);
 				break;
 			case NEXT_PAGE :
-			    quickSave();
 			    writeLog(FILE_NAME . __LINE__ .' NEXT_PAGE case processed where countStaffNursery = ') . gotoStaffNursery();
 				header("Location: " . (gotoStaffNursery() ? STAFF_NURSERY_PAGE : SUMMARY_PAGE));
 				break;
