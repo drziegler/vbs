@@ -123,11 +123,6 @@ $validateError = FALSE;
 $yesVal = $yesChk = $noChk = $fldEnabled = $errMsgText = "";
 $numStudents =(empty($_POST['numStudents'])) ? 0 : $_POST['numStudents'];
 
-//@@
-//print 'Line '.__LINE__.' $row_rsStudent[ ] is_array = ' . (is_array($row_rsStudent)?'TRUE':'FALSE') . '<br>';
-//print 'Line '.__LINE__.' $row_rsStudent[ ] isset = ' . (isset($row_rsStudent)?'TRUE':'FALSE') . '<br>';
-//print 'Line '.__LINE__.' $row_rsStudent[ ] empty = ' . (empty($row_rsStudent)?'TRUE':'FALSE') . '<br>';
-
 /* Turn on the button display by default */
 $button['New'] = '';
 $button['Home'] = '';
