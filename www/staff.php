@@ -9,8 +9,13 @@ if (empty($_SESSION['family_id'])){
 
 function quickSave(){
 	global $vbsDBi;
-	if (DEBUG) print "Quick Save<br>";
-	if (DEBUG) print_r($_POST); print "<br>";
+	if (DEBUG) {
+	    print 'Line '.__LINE.' Quick Save. $_POST = ';
+		print_r($_POST);
+		print "<br>";
+		print 'Line '.__LINE__.' $row_rsStudent[ ] is_array = ' . (is_array($row_rsStudent)?'TRUE':'FALSE') . '<br>';
+	}
+	
 	if (empty($_POST['staff_id'])) return;       /* New staff condition */
 	
     /* Note:  For all Inserts and Updates ...
@@ -42,11 +47,11 @@ function quickSave(){
     mysqli_real_escape_string($vbsDBi, $sqlUpdate);
 
 	if (mysqli_query($vbsDBi, $sqlUpdate)){
-		if (DEBUG) print  __LINE__ . "-Updated Staff record ".$_POST['staff_id']."<br>";
+		if (DEBUG) print 'Line '.__LINE__ .'  Updated Staff record '.$_POST['staff_id'].'<br>';
 		writeLog(FILE_NAME . $sqlUpdate);
 	}
 	else {
-		if (DEBUG) print  __LINE__ . "Update error in Quick save.  See log file.<br>";
+		if (DEBUG) print 'Line '.__LINE__."  Update error in Quick save.  See log file.<br>";
 		$sqlErr = mysqli_error($vbsDBi);
 		writeErr(FILE_NAME . "Error:", "Staff:QuickSave", __LINE__, $sqlErr);
 		writeErr(FILE_NAME . "SQL Statement:", __FUNCTION__, __LINE__, $sqlUpdate);
@@ -62,13 +67,14 @@ function validate($form){
 		Return TRUE if the form passed validation and is ready to save.
 		Return FALSE if the form failed validation and cannot be saved.
 	*/
-	$error = FALSE;
+    If (DEBUG) print 'Line '.__LINE__.'  Entering validate()<br>';
+    $error = FALSE;
 	global $errMsgText;
 	$errMsg = "";		/* clear out any previous messages */
 
 	/* Mandatory form elements */	
-	$mustExist  = array('picture'=>'Picture','age_group'=>'Over 18','registered'=>'Helping at VBS');
-	$notBlank   = array('first_name'=>'First Name', 'last_name'=>'Last Name');
+	$mustExist  = array('picture'=>'Indicate picture','age_group'=>'Indicate age group','registered'=>'Select \'Yes\' if helping.');
+	$notBlank   = array('first_name'=>'Enter first name', 'last_name'=>'Enter last name');
 	$selectedLists  = array('shirt_size'=>'Shirt size');
 	/* Arrays for looping through check boxes */
 	$chkDays = array("mon"=>1, "tue"=>2, "wed"=>3,"thur"=>4,"fri"=>5);
@@ -92,7 +98,7 @@ function validate($form){
 
 	/* Check for missing element, i.e. check boxes, radio boxes */
 	$missing = array_diff_key($mustExist, $form);		/* returns keys in mustExist but not in form */
-	if (DEBUG) print __LINE__ . "-Validate:radiobutton<br>";
+	if (DEBUG) print 'Line '.__LINE__ . " Validate:radiobutton<br>";
 	foreach ($missing as $key => $value){
 		$errMsg .= $value . ",";
 		$error = TRUE;
@@ -103,7 +109,7 @@ function validate($form){
 	/* Check for options not selected */
 	$selected = array_intersect_key($form,$selectedLists);
 	foreach ($selected as $key=>$value){
-		if (DEBUG) print __LINE__ . "-Selected key: " . $key . "-" . $value ."<br>";
+		if (DEBUG) print 'Line '.__LINE__ . " Selected key: " . $key . "-" . $value ."<br>";
 		if (contains_substr($value, "Select")){
 			$error = TRUE;
 			$errMsg .= $selectedLists[$key] . ",";
@@ -118,28 +124,18 @@ function validate($form){
 	}
 	if (count(array_intersect_key($chkAct, $form))==0){
 	    if (DEBUG) print "No areas selected";
-	    //@@
-	    print __LINE__ . '-';
-	    print_r($form);
-	    print '<br>';
-	    print_r($chkDays);
-	    print '<br>';
-	    //@@
 	    $error = TRUE;
 	    $errMsg .= " Select a preference.";
 	}
 	
-	//@@ TEST
-    print __LINE__ . '-';
-	print_r($_POST);
-	print "<br>";
-	
 	/* This assigns the error text to a variable outside the function */
-	$errMsgText = trim($errMsg, ",") . " required.";
+	$errMsgText = trim($errMsg, ",");
 	return !$error;
 }
 function check4dupes($form){
 	
+    if (DEBUG) print 'LINE '.__LINE__.' Entering check4dupes()<br';
+    if (DEBUG) print 'Line '.__LINE__.' $row_rsStudent[ ] is_array = ' . (is_array($row_rsStudent)?'TRUE':'FALSE') . '<br>';
 	$sql = "Select count(*) from staff ";
 	$sql .= "WHERE first_name='" . $form['first_name'] . "'";
 	$sql .= " AND last_name='" . $form['last_name'] . "'";
@@ -156,6 +152,7 @@ function check4dupes($form){
  * If either condition is true, then the function returns true; otherwise false.
  */
 function gotoStaffNursery(){
+    print 'Line '.__LINE__.' Entering gotoStaffNursery()<br>';
     global $vbsDBi;
     $displayStaffNurseryPage = FALSE;
     
@@ -191,6 +188,8 @@ $validateError = FALSE;
 $staffNurseryExists = FALSE;
 $yesVal = $yesChk = $noChk = $fldEnabled = $errMsgText = "";
 $numStudents =(empty($_POST['numStudents'])) ? 0 : $_POST['numStudents'];
+//@@
+//print 'Line '.__LINE__.' $row_rsStudent[ ] is_array = ' . (is_array($row_rsStudent)?'TRUE':'FALSE') . '<br>';
 
 /* Turn on the button display by default */
 $button['New'] = '';
@@ -199,17 +198,15 @@ $button['Back'] = '';
 $button['NextPage'] = '';
 
 
-//@@ $offset = (empty($_POST['offset'])) ? 0 : $_POST['offset'];
-
 if (empty($_REQUEST['submit'])){
     /* Entering from another page.  $_REQUEST[submit] will be empty. Perform initial population */
-    if (DEBUG) print __LINE__ . '$_REQUEST[\'submit\'] is empty <br>';
+    if (DEBUG) print 'Line '.__LINE__ . ' Coming from another page<br>';
     $_REQUEST['submit']='';		/* Set this to blank to prevent unset errors */
     $offset = 0;				/* Display the first record of the series */
 }
 elseif ($_REQUEST['submit']=='Redisplay' || $_REQUEST['submit']=='Cancel'){
     /* We do nothing here except skip the whole case section */
-    if (DEBUG) print __LINE__ . '$_REQUEST[\'submit\'] is ' . $_REQUEST['submit'] . "<br>";
+    if (DEBUG) print "Line " . __LINE__ . " Redisplay | Cancel<br>";
 	$offset=0;
 }
 else {
@@ -218,10 +215,10 @@ else {
      */
     $offset = $_POST['offset'];
     if (DEBUG) print "Offset: at line " . __LINE__ . " is " . $offset . "<br>";
-    
 switch ($_POST['submit']) {
 	case NEW_BUTTON :
-		/* Create a blank array */
+	    if (DEBUG) print 'Line: ' . __LINE__ . '-NEW Staff<br>';
+	    /* Create a blank array */
 		$row_rsStudent = array();
 		$row_rsStudent['first_name'] = $row_rsStudent['last_name'] = $row_rsStudent['age_group'] = $row_rsStudent['classroom'] = '';
 		$row_rsStudent['registered'] = $row_rsStudent['teach_with'] = $row_rsStudent['comments'] = $row_rsStudent['picture'] = '';
@@ -248,7 +245,8 @@ switch ($_POST['submit']) {
 		break;
 	case "Save" :                  /* ONLY HAPPENS ON A NEW RECORD */
 		if (validate($_POST)) {
-			$errMsg = '';
+		    if (DEBUG) print "Line " . __LINE__ . " Save - passed validation<br>";
+		    $errMsg = '';
 			/* This is a new record to insert */
 			$sql = "INSERT into staff (family_id, first_name, last_name, shirt_size, picture, registered, teach_with, confo, ";
 			$sql .= "classroom, nursery, craft, kitchen, anything, mon, tue, wed, thur, fri, age_group, create_date, last_update)";
@@ -273,34 +271,30 @@ switch ($_POST['submit']) {
 				(isset($_POST['thur'])     ?'Y':'N'),
 				(isset($_POST['fri'])      ?'Y':'N'),
 				(isset($_POST['age_group'])?$_POST['age_group']:'')
-				);
-    			/* Get the new staff id after insert */
-    			writelog(FILE_NAME . __LINE__ . "-" . $sqlStmt);
-    			if (mysqli_query($vbsDBi, $sqlStmt)){
-    			    if (DEBUG) print "Line " . __LINE__ . "<br>";
-    			    $row_rsStudent['staff_id'] = mysqli_insert_id($vbsDBi);
-    			    if (DEBUG) print "Local Offset is " . $offset . "<br>";
-    			    if (DEBUG) print "POST Offset is " . $_POST['offset'] . "<br>";
-    			    if (DEBUG) print "NumStaff is " . $_POST['numStudents'] . "<br>";
-    			    writeLog(FILE_NAME . __LINE__ . "-Student id inserted as " . $sqlStmt);
-    			    
-    			    /* Here we must redirect back to ourself to prevent a duplicate if the user refreshes the browser
-    			     * Redisplay just forces the code past the switch statement as there is no Redisplay option
-    			     */
-    			    header("Location: staff.php?submit=Redisplay");
-    			}
-    			else {
-    			    if (DEBUG) print "Line " . __LINE__ . "<br>";
-    			    $sqlErr = mysqli_error($vbsDBi);
-    			    writeErr(FILE_NAME . __LINE__ . "-Error writing insert statement", "Save", __LINE__, $sqlErr);
-    			}
-                //@@ This will need page control. 
-    			//@@ ??if ($_POST['submit']==="Next Page") header("Location: " . STAFF_NURSERY_PAGE);
-
-			
+			);
+			/* Get the new staff id after insert */
+			writelog(FILE_NAME . __LINE__ . "-" . $sqlStmt);
+			if (mysqli_query($vbsDBi, $sqlStmt)){
+			    if (DEBUG) print "Line " . __LINE__ . "<br>";
+			    $row_rsStudent['staff_id'] = mysqli_insert_id($vbsDBi);
+			    if (DEBUG) print "Local Offset is " . $offset . "<br>";
+			    if (DEBUG) print "POST Offset is " . $_POST['offset'] . "<br>";
+			    if (DEBUG) print "NumStaff is " . $_POST['numStudents'] . "<br>";
+			    writeLog(FILE_NAME . __LINE__ . "-Student id inserted as " . $sqlStmt);
+			    
+			    /* Here we must redirect back to ourself to prevent a duplicate if the user refreshes the browser
+			     * Redisplay just forces the code past the switch statement as there is no Redisplay option
+			     */
+			    header("Location: staff.php?submit=Redisplay");
+			}
+			else {
+			    if (DEBUG) print "Line " . __LINE__ . "<br>";
+			    $sqlErr = mysqli_error($vbsDBi);
+			    writeErr(FILE_NAME . __LINE__ . "-Error writing insert statement", "Save", __LINE__, $sqlErr);
+			}
 		}
 		else{     /* Code can branch here only if new staff member is not validated */
-		    if (DEBUG) print "Line " . __LINE__ . "Validation failed for new record<br>";
+		    if (DEBUG) print "Line " . __LINE__ . " Save - failed validation<br>";
 		    writeLog(FILE_NAME . __LINE__ . "-Validation failed for " . $_POST['first_name'] . ' ' . $_POST['last_name']);
 		    $button['Home'] = ' disabled';
 		    $button['Back'] = ' disabled';
@@ -321,17 +315,6 @@ switch ($_POST['submit']) {
 		    }
 		}
 		break;
-        /*@@ THIS IS OLD CODE 		    
-			$yesVal = 'Y';
-
-	case HOME_BUTTON :
-	case PREVIOUS_BUTTON :
-	case NEXT_PAGE :
-	case FIRST_RECORD :
-	case PREVIOUS_RECORD :
-	case NEXT_RECORD :
-	case LAST_RECORD :
-	case "Update" :  */
 	default:
 	    /* Any other 'submit' condition requires an update of the record.
 	     * If the registered flag is not set or equal to 'N', then only a quickUpdate() is performed without validation.
@@ -341,7 +324,7 @@ switch ($_POST['submit']) {
 	    if (isset($_POST['registered']) && !($_POST['registered']=='N')) {
 	        /* Validate only records where the registered value is true.  No use validating someone who is not attending! */
 	        if (validate($_POST)){           /* Validation passed */
-                if (DEBUG) writeLog(FILE_NAME . __LINE__ . '-Registered button selected');		
+	            if (DEBUG) print "Line " . __LINE__ . " Update - PASSED validation<br>";
                 $sql = "UPDATE staff SET first_name='%s', last_name='%s', shirt_size='%s', picture='%s', registered='%s',teach_with='%s', comments='%s', age_group='%s', ";
                 $sql .= "classroom='%s',nursery='%s',craft='%s', kitchen='%s', anything='%s', mon='%s', tue='%s', wed='%s', thur='%s', fri='%s', ";
                 $sql .= "last_update=now()";
@@ -455,18 +438,18 @@ if ($validateError){        /* FAILED validation */
 	}
 else {                      /* PASSED validation */
 	if ($_REQUEST['submit']==NEW_BUTTON){
-		if (DEBUG) print __LINE__ . "-New<br>";
+		if (DEBUG) print 'Line '.__LINE__ . " New record<br>";
 		$numStudents = 0;
 		$fldEnabled = '';
 	}
 	else {
-		if (DEBUG) print __LINE__ . "-Validation Passed. Selecting record from database for family_id " . $_SESSION['family_id'] . "<br>";
+		if (DEBUG) print 'Line '.__LINE__ . " Validation Passed. Selecting record from database for family_id " . $_SESSION['family_id'] . "<br>";
 		$query_rsStudent = "SELECT staff_id, family_id, first_name, last_name, Assignment, picture, mon, tue, wed, thur, fri, kitchen, craft, classroom, nursery, anything, shirt_size, teach_with, age_group, confo, registered, comments, create_date, last_update, deleted FROM staff WHERE family_id=".$_SESSION['family_id'];
 		if (DEBUG) writeLog(FILE_NAME . __LINE__ . "-" . $query_rsStudent);
 		$all_rsStudent = mysqli_query($vbsDBi, $query_rsStudent);
 		if (DEBUG and $all_rsStudent===FALSE) writeLog(FILE_NAME . __LINE__ . "-SQL Query failed.");
 		$numStudents = mysqli_num_rows($all_rsStudent);
-		if (DEBUG) print __LINE__ . "-Number of staff rows selected: $numStudents <br>";
+		if (DEBUG) print'Line '. __LINE__ . " Number of staff rows selected: $numStudents <br>";
 
 		if ($_REQUEST['submit']=='Redisplay') $offset = $numStudents-1;  /* Go to current record */
 		$query_limit_rsStudent = sprintf("%s LIMIT %d, %d", $query_rsStudent, $offset, $numStudents);
@@ -478,7 +461,7 @@ else {                      /* PASSED validation */
 		$yesChk = ($row_rsStudent['registered']=='Y' or $row_rsStudent['registered']=='C') ? ' checked ' : '';
 		$noChk  = ($row_rsStudent['registered']=='N') ? ' checked ' : '';
 
-		if (DEBUG) print "Number of staff: " . $numStudents . "<br>";
+		if (DEBUG) print 'Line '.__LINE__." Number of staff: $numStudents <br>";
 		if ($numStudents==0) {
 		    $_REQUEST['submit']=NEW_BUTTON;
 		    /* If there are no students on record, disable the input fields.  User required to press new button */
@@ -486,7 +469,7 @@ else {                      /* PASSED validation */
 		}
 	}
 }
-if (DEBUG) print "Pagination at line " . __LINE__ > ": " . $offset . " of " . $numStudents . "<br>";
+if (DEBUG) print 'Line '.__LINE__." Pagination: $offset of $numStudents <br>";
 
 $query_rsClassList = "SELECT class FROM class_types WHERE staff_opt = true ORDER BY disp_order";
 $rsClassList = mysqli_query($vbsDBi, $query_rsClassList);
@@ -512,15 +495,6 @@ $button['Previous'] = ($numStudents > 1 and $offset > 1) ? '' : ' disabled';
 $button['Next'] = ($numStudents > 1 and $offset<($numStudents)) ? '' : ' disabled';
 $button['Last'] = ($numStudents > 2 and $offset<($numStudents-1)) ? '' : ' disabled';
 $offset = --$offset;
-
-/* @@ TESTING */
-print_r($row_rsStudent);
-print "<br>";
-if (array_key_exists('mon', $row_rsStudent)) {
-    print 'Monday exists';
-} else {
-    print 'Monday does not exist';
-}
 
 ?>
 <!doctype html>
@@ -556,20 +530,20 @@ if (array_key_exists('mon', $row_rsStudent)) {
 			<label><input type="radio" name="registered" id="reg-yes" value="<?php echo $yesVal?>" <?php echo $yesChk . $fldEnabled?>> Yes</label>
             <label><input type="radio" name="registered" id="reg-no" value="N" <?php echo $noChk . $fldEnabled?>> No</label>
 			</td></tr>
-		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter the first name of the staff volunteer.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']; ?>" maxlength="20" <?php echo $fldEnabled ?>></td></tr>
-		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter the last name of the staff volunteer.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20" <?php echo $fldEnabled ?>></td></tr>
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter the first name of the staff volunteer.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']; ?>" maxlength="20" <?php echo $fldEnabled ?> style="width:60%"></td></tr>
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter the last name of the staff volunteer.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20" <?php echo $fldEnabled ?> style="width:60%"></td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAvail')">Availability<span class="popuptext" id="hAvail">Select the days you are available to help during the week of VBS.  You must select at least one day.</span></span></td><td class="value">
-            <input type="checkbox" name="mon" value="Y" <?php echo ((array_key_exists('mon',$row_rsStudent) && $row_rsStudent['mon']=='Y')?'checked ':'') . $fldEnabled;?>>&nbsp;Mo
-            <input type="checkbox" name="tue" value="Y" <?php echo ((array_key_exists('tue',$row_rsStudent) && $row_rsStudent['tue']=='Y')?'checked ':'') . $fldEnabled;?>>&nbsp;Tu
-            <input type="checkbox" name="wed" value="Y" <?php echo ((array_key_exists('wed',$row_rsStudent) && $row_rsStudent['wed']=='Y')?'checked ':'') . $fldEnabled;?>>&nbsp;We
-            <input type="checkbox" name="thur" value="Y" <?php echo ((array_key_exists('thur',$row_rsStudent) && $row_rsStudent['thur']=='Y')?'checked ':'') . $fldEnabled;?>>&nbsp;Th
-            <input type="checkbox" name="fri" value="Y" <?php echo ((array_key_exists('fri',$row_rsStudent) && $row_rsStudent['fri']=='Y')?'checked ':'') . $fldEnabled;?>>&nbsp;Fr
+            <input type="checkbox" name="mon" value="Y" <?php echo (empty($row_rsStudent['mon'])||$row_rsStudent['mon']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Mo
+            <input type="checkbox" name="tue" value="Y" <?php echo (empty($row_rsStudent['tue'])||$row_rsStudent['tue']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Tu
+            <input type="checkbox" name="wed" value="Y" <?php echo (empty($row_rsStudent['wed'])||$row_rsStudent['wed']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;We
+            <input type="checkbox" name="thur" value="Y" <?php echo (empty($row_rsStudent['thur'])||$row_rsStudent['thur']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Th
+            <input type="checkbox" name="fri" value="Y" <?php echo (empty($row_rsStudent['fri'])||$row_rsStudent['fri']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Fr
         </td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hPref')">Preferences<span class="popuptext" id="hPref">If you are particular about where you help, check only those boxes for the area in which you have an interest.  You must select at least one.</span></span></td><td class="value">
-	        <input type="checkbox" name="classroom" value="Y" <?php echo ((array_key_exists('classroom',$row_rsStudent) && $row_rsStudent['classroom']=='Y')?'checked ':'') . $fldEnabled;?>>&nbsp;Classroom
-			<input type="checkbox" name="craft" value="Y" <?php echo ((array_key_exists('craft',$row_rsStudent) && $row_rsStudent['craft']=='Y')?'checked ':'') . $fldEnabled;?>>&nbsp;Craft
-            <input type="checkbox" id="kitchen" name="kitchen" value="Y" <?php echo ((array_key_exists('kitchen',$row_rsStudent) && $row_rsStudent['kitchen']=='Y')?'checked ':'') . $fldEnabled;?>>&nbsp;Kitchen
-            <input type="checkbox" name="anything" value="Y" <?php echo ((array_key_exists('anything',$row_rsStudent) && $row_rsStudent['anything']=='Y')?'checked ':'') . $fldEnabled;?>>&nbsp;Anything
+	        <input type="checkbox" name="classroom" value="Y" <?php echo (empty($row_rsStudent['classroom'])||$row_rsStudent['classroom']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Classroom
+			<input type="checkbox" name="craft" value="Y" <?php echo (empty($row_rsStudent['craft'])||$row_rsStudent['craft']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Craft
+            <input type="checkbox" id="kitchen" name="kitchen" value="Y" <?php echo (empty($row_rsStudent['kitchen'])||$row_rsStudent['kitchen']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Kitchen
+            <input type="checkbox" name="anything" value="Y" <?php echo (empty($row_rsStudent['anything'])||$row_rsStudent['anything']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Anything
 	    <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hShirt')">Shirt Size<span class="popuptext" id="hShirt">Select the shirt size you want for this volunteer.  T-Shirt are only available for those who register before <?php echo VBS_SHIRT_DEADLINE_MMDDYYYY?></span></span></td><td class="value"><select name="shirt_size" <?php echo $fldEnabled?>>
       <?php
 do {  
@@ -594,11 +568,11 @@ do {
             <label><input type="radio" name="age_group" value="Youth" <?php echo (strcasecmp($row_rsStudent['age_group'],"Youth")==0 ? "checked " : "") . $fldEnabled;?>>&nbsp;No</label>
     	</td></tr>
         <tr><td class="label"><span class="popup" onclick="myPopUp('nursery')">I need staff nursery<span class="popuptext" id="nursery">Check this box if you have a child under 3 and want to place them in the staff nursery.  You will be guided to register the child on the next page.  Leave box unchecked if you do not need these services. If a staff nursery record already exists, the text "Staff nursery registrant exists" will appear adjacent to the check box.</span></span></td><td class="value">
-            <label><input type="checkbox" name="nursery" <?php echo ((array_key_exists('nursery',$row_rsStudent) && $row_rsStudent['nursery']=='Y')?'checked ':'') . $fldEnabled;?>></label> <?php if ($staffNurseryExists) echo "Staff nursery registrant exists"?>
+            <label><input type="checkbox" name="nursery" <?php echo (empty($row_rsStudent['nursery']) || $row_rsStudent['nursery']=='N'?'':'checked ') . $fldEnabled;?>></label> <?php if ($staffNurseryExists) echo "Staff nursery registrant exists"?>
     	</td></tr>
 		<tr>
-          <td class="label"><span class="popup" onclick="myPopUp('hClass')">I want to help in my child's class<span class="popuptext" id="hClass">If you want to be in the same class as your child, enter the child's name in this space.</span></span></td><td class="value"><input type="text" name="teach_with" placeholder="Your child's name and grade" value="<?php echo $row_rsStudent['teach_with']; echo $fldEnabled;?>"></td></tr>
-        <tr><td class="label"><span class="popup" onclick="myPopUp('hComment')">Comments<span class="popuptext" id="hComment">This block is for comments specifically related to this volunteer.  Comments are optional.</span></span></td><td class="value"><textarea name="comments" <?php echo $fldEnabled?>><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
+          <td class="label"><span class="popup" onclick="myPopUp('hClass')">I want to help in my child's class<span class="popuptext" id="hClass">If you want to be in the same class as your child, enter the child's name in this space.</span></span></td><td class="value"><input type="text" name="teach_with" placeholder="Your child's name and grade" value="<?php echo $row_rsStudent['teach_with'];?>" <?php echo $fldEnabled;?> style="width:60%"></td></tr>
+        <tr><td class="label"><span class="popup" onclick="myPopUp('hComment')">Comments<span class="popuptext" id="hComment">This block is for comments specifically related to this volunteer.  Comments are optional.</span></span></td><td class="value"><textarea name="comments"<?php echo $fldEnabled?> ><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
         <tr><td>*&nbsp;required  <span class="popup" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to register volunteers for the week of VBS.  Volunteers must be in 7th grade or older.  Click the underlined labels for detailed popup help. Click again to close it.</span></span></td><td class="value">
    		<?php if ($staffID==0) { ?>
 			<input type="submit" name="submit" value="Save">&nbsp;
