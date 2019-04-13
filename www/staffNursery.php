@@ -116,7 +116,7 @@ function check4dupes($form){
 /*******************************    MAIN  ***********************************/
 require_once('Connections/vbsDB.php');
 include('vbsUtils.inc');
-define('FILE_NAME', '[STAFF_NURSERY ]');
+define('FILE_NAME', '[STAFF_NURSERY] ');
 $validateError = FALSE;
 $yesVal = $yesChk = $noChk = $fldEnabled = $errMsgText = "";
 $numStudents =(empty($_POST['numStudents'])) ? 0 : $_POST['numStudents'];
