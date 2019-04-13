@@ -9,7 +9,6 @@ body { margin: 0; line-height: 1.231; }
 body, input, select, textarea {
 	font-family: sans-serif;
 	color: #222;
-	color: red;
 }
 img, object, embed, video {
 	max-width: 100%;
