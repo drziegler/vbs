@@ -7,6 +7,7 @@ require_once('Connections/vbsDB.php');
 define("SUBMIT_REGISTRATION", "Submit Registration");
 define("CANCEL_REGISTRATION", "Cancel");
 define("FILE_NAME", '[CONFIRM] ');
+
 $family = array();
 $studentTotal = 0;
 $staffTotal = 0;
@@ -25,14 +26,14 @@ function confirm($famID){
 
 
 	$sql="update students set registered='C' where registered='Y' and family_id=$famID";
-	writeLog(FILE_NAME . __LINE__ . $sql);
+	writeLog(FILE_NAME . __LINE__ .'  '.$sql);
 	if (!mysqli_query($vbsDBi, $sql)){
 		writeErr("Unable to confirm students for famID $famID.", __FUNCTION__, __LINE__, 2001);
 		$studentsConfirmed=false;
 	}
 
 	$sql="update staff set registered='C' where registered='Y' and family_id=$famID";
-	writeLog(FILE_NAME . __LINE__ . $sql);
+	writeLog(FILE_NAME . __LINE__ .'  '.$sql);
 	if (!mysqli_query($vbsDBi, $sql)){
 		writeErr("Unable to confirm staff for famID $famID.", __FUNCTION__, __LINE__, 2002);
 		$staffConfirmed=false;
@@ -66,7 +67,7 @@ function sendVBSmail($famID){
 	ini_set("sendmail_from", "vbs@hopecherryville.org");
 
 
-	$mail_status = mail("david@the-zieglers.com", SUBJECT, $mailbody, $mail_header);
+	$mail_status = mail("david@the-zieglers.com", 'VBS Registration', $mailbody, $mail_header);
 //@@TEST	$mail_status = mail(VBS_EMAIL, 'VBS Registration', $mailbody, $mail_header);
 	if(!$mail_status){
          writeLog(FILE_NAME . __LINE__ . "  Mail could not be sent due to an error while trying to send the mail.  Mail status is $mail_status");
@@ -75,11 +76,11 @@ function sendVBSmail($famID){
 	/* HLR lookup api - to get mobil carrier name */
 
 	if (SEND_TEXT){
-		writeLog(FILE_NAME . __LINE__ . " Sending text message to " . VBS_TEXT);
+		writeLog(FILE_NAME . __LINE__ . "  Sending text message to " . VBS_TEXT);
 		$text_headers = 'From: vbs@hopecherryville.org' . "\r\n";
 		$textMsg  = "New VBS registration for " . trim($family['family_name']) . " for $studentTotal students and $staffTotal volunteers\r\n";
 		$mail_status = mail(VBS_TEXT, '', $textMsg, $text_headers);
-		writeLog(FILE_NAME . __LINE__ . " Text mail status is " . $mail_status );
+		writeLog(FILE_NAME . __LINE__ . "  Text mail status is " . $mail_status );
 	}
 
 }
@@ -131,12 +132,12 @@ function sendClearanceMail($famID){
     $mailbody .= getStyles();
     $mailbody .= "</head><body>";
     $mailbody .= "<h1>VBS Adult Volunteer Registration Confirmation.</h1><br />";
-    $mailbody .= "Registration date: " . date("F dS, Y") . "<br /><br />";
+    $mailbody .= "Registration date: " . date("F dS, Y") . "<br><br>";
     
     $mailbody .="The following have registered as adult volunteers for VBS " . date("Y") . ". The following information has been sent to the VBS office.";
-    $mailbody .=" If any of the information is not correct, please <a href=\"mailto:vbs@hopecherryville.org\">email us</a> so we may adjust our ";
-    $mailbody .="records.<br><br>";
+    $mailbody .="<br><br>";
     $mailbody .= formatFamily($famID) . "\r\n";
+    $mailbody .= formatConfoPhone($famID) . "\r\n";
     $mailbody .= formatStaff($famID) . "\r\n";
     $mailbody .= "</body></html>";			/* just so we're well formed ! */
     
@@ -144,14 +145,14 @@ function sendClearanceMail($famID){
     // with newline char ending each line)
     $headers = array();
     $headers[] = "MIME-Version: 1.0";
-    $headers[] = "From: VBS Registration Office <" . VBS_EMAIL . ">";
-    $headers[] = "Reply-to: VBS Registration Office <" . VBS_EMAIL . ">";
+    $headers[] = "From: VBS Office <" . VBS_EMAIL . ">";
+    $headers[] = "Reply-to: VBS Office <" . VBS_EMAIL . ">";
     $headers[] = "Content-Type: text/html; charset=utf-8";
-    $headers[] = "Subject: VBS Confirmation";
+    $headers[] = "Subject: VBS Adult Volunteer Registration";
     
     $email = getEmail($famID);
     
-    writeLog(FILE_NAME . __LINE__ . " Sent to Clearance Coordinator at clearances@hopecherryville.org");
+    writeLog(FILE_NAME . __LINE__ . ' Sent to Clearance Coordinator at clearances@hopecherryville.org');
     $sendTo = "Clearance Coordinator <" . CLEARANCES_EMAIL . ">";
     
     $mail_status = mail($sendTo, "VBS Adult Volunteer Registration", $mailbody, implode("\r\n", $headers));
@@ -344,6 +345,7 @@ function getStyles(){
 	$style .= "#Staff table, td{border-color:rgb(153,51,153);}";
 	$style .= "#Staff th{color:white;background-color:rgb(153,51,153);} ";
 	$style .= "#Staff tr:nth-child(odd) {background-color:rgb(230,179,230);} #Staff tr:nth-child(even) {background-color:rgb(230,179,230);} ";
+	$style .= ".centerText{text-align:center;} ";
 	$style .= "</style>";
 	return $style;
 }
@@ -467,18 +469,16 @@ function getPhoneErrors(){
     ALL_VOLUNEETERS returns count of all volunteers regardles of age.	
 *****************************************************************************/
 function getStaffCount($volunteerType){
+    global $vbsDBi;
 	
-    $sql = "SELECT count(*) from staff where registered = 'C' and family_id = " . $_SESSION['family_id'];
+    $sql = "SELECT count(*) AS count from staff where registered = 'C' and family_id = " . $_SESSION['family_id'];
     if ($volunteerType==ADULT_VOLUNTEERS) {
         $sql .= " and age_group='Adult'";
     }
-	$result = mysqli_query($vbsDBi, $sql);
-	$staffCount = mysqli_fetch_assoc($result);
-	if (DEBUG) print 'Staff Count:' . print_r($staffCount);
-	writeLog(FILE_NAME . __LINE__ . $staffCount[0] . ($volunteerType==ADULT_VOLUNTEERS ? " Adult volunteers" : " Volunteers"));
-	mysqli_free_result($result);
-	
-	return ($staffCount==0 ? FALSE : TRUE);
+    $result = mysqli_query($vbsDBi, $sql);
+    $staffCount = mysqli_fetch_assoc($result);
+    mysqli_free_result($result);
+    return $staffCount['count'];
 }
 
 /***********************************************************************
@@ -511,9 +511,12 @@ if (isset($_POST['submit'])) {
 			if (confirm($_SESSION['family_id'])){
 				//@@sendConfo($_SESSION['family_id']);
 				//@@writeLog("Sent confirmation email to " . getEmail($_SESSION['family_id'])['family_name']);
-				sendVBSMail($_SESSION['family_id']);
+				
+			    sendVBSMail($_SESSION['family_id']);
+			    writeLog(FILE_NAME.__LINE__." Sent VBS confirmation mail to VBS office.");
 				if (getStaffCount(ADULT_VOLUNTEERS)>0){
-				    sendClearanceMail($famID);
+				    writelog(FILE_NAME.__LINE__." Sending clearance email notification.");
+				    sendClearanceMail($_SESSION['family_id']);
 				    header("Location: " . CLEARANCE_PAGE);
 				}
 				else {
