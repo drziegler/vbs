@@ -31,7 +31,7 @@ include("vbsUtils.inc");
 	</tr>
 	<tr><td><ul><li>We have clearances on file for you but</li>
 				<li>You must sign a new 2019 <a href='#VolunteerDisclosureStatement'>Volunteer Discolsure Statement</a> and</li>
-				<li>if you did not lived in PA for the past 10 consecutive years, you need a <a href='#OtherClearances'>Federal Criminal History Check.</a></li>
+				<li>if you did not live in PA for the past 10 consecutive years, you need a <a href='#OtherClearances'>Federal Criminal History Check.</a></li>
 	    <td><ul><li>You will need a <a href='#OtherClearances'>Child Abuse History Clearance</a> and</li>
 	    		<li>You will need a <a href='#OtherClearances'>PA Criminal Record Check</a> and</li>
 	    		<li>You must sign a new 2019 <a href='#VolunteerDisclosureStatement'>Volunteer Discolsure Statement</a> and</li>
