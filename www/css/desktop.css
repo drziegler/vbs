@@ -61,6 +61,12 @@ img, object, embed, video {
     animation: fadeIn 1s
 } 
 
+p.hanging{
+	margin-left:1.25vw;
+	margin-right:2vw;
+	text-indent:-1.25vw;
+	
+}
 textarea{
 	maxlength:256;
 }
@@ -69,10 +75,6 @@ input {
 }
 input[type=checkbox], input[type=radio]{
 	transform:scale(1.25,1.25);
-}
-.popup .popuptext{
-	width:160px;	
-	left:100%;
 }
 .red{
 	color:red;
@@ -228,6 +230,19 @@ tr *{
 #Student table{
 	border-color: rgb(31,122,31);
 	background-color: rgb(153,255,153);
+}
+#Clearance td{
+	padding-left:1.25em;	
+	border:solid;
+	width:49%;
+	text-align:left;
+	vertical-align:top;
+}
+#Clearance span{
+	padding-top:0;
+	border-top:0;
+	margin-top:0;
+	padding-bottom:0;
 }
 /* Only the summary screen has a th for Student */
 #Student th{
@@ -551,4 +566,18 @@ table #schedule{
 #counter{
 	font-size: 2vw;
 	margin-top: 8vh;
+}
+
+/* * * * * * * * * * * * * * *   CLEARANCES PAGE * * * * * * * * * * * * * */
+#clearance p, ul, li{
+	font-size:1vw;
+	margin:.25em 0em;
+}
+#clearance h1{
+	text-align:center;
+	font-size:200%;
+}
+#clearance h2{
+	text-align: left;
+	font-size: 2vw;	
 }

@@ -10,6 +10,7 @@ body, input, select, textarea {
 	font-family: sans-serif;
 	color: #222;
 }
+
 img, object, embed, video {
 	max-width: 100%;
 }
@@ -21,59 +22,6 @@ img, object, embed, video {
 /* POPUPS format the popup help text boxes */
 .width-equal-thirds{
 	width:33%;
-}
-.popup {
-	position: relative;
-	display: inline-block;
-	color:blue;
-	text-decoration:underline;
-	cursor: help;
-}
-.popup .popuptext {
-	visibility: hidden;
-	/* default width, overrides are in tablet and desktop media types */
-    width: 160px;
-    background-color: #555;
-    color: #fff;
-    text-align: left;
-    border-radius: 6px;
-    padding: 8px 6px;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    margin-left: -80px;	
-}
-/* This displays the little down arrow from the text box */
-.popup .popuptext::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 35%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-}
-/* This allows the JS to toggle the popup visibility */
-.popup .show {
-    visibility: visible;
-    -webkit-animation: fadeIn 1s;
-    animation: fadeIn 1s
-} 
-
-
-textarea{
-	maxlength:256;
-}
-input {
-	box-sizing: border-box;
-}
-input[type=checkbox], input[type=radio]{
-	transform:scale(1.25,1.25);
-}
-.popup .popuptext{
-	width:160px;	
-	left:100%;
 }
 .red{
 	color:red;
@@ -185,9 +133,6 @@ input[type=checkbox], input[type=radio]{
 }
 .home {
 	display: inline;
-	/*position:fixed; 
-	width:100%; 
-	top:50em;*/
 }
 .button:disabled{
 	background-color: LightGray;
@@ -198,6 +143,7 @@ input[type=checkbox], input[type=radio]{
 table {
 	width:99%;
 	margin:auto;
+	padding-left:5vw;
 	margin-top:1em;
 	border:.25em solid;
 	border-collapse:collapse;
@@ -248,6 +194,7 @@ tr *{
 #Staff td.label {
 	width:33%;
 }
+
 #Menu2 {
 	float: left;
 	margin-left: 5.2631%;
@@ -286,34 +233,6 @@ tr *{
 	position: relative;
 	font-size: 125%;
 	bottom: 12vw;
-}
-.find{
-	background-image:url("../images/find.jpg");
-	border: thick solid rgba(255,102,0,1);
-}
-.student{
-	background-image: url("../images/students.jpg");
-	border: thick solid rgba(31,122,31,1);
-}
-.family{
-	background-image: url("../images/family.jpg");
-	border: thick solid rgba(68,121,186,1);
-}
-.staff{
-	background-image: url("../images/volunteer.jpg");
-	border: thick solid rgba(153,51,153,1);
-}
-.register{
-	background-image: url("../images/register.jpg");
-}
-.schedule{
-	background-image: url("../images/schedule.png");
-}
-.pictures{
-	background-image: url("../images/photos.jpg");
-}
-.stats{
-	background-image: url("../images/stats.jpg");
 }
 .bottom{
 /* Used to place the bottom menu at the bottom */
@@ -359,72 +278,90 @@ tr *{
 	width: 60%;
 	margin: auto;
 }
-#counter{
-	display: block;
-	width: 90%;
-	margin: auto;
-	text-align: center;
-	font-size: 6vw;
-}
-/************************************************ CONFO PAGE *********************************************************************************/
-/* Styles that apply only to the confirmation screen */
-#Family table.confo{
-	width: 99%;
-	float: left;
-}
-#Family .confo td{
-	padding: .25em;
-/*	font-size: 1vw; */
+
+/********************************* BOTH MODE *********************************************/
+
+#clearance td{
+	/*padding-left:5vw; */
+	padding: 0.25vw 0 0 3.5vw;	
+	border:solid;
+	width:49%;
+	text-align:left;
+	vertical-align:top;
 }
 
-
-
-
-/********************************* PORTRAIT MODE *********************************************/
-@media screen and (max-width: 320px){
+#clearance h2{
+	text-align: left;
+	font-weight:bold;
+	font-size: 6vw;	
+}
+p {
+	font-size: 100%;
+	margin: 0em;
+}
+ul, li{
+	font-size: 90%;
+	margin: 0em;
 	
-h1, h2 {
-	width: 99%;
-	margin: auto;
-	text-align: center;
-	font-size: 6vw;
-	color: green;
 }
-h2 {
-	font-weight:normal;
-	font-size: 6vw;
+
+#clearance ul{
+	font-size: 4vw;
 }
-h3 {
-	font-size:5vw;
-	font-weight: normal;
-	text-align: center;
-	margin: 0;
-	color:red;
+
+p.hanging{
+	margin-left:5vw;
+	margin-right:2vw;
+	text-indent:-5vw;
 }
-	
-	
+p.topmargin{
+	margin-top:.5em;
 }
 
 
 /********************************* LANDSCAPE MODE *********************************************/
-@media screen and (min-width: 321px){
-h1, h2 {
-	width: 99%;
-	margin: auto;
-	text-align: center;
-	font-size: 6vw;
-	color: blue;
-}
-h2 {
-	font-weight:normal;
-	font-size: 3vw;
-}
+@media screen and (min-width: 361px){
 	
 
+	h1, h2 {
+		width: 99%;
+		margin: auto;
+		text-align: center;
+		font-size: 110%;
+	}
+	h2 {
+		font-weight:normal;
+		font-size: 100%;
+	}
+	h3 {
+		font-size:90%;
+		font-weight: normal;
+		text-align: center;
+		margin: 0;
+	}
+	
+	/* * * * * * * * * * * * * * *   CLEARANCES PAGE * * * * * * * * * * * * * */
+	/*#clearance p{
+		font-size:100%; */	
+	}
+}
+
+
+/********************************* PORTRAIT MODE *********************************************/
+@media screen and (max-width: 360px){
+	h1, h2 {
+		width: 99%;
+		margin: auto;
+		text-align: center;
+		font-size: 120%;
+	}
+	h2 {
+		font-weight:normal;
+		font-size: 3vw;
+	}
 	
 	
 }
-
 
 
 
@@ -433,3 +370,5 @@ h2 {
 @media screen and (max-height:800px) {
 	#Footer {display:none;}
 }
+
+
