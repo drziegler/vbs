@@ -13,7 +13,7 @@ include('vbsUtils.inc');
 </head>
 <body>
 <div class="gridContainer">
-	<div class="center"><h1>T THANKS FOR REGISTERING</h1></div>
+	<div class="center"><h1>THANKS FOR REGISTERING</h1></div>
 	<div id="buttonSubGroup" style="position:fixed; width:100%; top:0;">
 		<a href="<?php echo HOME_PAGE?>"><input type="submit" class="button" name="submit" value="<?php echo HOME_BUTTON?>"></a>
 	</div>
