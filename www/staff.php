@@ -555,7 +555,7 @@ do {
             <label><input type="radio" name="picture" id="pic-yes" value="Y" <?php echo (strcasecmp($row_rsStudent['picture'],"Y")==0 ? "checked " : "") . $fldEnabled; ?>>&nbsp;Yes</label>
             <label><input type="radio" name="picture" id="pic-no" value="N" <?php echo (strcasecmp($row_rsStudent['picture'],"N")==0 ? "checked " : "") . $fldEnabled;?>>&nbsp;No</label>
     	</td></tr>
-        <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('clear')">Over&nbsp;18?<span class="popuptext" id="clear">Federal and state regulations require us to have clearances for volunteers over the age of 18. Answer this question to help us identify who requires clearances.</span></span></td><td class="value">
+        <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('clear')">Over&nbsp;17?<span class="popuptext" id="clear">Federal and state regulations require us to have clearances for volunteers age 18 and older. Answer this question to help us identify who requires clearances.</span></span></td><td class="value">
             <label><input type="radio" name="age_group" value="Adult" <?php echo (strcasecmp($row_rsStudent['age_group'],"Adult")==0 ? "checked " : "") . $fldEnabled;?>>&nbsp;Yes</label>
             <label><input type="radio" name="age_group" value="Youth" <?php echo (strcasecmp($row_rsStudent['age_group'],"Youth")==0 ? "checked " : "") . $fldEnabled;?>>&nbsp;No</label>
     	</td></tr>
