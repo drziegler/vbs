@@ -152,8 +152,9 @@ function sendClearanceMail($famID){
     
     $email = getEmail($famID);
     
-    writeLog(FILE_NAME . __LINE__ . ' Sent to Clearance Coordinator at clearances@hopecherryville.org');
-    $sendTo = "Clearance Coordinator <" . CLEARANCES_EMAIL . ">";
+    writeLog(FILE_NAME . __LINE__ . ' Sent to Clearance Coordinator at '.CLEARANCES_EMAIL);
+    //@@$sendTo = "Clearance Coordinator <" . CLEARANCES_EMAIL . ">";
+    $sendTo = CLEARANCES_EMAIL;
     
     $mail_status = mail($sendTo, "VBS Adult Volunteer Registration", $mailbody, implode("\r\n", $headers));
     if(!$mail_status){
@@ -480,6 +481,38 @@ function getStaffCount($volunteerType){
     mysqli_free_result($result);
     return $staffCount['count'];
 }
+/********************************************************************
+ *    Returns the number of 'Mom and Me' registrants for this family
+ ********************************************************************/
+function getMomAndMeCount(){
+    global $vbsDBi;
+
+    $sql = "SELECT count(*) AS count from students where registered = 'C' and family_id = " . $_SESSION['family_id'];  
+    $sql .= " and classroom='Mom and Me'";
+    $result = mysqli_query($vbsDBi, $sql);
+    $recCount = mysqli_fetch_assoc($result);
+    mysqli_free_result($result);
+    return $recCount['count'];
+    
+}
+
+/********************************************************************
+ *  Wrapper function for getStaffCount and getMomAndMeCount to 
+ *  determine if clearances are quired for any member of this family
+ *  Returns TRUE upon first occurence of a condition that needs clearances
+ *          FALSE if all conditions fail.
+ ********************************************************************/
+function clearancesRequired(){
+    $clearanceNeeded = TRUE;
+    
+    if (getStaffCount(ADULT_VOLUNTEERS) == 0){
+        if (getMomAndMeCount()==0){
+            $clearanceNeeded=FALSE;            
+        }
+    }
+    return $clearanceNeeded;
+}
+
 
 /***********************************************************************
 	Returns the number of registered students for this current family id
@@ -514,7 +547,7 @@ if (isset($_POST['submit'])) {
 				
 			    sendVBSMail($_SESSION['family_id']);
 			    writeLog(FILE_NAME.__LINE__." Sent VBS confirmation mail to VBS office.");
-				if (getStaffCount(ADULT_VOLUNTEERS)>0){
+				if (clearancesRequired()){
 				    writelog(FILE_NAME.__LINE__." Sending clearance email notification.");
 				    sendClearanceMail($_SESSION['family_id']);
 				    header("Location: " . CLEARANCE_PAGE);
