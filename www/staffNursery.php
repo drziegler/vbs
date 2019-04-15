@@ -78,8 +78,6 @@ function validate($form){
 	foreach ($blanks as $key => $value){
 		if (strlen($value)===0){
 			$errMsg .= $notBlank[$key] . ",";
-			//@@
-			print 'Line '.__LINE__.' Validation error is true<br>';
 			$error = TRUE;
 		}
 	}
@@ -88,8 +86,6 @@ function validate($form){
 	$missing = array_diff_key($mustExist, $form);		/* returns keys in mustExist but not in form */
 	foreach ($missing as $key => $value){
 		$errMsg .= $value . ",";
-		//@@
-		print 'Line '.__LINE__.' Validation error is true<br>';
 		$error = TRUE;
 	}
 	/* If the element is missing, add a blank one to the array to avoid display errors */
@@ -200,8 +196,6 @@ switch ($_REQUEST['submit']) {
                 if (DEBUG) print "Line " . __LINE__ . "<br>";
                 $row_rsStudent['student_id'] = mysqli_insert_id($vbsDBi);
                 writeLog(FILE_NAME . __LINE__ . "-Inserted student id as " . $sqlStmt);
-                //@@ $offset = ++$offset;		/* Advance by one so the new record displays */
-
                 
                 /* Here we must redirect back to ourself to prevent a duplicate if the user refreshes the browser
                  Redisplay just forces the code past the switch statement as there is no Redisplay option
