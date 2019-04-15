@@ -31,7 +31,7 @@ mysqli_free_result($result);
 	<h1>Hope Lutheran Church</h1>
 	<h2>VBS Information</h2>
 	<p>Welcome to the VBS information page for Hope Lutheran Church.  VBS starts on Monday, July 8 and runs through July 12th.  Daily hours are 9 AM to 12 PM with a closing program on Friday evening at 7 PM.  All students and staff must register to attend VBS.  On-line registration is easier than filing your taxes and will open soon.  Check back often. Questions?  Email the VBS office (<a href="mailto:vbs@hopecherryville.org" class="email">vbs@hopecherryville.org</a>) or call 610-767-7203 Ext 17.</p>
-    <div id="logo"><img src="images/vbs-logo.jpg"></div>
+    <div id="logo"><a href="register.php"><img src="images/vbs-logo.jpg"></a></div>
 	<div id="counter">0&nbsp;students&nbsp;marooned on Mars</div>
 	<div id="Footer">&copy;<?php echo date("Y") ?> David R. Ziegler &amp; Hope Lutheran Church</div>
 </div>
