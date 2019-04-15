@@ -172,7 +172,6 @@ switch ($_POST['submit']) {
 					mysqli_real_escape_string($vbsDBi, trim($_POST['address'])),
 					mysqli_real_escape_string($vbsDBi, trim($_POST['zipcode'])),
 					mysqli_real_escape_string($vbsDBi, trim($_POST['lstHomeChurch'])),
-					/* @@mysqli_real_escape_string($vbsDBi, trim($_POST['prehelp'])), */
 					mysqli_real_escape_string($vbsDBi, trim($_POST['comments'])),
 					mysqli_real_escape_string($vbsDBi, $_POST['family_id']));
 
@@ -193,8 +192,6 @@ switch ($_POST['submit']) {
 		}
 		else {
 			/* Validation failed. Display the error message */
-			//@@$errMsgText = "Please correct missing data and save again.";
-			//todo: Fix _POST back to rsFAM.  field names are not the same, e.g. home_church vs lsthomechurch.
 			$rsFam = $_POST;
 			$rsFam['home_church'] = $rsFam['lstHomeChurch'];
 			$city = $_POST['city'];
