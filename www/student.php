@@ -218,7 +218,6 @@ switch ($_POST['submit']) {
                 $sqlErr = mysqli_error($vbsDBi);
                 writeErr(FILE_NAME . __LINE__ . "-Error writing insert statement", "Switch:Save", __LINE__, $sqlErr);
             }
-				//@@ if ($_POST['submit']==="Next Page") header("Location: " . STAFF_PAGE);
         }
 		else {
             /* This else can only branch if this is a new student who failed validation */
@@ -350,11 +349,6 @@ else {   /* Passed validation */
 		$fldEnabled = '';
 	}
 	else {
-	    //@@
-	    //print 'Line '.__LINE__.' $row_rsStudent[ ] is_array = ' . (is_array($row_rsStudent)?'TRUE':'FALSE') . '<br>';
-	    //print 'Line '.__LINE__.' $row_rsStudent[ ] isset = ' . (isset($row_rsStudent)?'TRUE':'FALSE') . '<br>';
-	    //print 'Line '.__LINE__.' $row_rsStudent[ ] empty = ' . (empty($row_rsStudent)?'TRUE':'FALSE') . '<br>';
-	    
 	    if (DEBUG) print "Line " . __LINE__ . "-Validation OK: Redisplay<br>";
 		$query_rsStudent = 	"SELECT student_id, family_id, first_name, last_name, birthdate, class, shirt_size, picture, buddy, comments, confo, create_date, last_update, registered FROM students WHERE family_id=" .$_SESSION['family_id'] . " AND deleted=0 AND class<>'Staff Nursery'";
 		$all_rsStudent = mysqli_query($vbsDBi, $query_rsStudent);
@@ -368,9 +362,7 @@ else {   /* Passed validation */
 		$yesChk = ($row_rsStudent['registered']=='Y' or $row_rsStudent['registered']=='C') ? ' checked ' : '';
 		$noChk  = ($row_rsStudent['registered']=='N') ? ' checked ' : '';
 
-		//@@
 		if (DEBUG) print "Line " . __LINE__ . " Number of students = " . $numStudents . '<br>';
-		print "Line " . __LINE__ . ' $row_rsStudent contains ' . count($row_rsStudent) . ' element(s)<br>';
 		if ($numStudents==0) {
 		    $_REQUEST['submit']=NEW_BUTTON;
 		    /* If there are no students on record, disable the input fields.  User required to press new button */
@@ -404,9 +396,6 @@ $rsStudentShirtList = mysqli_query($vbsDBi, $query_rsStudentShirtList);
 $row_rsStudentShirtList = mysqli_fetch_assoc($rsStudentShirtList);
 $totalRows_rsStudentShirtList = mysqli_num_rows($rsStudentShirtList);
 
-//@@
-//print 'Line '.__LINE__.' $row_rsStudent[ ]='; print_r($row_rsStudent); print '<br>';
-//print 'Line '.__LINE__.' $row_rsStudent[ ] is_array = ' . (is_array($row_rsStudent)?'TRUE':'FALSE') . '<br>';
 $_SESSION['student_id'] = $row_rsStudent['student_id'];
 if (DEBUG) print "Line " . __LINE__ . " Session student id is" . $_SESSION['student_id'] . "<br>";
 
@@ -419,12 +408,6 @@ $button['Previous'] = ($numStudents > 1 and $offset > 1) ? '' : ' disabled';
 $button['Next'] = ($numStudents > 1 and $offset<($numStudents)) ? '' : ' disabled';
 $button['Last'] = ($numStudents > 2 and $offset<($numStudents-1)) ? '' : ' disabled';
 $offset = --$offset;
-
-//@@
-//print 'Line '.__LINE__.' $row_rsStudent[ ] is_array = ' . (is_array($row_rsStudent)?'TRUE':'FALSE') . '<br>';
-//print 'Line '.__LINE__.' $row_rsStudent[ ] isset = ' . (isset($row_rsStudent)?'TRUE':'FALSE') . '<br>';
-//print 'Line '.__LINE__.' $row_rsStudent[ ] empty = ' . (empty($row_rsStudent)?'TRUE':'FALSE') . '<br>';
-
 
 ?>
 <!doctype html>
