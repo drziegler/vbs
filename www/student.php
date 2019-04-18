@@ -381,14 +381,15 @@ $query_rsClassList .= "ORDER BY disp_order";
 
 $rsClassList = mysqli_query($vbsDBi, $query_rsClassList);
 if ($rsClassList) {
-	$row_rsClassList = mysqli_fetch_assoc($rsClassList);}
+	$row_rsClassList = mysqli_fetch_assoc($rsClassList);
 	if (DEBUG){
 	    print "Line " . __LINE__ . " Class list: ";
 	    print_r($row_rsClassList);
 	    print "<br>";
 	}
+}
 else{
-    writeErr(FILE_NAME . __LINE__ . "-Unable to get class list", "Student.php", __LINE__, mysqli_errno($vbsDBi));
+    writeErr("-Unable to get class list", FILE_NAME, __LINE__, mysqli_errno($vbsDBi));
 }
 
 $query_rsStudentShirtList = "SELECT shirt_size FROM list_shirts WHERE student_opt = TRUE ORDER BY disp_order ";
