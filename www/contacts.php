@@ -281,7 +281,6 @@ if (DEBUG) {
 <title>VBS-Contact Information</title>
 <link href="css/boilerplate.css" rel="stylesheet" type="text/css">
 <link href="css/layout.css" rel="stylesheet" type="text/css">
-<!-- @@ <link href="css/textural.css" rel="stylesheet" type="text/css"> -->
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
@@ -293,9 +292,9 @@ if (DEBUG) {
 <div id="Phone" class="gridContainer">
 <div><h1>VBS - Contact Info</h1></div>
 <?php if (strlen($errMsgText)>0) { ?>
-	<div><h2 class="error"><?php echo $errMsgText;?></h2></div>
+	<div><h3 class="error"><?php echo $errMsgText;?></h3></div>
 <?php } else { ?>
-	<div><h3>Provide at least two different phone numbers.</h3></div>
+	<div><h2>Provide at least two different phone numbers.</h2></div>
 <?php } ?>
 	<div id="dataLayout">
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="POST" name="frmContacts" target="_self">
@@ -305,14 +304,6 @@ if (DEBUG) {
     <tr>
         <td><input type="text" name="phone[<?php echo $i;?>][contact_name]" value="<?php echo $rsPhone[$i]['contact_name']; ?>" style="width:99%" maxlength="50"></td>
         <td><input type="text" name="phone[<?php echo $i;?>][phone]" maxlength="12" value="<?php echo formatPhone($rsPhone[$i]['phone']); ?>" style="width:99%"></td>
-<!--
-        <td><select name="phone[<?php echo $i;?>][phone_type_code]">
-    	    <?php for ($p=0; $p<count($rsPhoneTypes); $p++) { ?>
-	        <option value="<?php echo $rsPhoneTypes[$p]['phone_type_code']?>"<?php if (!(strcmp($rsPhoneTypes[$p]['phone_type_code'], 
-				$rsPhone[$i]['phone_type_code']))) {echo " selected=\"selected\"";} ?>><?php echo $rsPhoneTypes[$p]['phone_type_desc']?></option>
-        	<?php } ?>
-			</select></td>
--->
 		<td><input name="phone[<?php echo $i;?>][sel]" type="checkbox" value="">
         <input type="hidden" name="phone[<?php echo $i;?>][family_id]" value="<?php echo $_SESSION['family_id']?>"></td>
 	</tr>
