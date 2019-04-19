@@ -11,11 +11,6 @@ if (DEBUG){
     print "<br>";
 }
 
-/* For Eclipse editor 
- * 
- * var string $vbsDBi
- * 
- */
 $errMsgText="";
 
 if (DEBUG) print "_SESSION[familyID] = " . $_SESSION['family_id'] . "<br>";
@@ -182,7 +177,7 @@ switch ($_POST['submit']) {
 				}
 				else {
 					if (DEBUG) print "Line: " . __LINE__ . "-Updated:family<br>";
-					writeLog(FILE_NAME . __LINE__ ."Updated family id as " . $sqlStmt);
+					writeLog(FILE_NAME . __LINE__ ." Updated family id as " . $sqlStmt);
 					$_SESSION['family_name'] = $_POST['family_name'];
 				}
 			}
@@ -229,11 +224,6 @@ switch ($_POST['submit']) {
 				if (intval($totalRows_rsCityState)>0){
 					$city = $rsCityState['city'];
 					$state = $rsCityState['state'];}
-				/*else {
-					if (DEBUG) print "Line: " . __LINE__ . "<br>";
-					$errMsgText = "Please correct missing data and save again.";
-					$rsFam = $_POST;}
-				*/
 			}
 		}
 		else {
