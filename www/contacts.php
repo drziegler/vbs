@@ -1,4 +1,6 @@
 <?php
+
+
 session_start();
 require_once('./Connections/vbsDB.php');
 include_once('vbsUtils.inc');
@@ -10,23 +12,57 @@ if ($_SESSION['family_id']==0){
 //	header("Location: search.php");
 }
 
+function quickSave(){
+    global $vbsDBi;
+    if (DEBUG) print "Line " . __LINE__ . " Quick Save: $_POST = " . print_r($_POST, TRUE) . '<br>';
+    writeLog(FILE_NAME . __LINE__ . " Entering quickSave()");
+
+    $sql = "DELETE from phone_numbers WHERE family_id=" . $_SESSION['family_id'];
+    if (mysqli_query($vbsDBi, $sql)){
+        /* Insert the records from the screen */
+        $newPhone = $_POST['phone'];
+        /* Loop through the phone array and insert each one into the table */
+        $sql = "INSERT into phone_numbers (phone, family_id, contact_name, last_update, create_date) ";
+        $sql .= "VALUES ('%s', %u, '%s', now(), now())";
+        for ($i=0; $i<count($newPhone); $i++){
+            if (DEBUG) print __FILE__ . ":" . __FUNCTION__ . "-" . __LINE__ . "<br>";
+            $sqlInsert = sprintf($sql,
+                mysqli_real_escape_string($vbsDBi, unformatPhone($newPhone[$i]['phone'])),
+                mysqli_real_escape_string($vbsDBi, $newPhone[$i]['family_id']),
+                mysqli_real_escape_string($vbsDBi, trim($newPhone[$i]['contact_name'])));
+            if (mysqli_query($vbsDBi, $sqlInsert)){
+                if (DEBUG) print "Inserting records at line: " . __LINE__ . "<br>" . $sqlInsert . "<br>";
+                writeLog(FILE_NAME . __LINE__ . " Inserted new phone data as " . $sqlInsert);}
+            else {
+                /* ERROR!  ERROR!  We have an ERROR! Just log it.*/
+                $sqlErrNum = mysqli_errno($vbsDBi);
+                $sqlErrMsg = mysqli_error($vbsDBi);
+                if (DEBUG) print "Line: " . __LINE__ . "-" . $sqlErrNum . "<br>";
+                writeErr(" Insert error $sqlErrMsg", __FILE__, __LINE__, $sqlErrNu);
+            }
+        }  /* End of phone insert loop */
+    }
+}
+
 function validate($form){
 	if (DEBUG) print "Line " . __LINE__ . "-Validate<br>";
 	$error = false;
 	global $errMsgText;
 	$errMsg = "";		/* Reset any previous messages */
 
-	$notBlank   = array('phone'=>'Phone', 'contact_name'=>'Contact Name');	
+	$notBlank   = array('phone'=>'Phone Number', 'contact_name'=>'Contact Name');	
 	
 	/* Remove leading and trailing spaces */
+	/*
 	for ($v=0; $v<count($form); $v++){
 		foreach ($form[$v] as $key => $value){
 			$form[$v][$key] = trim($value);
 		}
 	}
+	*/
 	
 	/* Assign trim changes back to the $_POST array */
-	$_POST['phone'] = $form;
+	//$_POST['phone'] = $form;
 
 	/* Check for blank elements */
 	for ($v=0; $v<count($form); $v++){
@@ -34,19 +70,22 @@ function validate($form){
 		foreach ($blanks as $key => $value){
 			if (strlen($value)===0){
 				$errMsg .= "Missing " . $notBlank[$key] . ",";
-				$error = true;
+				$error = TRUE;
 			}
 			else
 			{
 				if (($blanks=='phone') && (strlen($value)<10)){
-					$error = true;
+					$error = TRUE;
 					$errMsg .= $blanks[$key] . " too short,";
 				}
 			}
 		}
 	}
 
-	if (!validatePhoneQuantity()) $errMsgText .= "Need a minimum of two unique phone numbers.";
+	if (!validatePhoneQuantity()){
+	    $errMsg .= "Need a minimum of two (2) unique phone numbers.";
+	    $error = TRUE;
+	}
 	
 	/* This assigns the error text to a variable outside the function */
 	if ($error) $errMsgText = trim($errMsg, ",");
@@ -64,7 +103,7 @@ function validatePhoneQuantity(){
     if (DEBUG) writelog(FILE_NAME . __LINE__ . "-Unique phone count for fam ID " . $_SESSION['family_id'] . " is " . $rsPhoneCount);
     
     if ($rsPhoneCount < 2){
-    	writeLog(FILE_NAME . __LINE__ . " Family id " . $_SESSION['family_id'] . " has insufficient contacts.");
+    	writeLog(FILE_NAME . __LINE__ . " Family id " . $_SESSION['family_id'] . " has < 2 contacts.");
         $validatedOK = FALSE;
     }
 
@@ -105,19 +144,34 @@ switch ($_POST['submit']){
 		break;
     /* No validation on backwards moves */
 	case HOME_BUTTON :
+        quickSave();
 	    header("Location: " . HOME_PAGE);
 	    break;
 	case PREVIOUS_BUTTON :
+	    quickSave();
 	    header("Location: " . FAMILY_PAGE);
 	    break;
 	case NEXT_PAGE :
+	    quickSave();
+	    $toValidate = $_POST['phone'];
+	    if (validate($toValidate)===TRUE){
+	        header("Location: " . STUDENT_PAGE);
+	    }
+	    break;
 	case "Add" :
+	    quickSave();
+	    break;
 	case "Save" :	
 		if (DEBUG) print "Line: " . __LINE__ . "-Save<br>";
 		if (DEBUG) print_r($_POST['phone']);
 		if (DEBUG) print "<br>";
 
-		/* First validate the data */
+		/* We must do a quickSave because the validation is based upon what is in the database, not on the screen. 
+		 * This will get the data from the screen into the database */
+
+		quickSave();  
+		
+		/* Next validate the data */
 		$toValidate = $_POST['phone']; 
 		if (validate($toValidate)===TRUE){
 			if (DEBUG) print "Line " . __LINE__ . " - Validation passed<br>";
@@ -188,7 +242,6 @@ switch ($_POST['submit']){
 			else  /* Unable to delete phone number(s) */
 			{
 				if (DEBUG) print "Line: " . __LINE__ . "Delete before Save failed!<br>";		
-				//@@ $sqlErr = mysqli_error($vbsDBi);
 				writeLog(FILE_NAME . __LINE__ . " Error deleting phone records for family id " . $_SESSION['family_id'], "Contacts:Save", __LINE__, mysqli_error($vbsDBi));
 			}
 		}
@@ -198,7 +251,8 @@ switch ($_POST['submit']){
 		        print "Line: " . __LINE__ . " Validation error<br>";
 		        writeLog(FILE_NAME . __LINE__ . "-Validation error");
 		    }
-			$errMsg = "Please correct missing data.";
+		    quickSave();   /* We need to do a quickSave here to save any new phones (validated or not) to the database for redisplay */
+			//$errMsg = "Please correct missing data.";
 			writeLog(FILE_NAME . __LINE__ . " Validation failed for family id contacts (".$_SESSION['family_id'].")");
 			/* Restore the POSTed data to the screen, break out of here to avoid a requery */
 			$rsPhone = $_POST['phone'];
@@ -298,7 +352,7 @@ if (DEBUG) {
 <?php } ?>
 	<div id="dataLayout">
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="POST" name="frmContacts" target="_self">
-<table cellspacing="0">
+<table>
 	<tr><th>*&nbsp;Name</th><th>*&nbsp;Phone</th><th class="left">Select</th></tr>
     <?php for ($i=0; $i<count($rsPhone); $i++){ ?>
     <tr>
@@ -308,14 +362,14 @@ if (DEBUG) {
         <input type="hidden" name="phone[<?php echo $i;?>][family_id]" value="<?php echo $_SESSION['family_id']?>"></td>
 	</tr>
     <?php } ?>
-    <tr><td colspan="4">* required  <span class="popup" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Enter family contact information on this page.  You may enter as many names and phone numbers as you wish but you must provide at least two different phone numbers.  Each contact must have a name & phone number.<br>To delete a contact, first check the Select box(es) of the lines you want to delete then click the delete button.</span></span></td></tr>
+    <tr><td colspan="4">* required  <span class="popup" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Enter family contact information on this page.  You may enter as many names and phone numbers as you wish but you must provide at least two different phone numbers.  Each contact must have a name &amp; phone number.<br>To delete a contact, first check the Select box(es) of the lines you want to delete then click the delete button.</span></span></td></tr>
 	<tr class="center">
 		<td colspan="4">
     	<input type="submit" name="submit" value="Save">&nbsp;
 	    <input type="submit" name="submit" value="Add">&nbsp;
 	    <input type="submit" name="submit" value="Delete">&nbsp;
 		</td>
-	</tr>
+	</tr>s
 </table>
 <div id="buttonGroup" class="center">
 	<input type="submit" name="submit" class="button" value="<?php echo HOME_BUTTON?>">&nbsp;
