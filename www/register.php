@@ -2,14 +2,11 @@
 session_start();
 require_once('Connections/vbsDB.php');
 include_once('vbsUtils.inc');
+define('FILE_NAME',   '[REGISTER] ');
 
 $confoNo = mt_rand();
 $_SESSION['confoNo'] = $confoNo;
 
-$sqlQuery = "SELECT count(*) as registered from students where registered = 'C'";
-$result = mysqli_query($vbsDBi, $sqlQuery);
-$registered = mysqli_fetch_assoc($result);
-mysqli_free_result($result);
 ?>
 <!doctype html>
 <!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
@@ -41,8 +38,7 @@ mysqli_free_result($result);
     <a href="student.php"><div id="mnuBtn" class="student"><span>Students</span></div></a>
     <a href="staff.php"><div id="mnuBtn" class="staff"><span>Volunteers</span></div></a>
 </div>
-<div id="counter">Over&nbsp;<?php echo $registered['registered']?>&nbsp;students&nbsp;marooned on Mars</div>
-<!-- FOR TEST ENV ONLY <div id="counter">Over 20,000 Shipwrecked!</div> -->
+<div id="counter">Over&nbsp;<?php echo registrationCount();?>&nbsp;students&nbsp;marooned on Mars</div>
 <div id="Footer">&copy; <?php echo date("Y");?> David R Ziegler &amp; Hope Lutheran Church</div>
 </div>
 </body>
