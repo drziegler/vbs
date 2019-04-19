@@ -38,7 +38,7 @@ if (!empty($_POST['submit'])){
     			/* This means we found an existing record but the user doesn't want to use it.  We need to clear out the
     			   phone number used to search so that we don't create a new phone entry with the existing phone number
     			   for the new family id */
-    			//@@--unset($_SESSION['newPhone']);
+    			//--unset($_SESSION['newPhone']);
     		}
     		$_SESSION['family_id']='New';
     		header("Location: " . FAMILY_PAGE);

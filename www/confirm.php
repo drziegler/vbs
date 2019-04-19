@@ -66,9 +66,9 @@ function sendVBSmail($famID){
 	/* Temporarily set the php.ini file to the sendmail_from value specified here */
 	ini_set("sendmail_from", "vbs@hopecherryville.org");
 
-
-	$mail_status = mail("david@the-zieglers.com", 'VBS Registration', $mailbody, $mail_header);
-//@@TEST	$mail_status = mail(VBS_EMAIL, 'VBS Registration', $mailbody, $mail_header);
+	//TEST
+	//$mail_status = mail("david@the-zieglers.com", 'VBS Registration', $mailbody, $mail_header);
+    $mail_status = mail(VBS_EMAIL, 'VBS Registration', $mailbody, $mail_header);
 	if(!$mail_status){
          writeLog(FILE_NAME . __LINE__ . "  Mail could not be sent due to an error while trying to send the mail.  Mail status is $mail_status");
 	}
@@ -79,10 +79,9 @@ function sendVBSmail($famID){
 		writeLog(FILE_NAME . __LINE__ . "  Sending text message to " . VBS_TEXT);
 		$text_headers = 'From: vbs@hopecherryville.org' . "\r\n";
 		$textMsg  = "New VBS registration for " . trim($family['family_name']) . " for $studentTotal students and $staffTotal volunteers\r\n";
-		$mail_status = mail(VBS_TEXT, '', $textMsg, $text_headers);
-	}
-	else {
-		writeLog(FILE_NAME . __LINE__ . "  Text to " . VBS_TEXT . "failed." );
+		if (mail(VBS_TEXT, '', $textMsg, $text_headers)) {
+		    writeLog(FILE_NAME . __LINE__ . "  Sent text to " . VBS_TEXT . " for " . trim($family['family_name']));
+		}
 	}
 
 }
@@ -155,13 +154,11 @@ function sendClearanceMail($famID){
 
     $sendTo = "Clearance Coordinator <" . VBS_CLEARANCES_EMAIL . ">";
     
-    $mail_status = mail($sendTo, "VBS Adult Volunteer Registration (clearances)", $mailbody, implode("\r\n", $headers));
-    if(!$mail_status){
-        //@@writeErr(FILE_NAME . "Failed to send email to " . $sendTo . " on " . date("F dS, Y"));
-        writeErr('', FILE_NAME, __LINE__, "-Failed to send email to $sendTo" );
-    }
-    else{
+    if ( mail($sendTo, "VBS Adult Volunteer Registration (clearances)", $mailbody, implode("\r\n", $headers))){
         writeLog('', FILE_NAME, __LINE__, ' Sent email to Clearance Coordinator at ' . VBS_CLEARANCES_EMAIL);
+    }
+    else {
+        writeErr('', FILE_NAME, __LINE__, " Failed to send email to $sendTo" );
     }
 }
 
@@ -231,12 +228,6 @@ global $vbsDBi, $studentTotal;
 			FROM students WHERE (registered='Y' or registered='C') and family_id=" . $famID . " ORDER BY last_name, first_name";
 	$result = mysqli_query($vbsDBi, $sql);
 
-	/*@@
-	if ($result===false){
-		$sqlErr = mysqli_error($vbsDBi);
-		writeErr("No student results", FILE_NAME, __LINE__, $sqlErr);}
-	else {
-	*/
 	if ($result) {
 		$s = mysqli_fetch_assoc($result);
 		$stud = '<div id="Student">';
@@ -552,13 +543,9 @@ if (isset($_POST['submit'])) {
 			break;
 		case SUBMIT_REGISTRATION :
 			if (confirm($_SESSION['family_id'])){
-				//@@sendConfo($_SESSION['family_id']);
-				//@@writeLog("Sent confirmation email to " . getEmail($_SESSION['family_id'])['family_name']);
-				
+				sendConfo($_SESSION['family_id']);
 			    sendVBSMail($_SESSION['family_id']);
-			    writeLog(FILE_NAME.__LINE__." Sent VBS confirmation mail to VBS office.");
 				if (clearancesRequired()){
-				    writelog(FILE_NAME.__LINE__." Sending clearance email notification.");
 				    sendClearanceMail($_SESSION['family_id']);
 				    header("Location: " . CLEARANCE_PAGE);
 				}
@@ -578,8 +565,6 @@ if (isset($_POST['submit'])) {
 }
 else
 {
-//if (empty($_REQUEST['submit'])){
-
 	/************************************************************
 	 Here we perform validations section by section.  If we find
 	 an error, we stop and go no further, redirect to the page

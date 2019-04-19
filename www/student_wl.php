@@ -149,7 +149,7 @@ switch ($_POST['submit']) {
 			/* Get the new student id after insert */
 			if (mysqli_query($vbsDBi, $sqlStmt)){
 				if (DEBUG) print "Line " . __LINE__ . "<br>";	
-				//@@ Check if we really need to do this!
+				//todo: Check if we really need to do this!
 				$row_rsStudent['student_id'] = mysqli_insert_id($vbsDBi);
 				if (DEBUG) print "Local Offset is " . $offset . "<br>";
 				if (DEBUG) print "POST Offset is " . $_POST['offset'] . "<br>";
@@ -158,7 +158,7 @@ switch ($_POST['submit']) {
 				/* Here we must redirect back to ourself to prevent a duplicate if the user refreshes the browser 
 					Redisplay just forces the code past the switch statement as there is no Redisplay option
 					Offset defines which record to display.  Since we added one, the offset will be one less than the total number of students*/
-//@@				header("Location: student.php?submit=Redisplay&offset=".($_POST['numStudents']));
+//todo:				header("Location: student.php?submit=Redisplay&offset=".($_POST['numStudents']));
 				header("Location: student.php?submit=Redisplay");
 			}
 			else {
