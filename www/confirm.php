@@ -28,14 +28,14 @@ function confirm($famID){
 	$sql="update students set registered='C' where registered='Y' and family_id=$famID";
 	writeLog(FILE_NAME . __LINE__ .'  '.$sql);
 	if (!mysqli_query($vbsDBi, $sql)){
-		writeErr("Unable to confirm students for famID $famID.", __FUNCTION__, __LINE__, 2001);
+		writeErr("Unable to confirm students for famID $famID.", FILE_NAME, __LINE__, 2001);
 		$studentsConfirmed=false;
 	}
 
 	$sql="update staff set registered='C' where registered='Y' and family_id=$famID";
 	writeLog(FILE_NAME . __LINE__ .'  '.$sql);
 	if (!mysqli_query($vbsDBi, $sql)){
-		writeErr("Unable to confirm staff for famID $famID.", __FUNCTION__, __LINE__, 2002);
+		writeErr("Unable to confirm staff for famID $famID.", FILE_NAME, __LINE__, 2002);
 		$staffConfirmed=false;
 	}
 	return ($studentsConfirmed && $staffConfirmed);
@@ -80,7 +80,9 @@ function sendVBSmail($famID){
 		$text_headers = 'From: vbs@hopecherryville.org' . "\r\n";
 		$textMsg  = "New VBS registration for " . trim($family['family_name']) . " for $studentTotal students and $staffTotal volunteers\r\n";
 		$mail_status = mail(VBS_TEXT, '', $textMsg, $text_headers);
-		writeLog(FILE_NAME . __LINE__ . "  Text mail status is " . $mail_status );
+	}
+	else {
+		writeLog(FILE_NAME . __LINE__ . "  Text to " . VBS_TEXT . "failed." );
 	}
 
 }
@@ -150,18 +152,16 @@ function sendClearanceMail($famID){
     $headers[] = "Content-Type: text/html; charset=utf-8";
     $headers[] = "Subject: VBS Adult Volunteer Registration";
     
-    $email = getEmail($famID);
+
+    $sendTo = "Clearance Coordinator <" . VBS_CLEARANCES_EMAIL . ">";
     
-    writeLog(FILE_NAME . __LINE__ . ' Sent to Clearance Coordinator at '.CLEARANCES_EMAIL);
-    //@@$sendTo = "Clearance Coordinator <" . CLEARANCES_EMAIL . ">";
-    $sendTo = CLEARANCES_EMAIL;
-    
-    $mail_status = mail($sendTo, "VBS Adult Volunteer Registration", $mailbody, implode("\r\n", $headers));
+    $mail_status = mail($sendTo, "VBS Adult Volunteer Registration (clearances)", $mailbody, implode("\r\n", $headers));
     if(!$mail_status){
-        writeErr(FILE_NAME . "Failed to send email to " . $sendTo . " on " . date("F dS, Y"));
+        //@@writeErr(FILE_NAME . "Failed to send email to " . $sendTo . " on " . date("F dS, Y"));
+        writeErr('', FILE_NAME, __LINE__, "-Failed to send email to $sendTo" );
     }
     else{
-        writeLog("Sent confirmation email to " . $email['family_name'] . " at " . $email['email']);
+        writeLog('', FILE_NAME, __LINE__, ' Sent email to Clearance Coordinator at ' . VBS_CLEARANCES_EMAIL);
     }
 }
 
@@ -191,10 +191,8 @@ function formatFamily($famID){
 	}
 	else {
 		$sqlErr = mysqli_error($vbsDBi);
-		writeErr("No family results for " . $famID, __FUNCTION__, __LINE__, $sqlErr);
+		writeErr('', FILE_NAME, __LINE__, "-No family results for $famID " . $sqlErr);
 	}
-
-	//@mysqli_free_result($family);
 
 	return $fam;
 }
@@ -206,7 +204,7 @@ global $vbsDBi;
 	$result = mysqli_query($vbsDBi, $sql);
 	if ($result===false){
 		$sqlErr = mysqli_error($vbsDBi);
-		writeErr(FILE_NAME . "No phone contacts for " . $famID, __FUNCTION__, __LINE__, $sqlErr);}
+		writeErr(FILE_NAME . "No phone contacts for " . $famID, FILE_NAME, __LINE__, $sqlErr);}
 	else {
 		$phone = mysqli_fetch_assoc($result);
 		$ph = '<div id="Phone">';
@@ -233,10 +231,13 @@ global $vbsDBi, $studentTotal;
 			FROM students WHERE (registered='Y' or registered='C') and family_id=" . $famID . " ORDER BY last_name, first_name";
 	$result = mysqli_query($vbsDBi, $sql);
 
+	/*@@
 	if ($result===false){
 		$sqlErr = mysqli_error($vbsDBi);
-		writeErr("No student results", __FUNCTION__, __LINE__, $sqlErr);}
+		writeErr("No student results", FILE_NAME, __LINE__, $sqlErr);}
 	else {
+	*/
+	if ($result) {
 		$s = mysqli_fetch_assoc($result);
 		$stud = '<div id="Student">';
 		$stud .= "<h2>Student Information</h2>";
@@ -244,7 +245,6 @@ global $vbsDBi, $studentTotal;
 
 		if (! is_null($s)){
 			$stud .= "<tr><th>Name</th><th>Birthdate</th><th>Picture</th>";
-			//20180402-removed confo no. $stud .= "<th>Class</th><th>T-Shirt</th><th>Friend Request</th><th>Comments</th><th>Conf #</th></tr>";
 			$stud .= "<th>Class</th><th>T-Shirt</th><th>Friend Request</th><th>Comments</th></tr>";
 			$stud .= "<tr>";
 			do {
@@ -282,7 +282,7 @@ global $vbsDBi, $staffTotal;
 	$result = mysqli_query($vbsDBi, $sql);
 	if ($result===false){
 		$sqlErr = mysqli_error($vbsDBi);
-		writeErr("No volunteer results", __FUNCTION__, __LINE__, $sqlErr);}
+		writeErr("No volunteer results", FILE_NAME, __LINE__, $sqlErr);}
 	else {
 		$s = mysqli_fetch_assoc($result);
 
@@ -379,9 +379,8 @@ function getFamilyErrors(){
 		}
 	}
 	else {
-		if (DEBUG) print "Line " . __LINE__ . "-" . __FUNCTION__ . "<br>";
 		$sqlErr = mysqli_error($vbsDBi);
-		writeErr("Error selecting family name", __FUNCTION__, __LINE__, $sqlErr);
+		writeErr("Error selecting family name", FILE_NAME, __LINE__, $sqlErr);
 	}
 	@mysqli_free_result($rsResult);
 
@@ -488,10 +487,11 @@ function getMomAndMeCount(){
     global $vbsDBi;
 
     $sql = "SELECT count(*) AS count from students where registered = 'C' and family_id = " . $_SESSION['family_id'];  
-    $sql .= " and classroom='Mom and Me'";
+    $sql .= " and class='Mom and Me'";
     $result = mysqli_query($vbsDBi, $sql);
     $recCount = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
+    writeLog(FILE_NAME . __LINE__ . " getMomandMeCount = " . $recCount['count']);
     return $recCount['count'];
     
 }
@@ -506,9 +506,17 @@ function clearancesRequired(){
     $clearanceNeeded = TRUE;
     
     if (getStaffCount(ADULT_VOLUNTEERS) == 0){
+        writelog(FILE_NAME . __LINE__ . " No Adult Volunteers");
         if (getMomAndMeCount()==0){
-            $clearanceNeeded=FALSE;            
+            writelog(FILE_NAME . __LINE__ . " No Mom and Me Students");
+            $clearanceNeeded=FALSE;
         }
+        else {
+            writelog(FILE_NAME . __LINE__ . " Mom and Me Students - Display clearance page");
+        }
+    }
+    else {
+        writelog(FILE_NAME . __LINE__ . " Adult Volunteers - Display clearance page");
     }
     return $clearanceNeeded;
 }
@@ -517,6 +525,7 @@ function clearancesRequired(){
 /***********************************************************************
 	Returns the number of registered students for this current family id
 ************************************************************************/
+/*
 function getStudentCount($famID){
 	$sql = "SELECT count(*) as c from students where registered = 'Y' and family_id = " . $famID;
 	$result = mysqli_query($vbsDBi, $sql);
@@ -524,6 +533,7 @@ function getStudentCount($famID){
 	mysqli_free_result($result);
 	return $registered[0];
 }
+*/
 
 /**************************************************** M A I N *********************/
 
