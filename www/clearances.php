@@ -20,14 +20,14 @@ include("vbsUtils.inc");
 </head>
 <body>
 <div id="clearance" class="gridContainer">
-	<table style="border-style:hidden;margin:0em;padding:0em;"><tr><td style="width:5%;border-style:hidden" ><a href="/index.php"><input type="submit" class="button" name="submit" value="<?php echo HOME_BUTTON?>"></a></td>
+	<table style="border-style:hidden;margin:0em;padding:0em;"><tr><td style="width:5%;border-style:hidden" ><a href="./index.php"><input type="submit" class="button" name="submit" value="<?php echo HOME_BUTTON?>"></a></td>
 	           <td><h1>VBS Volunteer Clearance Information</h1></td>
 	           <td style="width:5%; border-style:hidden;">&nbsp;</td></tr></table>
 	<p>Thank you for registering for VBS.</p>
-	<p>If you are 18 or older and ...</p>
+	<p>If you are 18 or older or are attending the 'Mom and Me' class and ...</p>
 	<table>
 	<tr><td><ul><li>volunteered for Hope's VBS within the past 5 years</li></ul></td>
-	    <td><ul style="line-height:50%"><li>are a new VBS volunteer</li></ul><span style="line-height:1%">or</span><ul><li>are attending the 'Mom and Me Class'</ul></td>
+	    <td><ul style="line-height:50%"><li>are a new VBS volunteer</li></ul></td>
 	</tr>
 	<tr><td><ul><li>We have clearances on file for you but</li>
 				<li>You must sign a new 2019 <a href='#VolunteerDisclosureStatement'>Volunteer Discolsure Statement</a> and</li>
