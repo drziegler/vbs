@@ -68,19 +68,23 @@ function sendVBSmail($famID){
 
 	//TEST
 	//$mail_status = mail("david@the-zieglers.com", 'VBS Registration', $mailbody, $mail_header);
-    $mail_status = mail(VBS_EMAIL, 'VBS Registration', $mailbody, $mail_header);
-	if(!$mail_status){
-         writeLog(FILE_NAME . __LINE__ . "  Mail could not be sent due to an error while trying to send the mail.  Mail status is $mail_status");
+	if ( mail(VBS_EMAIL, 'VBS Registration', $mailbody, $mail_header)){
+        writeLog(FILE_NAME . __LINE__ . ' Sent email to ' . VBS_EMAIL . ' for ' . $email['family_name']);
+	}
+	else {
+        writeErr(FILE_NAME . __LINE__ . ' Could not send email to '.VBS_EMAIL . ' for ' . $email['family_name']);
 	}
 
 	/* HLR lookup api - to get mobil carrier name */
 
 	if (SEND_TEXT){
-		writeLog(FILE_NAME . __LINE__ . "  Sending text message to " . VBS_TEXT);
 		$text_headers = 'From: vbs@hopecherryville.org' . "\r\n";
 		$textMsg  = "New VBS registration for " . trim($family['family_name']) . " for $studentTotal students and $staffTotal volunteers\r\n";
 		if (mail(VBS_TEXT, '', $textMsg, $text_headers)) {
-		    writeLog(FILE_NAME . __LINE__ . "  Sent text to " . VBS_TEXT . " for " . trim($family['family_name']));
+		    writeLog(FILE_NAME . __LINE__ . "  Sent VBS text to " . VBS_TEXT . " for " . $family['family_name']);
+		}
+		else {
+		    writeErr('', FILE_NAME, __LINE__, " Unable to send VBS text for " . $family['family_name']);
 		}
 	}
 
@@ -114,15 +118,13 @@ function sendConfo($famID){
 
 	$email = getEmail($famID);
 
-	writeLog(FILE_NAME . __LINE__ . " Sent to " . $email['family_name'] . " at " . $email['email']);
 	$sendTo = $email['family_name'] . "<" . $email['email'] . ">";
 
-	$mail_status = mail($sendTo, "VBS Confirmation", $mailbody, implode("\r\n", $headers));
-	if(!$mail_status){
-         writeErr(FILE_NAME . "Failed to send email to " . $sendTo . " on " . date("F dS, Y"));
+	if( mail($sendTo, "VBS Confirmation", $mailbody, implode("\r\n", $headers)) ){
+	    writeLog(FILE_NAME . __LINE__ . " Sent confirmation email to " . $email['family_name'] . " at " . $email['email']);
 	}
-	else{
-		writeLog(FILE_NAME . __LINE__ . " Sent confirmation email to " . $email['family_name'] . " at " . $email['email']);
+	else {
+         writeErr(FILE_NAME . "Failed to send email to " . $sendTo . " on " . date("F dS, Y"));
 	}
 }
 
@@ -165,7 +167,7 @@ function sendClearanceMail($famID){
 
 function formatFamily($famID){
 	global $vbsDBi, $family;
-	$sql = $ph = $fam = "";
+	$sql = $fam = "";
 
 	$sql = "select * from family fam left join zipcodes zip on LEFT(fam.zipcode, 5)=zip.zipcode where family_id=" . $famID;
 	$result = mysqli_query($vbsDBi, $sql);
@@ -188,6 +190,7 @@ function formatFamily($famID){
 	}
 	else {
 		$sqlErr = mysqli_error($vbsDBi);
+		writeErr('', FILE_NAME, __LINE__, "-No family results for $famID " . $sql);
 		writeErr('', FILE_NAME, __LINE__, "-No family results for $famID " . $sqlErr);
 	}
 
@@ -223,6 +226,8 @@ global $vbsDBi;
 /* If includeID is false, then this is a confirmation for the requester and we suppress the ID field(s). */
 function formatStudents($famID){
 global $vbsDBi, $studentTotal;
+
+    $studentTotal = 0;
 
 	$sql = "SELECT CONCAT(first_name, ' ',last_name) as name, birthdate, class, shirt_size, picture, buddy, comments, confo, last_name, first_name
 			FROM students WHERE (registered='Y' or registered='C') and family_id=" . $famID . " ORDER BY last_name, first_name";
@@ -267,13 +272,16 @@ global $vbsDBi, $studentTotal;
 function formatStaff($famID){
 global $vbsDBi, $staffTotal;
 
+    $staffTotal = 0;
+	
 	$sql = "SELECT CONCAT(first_name, ' ',last_name) as name, picture, mon, tue, wed, thur, fri, kitchen, craft, classroom, anything,
 			teach_with, shirt_size, age_group, confo, comments, last_name, first_name
 			FROM staff WHERE (registered='Y' or registered='C') and family_id=" . $famID . " ORDER BY last_name, first_name";
 	$result = mysqli_query($vbsDBi, $sql);
 	if ($result===false){
 		$sqlErr = mysqli_error($vbsDBi);
-		writeErr("No volunteer results", FILE_NAME, __LINE__, $sqlErr);}
+		writeErr('', FILE_NAME, __LINE__. " Error on staff select: $sqlErr");
+	}
 	else {
 		$s = mysqli_fetch_assoc($result);
 
@@ -289,7 +297,6 @@ global $vbsDBi, $staffTotal;
 			$stf .= "<th>Class</th><th>Craft</th><th>Kitchen</th><th>Any</th>";
 			$stf .= "<th>Picture</th>";
 			$stf .= "<th>T-Shirt</th><th>Teach with</th>";
-			//20180402-removed confo no. $stf .= "<th>Age Group</th><th>Conf #</th></tr>";
 			$stf .= "<th>Clearance Required</th></tr>";
 
 			do {
@@ -371,12 +378,13 @@ function getFamilyErrors(){
 	}
 	else {
 		$sqlErr = mysqli_error($vbsDBi);
-		writeErr("Error selecting family name", FILE_NAME, __LINE__, $sqlErr);
+		writeErr('', FILE_NAME, __LINE__, $sql);
+		writeErr('Error selecting family name', FILE_NAME, __LINE__, $sqlErr);
 	}
 	@mysqli_free_result($rsResult);
 
 	$errMsg = trim($errMsg, ',');
-	$errMsg = ((strlen($errMsg)>0) ? " cannot be blank.":"");
+	$errMsg = ((strlen($errMsg)>0) ? ' cannot be blank.':'');
 	return $errMsg;
 }
 
@@ -386,7 +394,7 @@ function getStudentErrors(){
 	$notEmpty = Array('first_name'=>'First Name', 'last_name'=>'Last Name', 'birthdate'=>'Birthdate', 'class'=>'Class', 'shirt_size'=>'Shirt Size', 'picture'=>'Picture opt out');
 
 	/* Pull the family record */
-	$sql = "SELECT first_name, last_name, birthdate, class, shirt_size, picture from students where family_id=" . $_SESSION['family_id'];
+	$sql = 'SELECT first_name, last_name, birthdate, class, shirt_size, picture from students where family_id=' . $_SESSION['family_id'];
 	$rsResult = mysqli_query($vbsDBi, $sql);
 	$students = mysqli_fetch_all($rsResult, MYSQLI_ASSOC);
 	foreach ($students as $sKey=>$sValue){
@@ -398,7 +406,7 @@ function getStudentErrors(){
 			}
 		}
 	}
-	@mysqli_free_result($rsStudent);
+	@mysqli_free_result($rsResult);
 
 	$errMsg = trim($errMsg, ',');
 	$errMsg = ((strlen($errMsg)>0) ? " cannot be blank.":"");
@@ -482,9 +490,7 @@ function getMomAndMeCount(){
     $result = mysqli_query($vbsDBi, $sql);
     $recCount = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
-    writeLog(FILE_NAME . __LINE__ . " getMomandMeCount = " . $recCount['count']);
     return $recCount['count'];
-    
 }
 
 /********************************************************************
