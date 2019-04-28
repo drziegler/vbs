@@ -63,8 +63,6 @@ function sendVBSmail($famID){
 	$mail_header .= "Reply-to: " .$email['family_name']." <".$email['email'].">\r\n";
 	$mail_header .= "Content-Type: text/html; charset=utf-8\r\n";
 
-	/* Temporarily set the php.ini file to the sendmail_from value specified here */
-	ini_set("sendmail_from", "vbs@hopecherryville.org");
 
 	//TEST
 	//$mail_status = mail("david@the-zieglers.com", 'VBS Registration', $mailbody, $mail_header);
@@ -136,28 +134,28 @@ function sendClearanceMail($famID){
     $mailbody .= "</head><body>";
     $mailbody .= "<h1>VBS Adult Volunteer Registration Confirmation.</h1><br />";
     $mailbody .= "Registration date: " . date("F dS, Y") . "<br><br>";
-    
     $mailbody .="The following have registered as adult volunteers for VBS " . date("Y") . ". The following information has been sent to the VBS office.";
     $mailbody .="<br><br>";
     $mailbody .= formatFamily($famID) . "\r\n";
     $mailbody .= formatConfoPhone($famID) . "\r\n";
-    $mailbody .= formatStaff($famID) . "\r\n";
+    if ( ! getMomAndMeCount()==0) $mailbody .= formatStudents($famID) ."\r\n";
+    if ( ! getStaffCount(ADULT_VOLUNTEERS) == 0) $mailbody .= formatStaff($famID) . "\r\n";
     $mailbody .= "</body></html>";			/* just so we're well formed ! */
     
     // Append lines to $mail_header that you wish to be added to the headers of the e-mail. (SMTP Format
     // with newline char ending each line)
     $headers = array();
     $headers[] = "MIME-Version: 1.0";
-    $headers[] = "From: VBS Office <" . VBS_EMAIL . ">";
-    $headers[] = "Reply-to: VBS Office <" . VBS_EMAIL . ">";
+    $headers[] = "From: VBS Registration Office <" . VBS_EMAIL . ">";
+    $headers[] = "Reply-to: VBS Registration Office <" . VBS_EMAIL . ">";
     $headers[] = "Content-Type: text/html; charset=utf-8";
-    $headers[] = "Subject: VBS Adult Volunteer Registration";
-    
+    $headers[] = "Subject: VBS Adult Volunteer Registration (clearances)";
 
-    $sendTo = "Clearance Coordinator <" . VBS_CLEARANCES_EMAIL . ">";
+    $sendTo = 'Clearance Coordinator<' . VBS_CLEARANCES_EMAIL . '>';
+    writelog(FILE_NAME.__LINE__.' '.$sendTo);
     
-    if ( mail($sendTo, "VBS Adult Volunteer Registration (clearances)", $mailbody, implode("\r\n", $headers))){
-        writeLog('', FILE_NAME, __LINE__, ' Sent email to Clearance Coordinator at ' . VBS_CLEARANCES_EMAIL);
+    if ( mail($sendTo, "VBS Adult Volunteer Registration (clearances)", $mailbody, implode("\r\n", $headers)) ){
+        writeLog(FILE_NAME.__LINE__. ' Sent email to ' . $sendTo);
     }
     else {
         writeErr('', FILE_NAME, __LINE__, " Failed to send email to $sendTo" );
@@ -549,6 +547,7 @@ if (isset($_POST['submit'])) {
 			break;
 		case SUBMIT_REGISTRATION :
 			if (confirm($_SESSION['family_id'])){
+			    ini_set("sendmail_from", "vbs@hopecherryville.org");
 				sendConfo($_SESSION['family_id']);
 			    sendVBSMail($_SESSION['family_id']);
 				if (clearancesRequired()){
@@ -563,7 +562,7 @@ if (isset($_POST['submit'])) {
 			else
 			{
 				/* Send error notice to vbs mailbox */
-				writeErr("Confirm error", "confirm", __LINE__, 2003);
+				writeErr("Confirm error", FILE_NAME, __LINE__, 2003);
 				header("Location: " . HOME_PAGE);
 				break;
 			}
