@@ -20,26 +20,25 @@ $_SESSION['confoNo'] = $confoNo;
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS Registration</title>
 <link href="css/boilerplate.css" rel="stylesheet" type="text/css">
-<link href="css/layout.css" rel="stylesheet" type="text/css">
-<!--<link href="css/textural.css" rel="stylesheet" type="text/css"> -->
+<link href="css/layout.css?v1" rel="stylesheet" type="text/css">
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 <script src="scripts/respond.min.js"></script>
 </head>
-<body><!--  version 1 -->
+<body>
 <div id="Register" class="gridContainer">
-<div><h1>Hope Lutheran Church</h1></div>
-<table style="border-style: none;"><tr><td width="10%"><a href="/index.php"><input type="submit" class="button" name="submit" value="<?php echo HOME_BUTTON?>"></a></td>
-	<td width="80%" align="center" class="h2">VBS-Registration</td><td width="10%">&nbsp;</td></tr></table>
-<div>
+<h1 class='center'>Hope Lutheran Church</h1>
+<table style='border:none; padding:0px; margin:0;' width='100%'><tr><td width="10%"><a href="/index.php"><input type="submit" class="button" name="submit" value="<?php echo HOME_BUTTON?>" ></a></td>
+	<td width="80%" align="center" class="h2" style='padding:0; margin:0;'>VBS-Registration</td><td width="10%">&nbsp;</td></tr></table>
+<div class="center vertical-center">
 	<a href="search.php"><div id="mnuBtn" class="find"><span>Find</span></div></a>
     <a href="<?php echo FAMILY_PAGE ?>"><div id="mnuBtn" class="family"><span>Family</span></div></a>
     <a href="student.php"><div id="mnuBtn" class="student"><span>Students</span></div></a>
     <a href="staff.php"><div id="mnuBtn" class="staff"><span>Volunteers</span></div></a>
 </div>
-<div id="counter">Over&nbsp;<?php echo registrationCount();?>&nbsp;students&nbsp;marooned on Mars</div>
-<div id="Footer">&copy; <?php echo date("Y");?> David R Ziegler &amp; Hope Lutheran Church</div>
+</div>
+<div id="Footer"><div id="counter">Over&nbsp;<?php echo registrationCount();?>&nbsp;students&nbsp;marooned on Mars</div>&copy; <?php echo date("Y");?> David R Ziegler &amp; Hope Lutheran Church</div>
 </div>
 </body>
 </html>
