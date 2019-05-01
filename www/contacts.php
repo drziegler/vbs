@@ -369,7 +369,7 @@ if (DEBUG) {
 	    <input type="submit" name="submit" value="Add">&nbsp;
 	    <input type="submit" name="submit" value="Delete">&nbsp;
 		</td>
-	</tr>s
+	</tr>
 </table>
 <div id="buttonGroup" class="center">
 	<input type="submit" name="submit" class="button" value="<?php echo HOME_BUTTON?>">&nbsp;
