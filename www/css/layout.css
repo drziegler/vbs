@@ -1,5 +1,5 @@
 @charset "utf-8";
-/* Simple fluid media
+/* Simple fluid media  Version 1
    Note: Fluid media requires that you remove the media's height and width attributes from the HTML
    http://www.alistapart.com/articles/fluid-images/ 
 */
@@ -67,6 +67,8 @@ h1, h2 {
 	margin: auto;
 	text-align: center;
 	font-size: 8vw;
+	/* @@ For testing only */
+	color: orange;
 }
 h2, .h2 {
 	font-weight:normal;
@@ -131,6 +133,14 @@ input[type=checkbox], input[type=radio]{
 .centerText{
 	text-align:center;
 }
+.vertical-center{
+	margin:0;
+	position:fixed;
+	top:50%;
+	width: inherit;
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
 .nowrap{
 	white-space: nowrap;
 }
@@ -173,9 +183,11 @@ input[type=checkbox], input[type=radio]{
 	margin-left:auto;
 	margin-right:auto;
 }
+/* @@ ? 
 #buttonGroup span{
 	font-size:large;
 }
+*/
 .button{
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -191,19 +203,11 @@ input[type=checkbox], input[type=radio]{
 	display:inline;
 	margin: .25em .15em;
 	background: #4479BA;
-	color: #FFF;
+	color: white;
 	-webkit-transition-duration: 0.2s;
 	-moz-transition-duration: 0.2s;
 	transition-duration: 0.2s;
-}
-.button{
-	font-size: 3vw;
-}
-.home {
-	display: inline;
-	/*position:fixed; 
-	width:100%; 
-	top:50em;*/
+	font-size:100%;
 }
 .button:disabled{
 	background-color: LightGray;
@@ -270,19 +274,6 @@ tr *{
 	width: 47.3684%;
 	display: block;
 }
-#mnuButton{
-	border-radius: 25px;
-	border: thick solid black;
-	width: 50%;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 4vh;
-	padding: 5px;
-	font-family:Tahoma, Geneva, sans-serif;
-	font-size: 1.5em;
-	text-align: center;
-}
-
 #mnuBtn {
 	display: inline-block;
 	border-radius: 25px;
@@ -294,9 +285,10 @@ tr *{
 	margin:.1em;
 	font-family: Tahoma, Geneva, sans-serif;
 	font-size: 6vw;
-	color: black;
 	text-align: center;
 	background-size: contain;
+	/* @@ TESTING ONLY */
+	color: orange;
 }
 #mnuBtn span {
 	position: relative;
@@ -348,17 +340,17 @@ a:link{
 	max-height: 25px;
 }
 #Footer {
+	width: 98%;
 	position: absolute;
-	text-align:center;
 	clear: both;
 	float: left;
 	margin-left: 0;
-	width: 90%;
+	text-align:center;
 	display: block;
-	padding:15px;
+	padding: 2.5vmin; 
 	bottom:0;
 	left:0;
-	font-size: 3vw;
+	font-size: 1vmax; /* 80%; */
 }
 #LayoutDiv2{
 	clear: both;
@@ -381,11 +373,12 @@ a:link{
 	margin: auto;
 }
 #counter{
-	display: block;
-	width: 90%;
+	width: 100%;
 	margin: auto;
+	top: 0%;
 	text-align: center;
-	font-size: 12vw;
+	font-size: 5vmin;
+	margin-bottom: 2.5vh;
 }
 /************************************************ CONFO PAGE *********************************************************************************/
 /* Styles that apply only to the confirmation screen */
@@ -402,12 +395,15 @@ a:link{
 /********************************************************  TABLET LAYOUT ********************* TABLET LAYOUT ************************************/
 @media only screen and (min-width: 481px) {
 
-h1, h2{
-	font-size: 5vw;
+/*h1, h2{*/
+h1 {
+	font-size: 3vw;
+	/* @@ For testing only */
+	color: red;
 }
-h2 {
+h2, .h2{
 	font-weight:normal;
-	font-size: 4vw;
+	font-size: 3vw;
 }
 h3{
 	font-size: 2.5vw;
@@ -484,34 +480,27 @@ input[type=checkbox], input[type=radio]{
 	width: 48.7179%;
 }
 #mnuBtn{
-	font-size: 5vw;
+	width: 20%;
+	height: 25%;
+	padding-top: 20%;
+	margin:.1em;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 2.5vw;
+	color: blue;
 }
-#Footer {
-	position: absolute;
-	clear: both;
-	float: left;
-	margin-left: 0;
-	width: 100%;
-	display: block;
-	padding:15;
-	bottom:0;
-	left:0;
-	font-size: 3vw;
+/* @@#Footer {
+	font-size: 2vw;
 }
+*/
+
 #logo img{
 	display: block;
 	height: 60%;
 	width: 60%;
 	margin: auto;
 }
-#counter{
-	display: block;
-	width: 90%;
-	margin: auto;
-	text-align: center;
-	font-size: 12vw;
 }
-}
+
 
 /* Desktop Layout: 769px to a max of 1232px.  Inherits styles from: Mobile Layout and Tablet Layout. */
 /********************************************************  DESKTOP LAYOUT ********************* DESKTOP LAYOUT ************************************/
@@ -519,10 +508,15 @@ input[type=checkbox], input[type=radio]{
 @media only screen and (min-width: 836px) {
 h1 {
 	font-size: 3vw;
+	font-size: 300%;
+	/* @@ For testing only */
+	color: black;
 }
 h2, .h2 {
 	font-weight:normal;
-	font-size: 2vw;
+	font-size: 250%;
+	/* @@ for testing only */
+	color: black;
 }
 h3{
 	font-size: 1vw;
@@ -543,12 +537,7 @@ h3{
 	margin: auto;
 }
 .button{
-	font-size: 0.8vw;
-}
-.home {
-	position:fixed; 
-	width:100%; 
-	top:0;
+	font-size: 120%;
 }
 tr *{
 	font-size: 1vw;
@@ -601,6 +590,7 @@ input[type=checkbox], input[type=radio]{
 	width: 23%;
 	padding-top: 23%;
 	font-size: 2vw;
+	color: black;
 }
 
 #mnuBtn span {
@@ -611,19 +601,10 @@ input[type=checkbox], input[type=radio]{
 #mnuButton{
 	font-size: 2em;
 }
-#Footer {
-	position: absolute;
-	clear: both;
-	float: left;
-	margin-left: 0;
-	width: 100%;
-	display: block;
-	padding:15;
-	bottom:0;
-	left:0;
-	font-size: .75vw;
+/* @@#Footer {
+	font-size: 1.25vw;
 }
-
+*/
 #buttonGroup{
 	display: block;
 	width: 90%;
@@ -664,8 +645,4 @@ table #schedule{
 #logo img{
 	height: 40%;
 	width: 40%;
-}
-#counter{
-	font-size: 2vw;
-	margin-top: 8vh;
 }
