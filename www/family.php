@@ -263,12 +263,12 @@ if (DEBUG) print_r($_SESSION);
 </head>
 <body>
 <div id="Family" class="gridContainer">
-<div><h1>VBS - Family</h1></div>
-<?php if (strlen($errMsgText)) { ?>
-	<div><h2 class="error"><?php echo $errMsgText?></h2></div>
-<?php } else { ?>
-	<div><h2>Edit your family information then click next.</h2></div>
-<?php } ?>
+	<h1>VBS - Family</h1>
+	<?php if (strlen($errMsgText)) { ?>
+		<h3 class="error"><?php echo $errMsgText?></h3>
+	<?php } else { ?>
+		<h2>Edit your family information then click next.</h2>
+	<?php } ?>
 <div id="dataLayout">
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post" name="frmFamily" target="_self">
 <table>

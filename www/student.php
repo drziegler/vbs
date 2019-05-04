@@ -432,8 +432,8 @@ $offset = --$offset;
 </head>
 <body>
 <div id="Student" class="gridContainer">
-	<div><h1>VBS - Student</h1></div>
-	<div id="status"><h2>Edit information and save.</h2></div>
+	<h1>VBS - Student</h1>
+	<h2>Edit information and save.</h2>
     <?php if ($validateError) { ?><div class="error"><h3><?php echo $errMsgText;?></h3></div><?php } ?>
 	<div id="dataLayout">
 	<form method="post" name="frmStudent" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
