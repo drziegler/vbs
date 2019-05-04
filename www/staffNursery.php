@@ -407,9 +407,9 @@ $offset = --$offset;
 </head>
 <body>
 <div id="Staff" class="gridContainer">
-	<div id="header"><h1>VBS - Staff Nursery</h1></div>
-	<div id="status"><h2>Edit information and click save or update.</h2></div>
-	<?php if ($validateError) { ?><div class="error"><h3><?php echo $errMsgText;?></h3></div><?php } ?>
+	<h1>VBS - Staff Nursery</h1>
+	<h2>Edit information and click save or update.</h2>
+	<?php if ($validateError) { ?><h3><?php echo $errMsgText;?></h3><?php } ?>
 	<div id="dataLayout">
 	<form method="post" name="frmStudent" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
 	<table cellspacing="0">
@@ -464,22 +464,21 @@ do {
 			  <input type="submit" name="submit" value="Update">
         <?php } } ?>
 		</td></tr>
-	</table>
-    <input name="student_id" type="hidden" value="<?php echo $row_rsStudent['student_id']; ?>">
-    <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
-    <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
-    <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
-    <input name="offset" type="hidden" value="<?php echo $offset;?>">
-    <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
-	<table style=margin-top:-0.6em><tr><td>
-		<div id="buttonSubGroup" class="center">
-	    	<span>Displaying student <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?> students</span><br>
+	<tr><td colspan='2'><hr>
+        <input name="student_id" type="hidden" value="<?php echo $row_rsStudent['student_id']; ?>">
+        <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
+        <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
+        <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
+        <input name="offset" type="hidden" value="<?php echo $offset;?>">
+        <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
+	</td></tr>
+	<tr><td colspan='2' class='center'>
+		   	Displaying student <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?><br>
 			<input type="submit" class="button" name="submit" value="First" <?php echo $button['First'];?>>&nbsp;
 			<input type="submit" class="button" name="submit" value="Previous" <?php echo $button['Previous'];?>>&nbsp;
 			<input type="submit" class="button" name="submit" value="Next" <?php echo $button['Next'];?>>&nbsp;
 			<input type="submit" class="button" name="submit" value="Last" <?php echo $button['Last'];?>>&nbsp;&nbsp;&nbsp;
 			<input type="submit" class="button" name="submit" value="<?php echo NEW_BUTTON?>" <?php echo $button['New'];?>>
-		</div>
 		</td></tr>
 	</table>
 		<div id="buttonSubGroup" class="center">
