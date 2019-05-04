@@ -571,14 +571,14 @@ do {
         	<input type="submit" name="submit" value="Update">
         <?php } ?>
 		</td></tr>
-	</table>
-    <input name="staff_id" type="hidden" value="<?php echo $row_rsStudent['staff_id']; ?>">
-    <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
-    <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
-    <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
-    <input name="offset" type="hidden" value="<?php echo $offset;?>">
-    <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
-	<table style=margin-top:-0.6em><tr><td>
+        <input name="staff_id" type="hidden" value="<?php echo $row_rsStudent['staff_id']; ?>">
+        <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
+        <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
+        <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
+        <input name="offset" type="hidden" value="<?php echo $offset;?>">
+        <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
+		<tr><td colspan='2'><hr></td></tr>
+		<tr><td colspan='2'>
 		<div id="buttonSubGroup" class="center">
     		<span>Displaying staff member <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?></span><br>
 			<input type="submit" name="submit" class="button" value="First"<?php echo $button['First']?>>&nbsp;
@@ -587,6 +587,7 @@ do {
 			<input type="submit" name="submit" class="button" value="Last"<?php echo $button['Last']?>>&nbsp;&nbsp;&nbsp;
 			<input type="submit" name="submit" class="button" value="<?php echo NEW_BUTTON?>"<?php  echo $button['New']?>><br>
 		</div>
+		</td></tr>
 	</table>
 	<div id="buttonGroup" class="buttonGroup center">
 		<input type="submit" name="submit" class="button" value="<?php echo HOME_BUTTON?>"<?php echo $button['Home']?>>&nbsp;
