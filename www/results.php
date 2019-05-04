@@ -8,6 +8,7 @@ define("NEXT_FAMILY",       "Next family");
 define("PREVIOUS_FAMILY",   "Previous family");
 define("NEW_FAMILY",		"New family");
 define('FILE_NAME',         '[RESULTS] ');
+$button = Array();
 $numFamilies = 0;
 
 /* We are coming back to ourselves, process as necessary */
@@ -112,7 +113,7 @@ $offset = --$offset;
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS Search Results</title>
-<link href="css/layout.css" rel="stylesheet" type="text/css">
+<link href="css/layout.css?v1" rel="stylesheet" type="text/css">
 <link href="css/boilerplate.css" rel="stylesheet" type="text/css">
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -132,24 +133,22 @@ $offset = --$offset;
         <tr><td class="center"><?php echo $row_rsFamily['address']; ?><input type="hidden" name="address" value="<?php echo $row_rsFamily['address']; ?>"></td></tr>
         <tr><td class="center"><?php echo $row_rsFamily['city']; ?></td></tr>
         <tr><td class="center"><input name="family_id" type="hidden" value="<?php echo $row_rsFamily['family_id']; ?>"><?php echo $row_rsFamily['email']; ?></td></tr>
-	</table>
 	<?php if ($numFamilies>1) {?>
-	<table style=margin-top:-0.6em><tr><td>
-		<div id="buttonSubGroup" class="center">
-	    	<span>Displaying family <?php echo (($numFamilies >0)?$offset+1:0)?> of <?php echo $numFamilies ?> families</span><br>
+	    <tr><td><hr></td></tr>
+	    <tr><td class="center">
+    		Displaying family <?php echo (($numFamilies >0)?$offset+1:0)?> of <?php echo $numFamilies ?><br>
 			<input type="submit" class="button" name="submit" value="<?php echo PREVIOUS_RECORD?>" <?php echo $button['Previous'];?>>&nbsp;
 			<input type="submit" class="button" name="submit" value="<?php echo NEXT_RECORD?>" <?php echo $button['Next'];?>>&nbsp;
-		</div>
-	</table>
+		</td></tr>
     <?php } } ?>
-
+	</table>
 	<div id="buttonGroup" class="center">
 	<?php if ($numFamilies > 0){ ?>
 		<input type="submit" name="submit" class="button" value="<?php echo USE_THIS_RECORD ?>">&nbsp;
 	<?php } ?>
 		<input type="submit" name="submit" class="button" value="<?php echo SEARCH_AGAIN ?>">&nbsp;
 		<input type="submit" name="submit" class="button" value="<?php echo NEW_FAMILY ?>">
-	</div></td></tr>
+	</div>
     <input name="offset" type="hidden" value="<?php echo $offset;?>">
     <input name="numFamilies" type="hidden" value="<?php echo $numFamilies;?>">
     <input name="txtPhone" type="hidden" value="<?php echo $_REQUEST['txtPhone']?>">
