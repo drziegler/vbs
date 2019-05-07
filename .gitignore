@@ -11,3 +11,4 @@ www/.buildpath
 www/.project
 www/images/_notes/dwsync.xml
 *.xml
+www/logs/vbs.log
