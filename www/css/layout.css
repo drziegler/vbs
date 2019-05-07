@@ -68,6 +68,11 @@ h1, h2 {
 	text-align: center;
 	font-size: 8vw;
 }
+#Staff h2{
+	/* This formats the staff page to fix on 1 mobile screen. */
+	margin-bottom:0;
+	padding-bottom:0;
+}
 h2, .h2 {
 	font-weight:normal;
 	font-size: 6vw;
@@ -215,7 +220,7 @@ table {
 	margin-top:1em;
 	border:.25em solid;
 	border-collapse:collapse;
-	border-spacing:0px;
+	border-spacing:0px;		/* equivalent to cellspacing*/ 
 }
 td {
 	padding: 0.45em;
@@ -382,7 +387,7 @@ a:link{
 }
 #Family .confo td{
 	padding: .25em;
-/*	font-size: 1vw; */
+	font-size: .5vw; 
 }
 
 /* Tablet Layout: 481px to 768px. Inherits styles from: Mobile Layout. */
