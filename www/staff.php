@@ -500,12 +500,10 @@ $offset = --$offset;
 <title>VBS Staff</title>
 <link href="css/boilerplate.css" rel="stylesheet" type="text/css">
 <link href="css/layout.css" rel="stylesheet" type="text/css">
-<!-- <link href="css/textural.css" rel="stylesheet" type="text/css"> -->
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 <script src="scripts/vbsUtils.js"></script>
-<!-- Removed 4-9-19 <script src="scripts/respond.min.js"></script>  -->
 </head>
 <body>
 <div id="Staff" class="gridContainer">
@@ -577,10 +575,10 @@ do {
         <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
         <input name="offset" type="hidden" value="<?php echo $offset;?>">
         <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
-		<tr><td colspan='2'><hr></td></tr>
-		<tr><td colspan='2'>
-		<div id="buttonSubGroup" class="center">
-    		<span>Displaying staff member <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?></span><br>
+		<tr><td colspan='2' style="margin:0;padding:0;"><hr></td></tr>
+		<tr><td colspan='2' style="margin-top:0;padding-top:0;">
+		<div id="buttonSubGroup" class="center" style="padding-top:0;margin-top:0;">
+    		Displaying staff member <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?><br>
 			<input type="submit" name="submit" class="button" value="First"<?php echo $button['First']?>>&nbsp;
 			<input type="submit" name="submit" class="button" value="Previous"<?php echo $button['Previous']?>>&nbsp;
 			<input type="submit" name="submit" class="button" value="Next"<?php echo $button['Next']?>>&nbsp;
