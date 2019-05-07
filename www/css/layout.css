@@ -147,6 +147,10 @@ input[type=checkbox], input[type=radio]{
 .nowrap{
 	white-space: nowrap;
 }
+.narrow{
+	margin:0;
+	padding:0;
+}
 .left{
 	text-align: left;
 }
@@ -244,7 +248,7 @@ hr {border:none;}
 	background-color: rgba(0,0,255,0.25);
 }
 #Family td{font-size: 3vh;}
-#Student table, #Student hr{
+#Student table{
 	border-color: rgb(31,122,31);
 	background-color: rgb(153,255,153);
 }
