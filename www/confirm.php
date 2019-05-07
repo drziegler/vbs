@@ -175,9 +175,9 @@ function formatFamily($famID){
 		// Add the family data to the email body
 		$fam = '<div id="Family">';
 		$fam .= '<h2 style="margin:0">Family Information</h2>';
-		$fam .= '<table cellspace="0" class="confo">';
-		$fam .= '<tr><td class="label">Family Name:</td><td class="value">' . $family['family_name'] . "</td></tr>";
-		$fam .= '<tr><td class="label">Address:</td><td class="value">' . $family['address'] . "</td></tr>";
+		$fam .= '<table>';
+		$fam .= '<tr><td class="label">Family Name:</td><td class="confo value">' . $family['family_name'] . "</td></tr>";
+		$fam .= '<tr><td class="label">Address:</td><td class="confo value">' . $family['address'] . "</td></tr>";
 		$fam .= '<tr><td class="label">City State Zip:</td><td class="value">' . $family['city'] . " " . $family['state'] . " " . $family['zipcode'] . "</td></tr>";
 		$fam .= '<tr><td class="label">Email:</td><td class="value">'.$family['email']."</a></td></tr>";
 		$fam .= "<tr><td class='label'>Home Church:</td><td class='value'>" . $family['home_church'] . "</td></tr>";
@@ -207,7 +207,7 @@ global $vbsDBi;
 		$phone = mysqli_fetch_assoc($result);
 		$ph = '<div id="Phone">';
 		$ph .= "<h2>Phone Contacts</h2>";
-		$ph .= '<table class="confo" cellspacing="0">';
+		$ph .= '<table class="confo">';
 		$ph .= '<tr><th>Contact Name</th><th>Telephone Number</th></tr>';
 		do {
 			$ph .= "<tr><td>" . $phone['contact_name'] . "</td>";
@@ -235,7 +235,7 @@ global $vbsDBi, $studentTotal;
 		$s = mysqli_fetch_assoc($result);
 		$stud = '<div id="Student">';
 		$stud .= "<h2>Student Information</h2>";
-		$stud .= '<table cellspacing="0">';
+		$stud .= '<table>';
 
 		if (! is_null($s)){
 			$stud .= "<tr><th>Name</th><th>Birthdate</th><th>Picture</th>";
@@ -249,7 +249,6 @@ global $vbsDBi, $studentTotal;
 				$stud .= "<td class='centerText'>" . $s['shirt_size'] . "</td>";
 				$stud .= "<td class='centerText'>" . $s['buddy'] . "</td>";
 				$stud .= "<td>" . $s['comments'] . "</td>";
-				//20180402-removed confo no.$stud .= "<td>" . $s['confo'] . "</td>";
 				$stud .= "</tr>";
 				$studentTotal++;
 			} while ($s = mysqli_fetch_assoc($result));
@@ -370,7 +369,7 @@ function getFamilyErrors(){
 
 		foreach($mandatory as $key=>$value){
 			if (strlen(trim($value))===0){
-				$error .= $value . ",";
+				$errMsg .= $value . ",";
 			}
 		}
 	}
