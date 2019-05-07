@@ -5,7 +5,6 @@ define('FILE_NAME_UTIL',     '[VBSUTILS] ');
 
 define("DEBUG", 		FALSE);
 define("SEND_TEXT",		TRUE);
-define("SEND_ERROR_TEXT", TRUE);
 
 /* Pagination constants */
 define("HOME_PAGE",		'register.php');
@@ -39,13 +38,13 @@ define("ALL_VOLUNTEERS",    FALSE);
 
 //PROD
 define("LOG_FILE",  	'./logs/vbs.log');
-define("ERR_FILE", 	    './logs/vbs_error.log');
+define("ERR_FILE", 	'./logs/vbs_error.log');
 //DEV
 //define("LOG_FILE",  	'C:/Users/David/git/vbs/www/vbs.log');
-//define("ERR_FILE", 		'C:/Users/David/git/vbs/www/vbs_error.log'); 
+//define("ERR_FILE", 	'C:/Users/David/git/vbs/www/vbs_error.log'); 
 define("START_PAGE", 	"index.php");
-define("REGISTER",		"Register");
-//define("UNREGISTER",	"Unregister");
+define("REGISTER",	"Register");
+define("UNREGISTER",	"Unregister");
 
 
 #Date constants
@@ -61,17 +60,17 @@ define("VBS_MOM_ME_DEADLINE_MMDDYYYY",      '06-24-2019');
 define("NO_DUPES",		false);
 define("WAITLIST_ONLY",	false);
 //PROD
-define("VBS_EMAIL",             "vbs@hopecherryville.org");
-define("VBS_TEXT",		        "6102629198@vtext.com");
-define("VBS_ERROR_TEXT",        "6102629199@vtext.com");
-define("VBS_CLEARANCES_EMAIL",  "clearances@hopecherryville.org");
-
-//DEV
 /*
+define("VBS_EMAIL",		"vbs@hopecherryville.org");
+define("VBS_TEXT",		"6102629198@vtext.com");
+define("VBS_CLEARANCES_EMAIL","clearances@hopecherryville.org");
+*/
+//DEV
+
 define("VBS_EMAIL",		"david@the-zieglers.com");
 define("VBS_TEXT",		"6102629199@vtext.com");
-define("VBS_CLEARANCES_EMAIL",  "organist@hopecherryville.org");
-*/
+define("VBS_CLEARANCES_EMAIL",  "david@the-zieglers.com");
+
 
 function formatPhone($rawPhone){
 	$delimiter = "&#45;";
@@ -162,16 +161,9 @@ function writeLog($text2write){
 	write($text2write, LOG_FILE);
 }
 function writeErr($text2write, $functionName, $lineNo, $errNo){
-
-    $text2write = $functionName .  $lineNo . "-ErrNo: " . $errNo . " " . $text2write;
-	write($text2write, ERR_FILE);
-	
-	if (SEND_ERROR_TEXT){
-	    $text_headers = 'From: vbs@hopecherryville.org' . "\r\n";
-	    $textMsg  = "Error in VBS registration at $functionName | $lineNo | $errNo \r\n";
-	    mail(VBS_ERROR_TEXT, '', $textMsg, $text_headers);
-	}
-	
+	//if (DEBUG) print "Function: " . __FUNCTION__ . " Line: " . __LINE__ . "<br>";
+	$text2write = $functionName .  $lineNo . "-ErrNo: " . $errNo . " " . $text2write;
+	write($text2write, ERR_FILE);	
 }
 /*
   This formats and writes a string to the file as 
