@@ -464,7 +464,7 @@ do {
 			  <input type="submit" name="submit" value="Update">
         <?php } } ?>
 		</td></tr>
-	<tr><td colspan='2'><hr>
+	<tr><td colspan='2' class='narrow'><hr>
         <input name="student_id" type="hidden" value="<?php echo $row_rsStudent['student_id']; ?>">
         <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
         <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">

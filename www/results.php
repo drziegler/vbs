@@ -134,7 +134,7 @@ $offset = --$offset;
         <tr><td class="center"><?php echo $row_rsFamily['city']; ?></td></tr>
         <tr><td class="center"><input name="family_id" type="hidden" value="<?php echo $row_rsFamily['family_id']; ?>"><?php echo $row_rsFamily['email']; ?></td></tr>
 	<?php if ($numFamilies>1) {?>
-	    <tr><td><hr></td></tr>
+	    <tr><td class='narrow'><hr></td></tr>
 	    <tr><td class="center">
     		Displaying family <?php echo (($numFamilies >0)?$offset+1:0)?> of <?php echo $numFamilies ?><br>
 			<input type="submit" class="button" name="submit" value="<?php echo PREVIOUS_RECORD?>" <?php echo $button['Previous'];?>>&nbsp;

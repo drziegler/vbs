@@ -489,10 +489,10 @@ do {
 			  <input type="submit" name="submit" value="Update">
         <?php } }?>
 		</td></tr>
-		<tr><td colspan='2'><hr></td></tr>
+		<tr><td colspan='2' class='narrow'><hr></td></tr>
 		<tr><td colspan='2'>
 		<div id="buttonSubGroup" class="center">
-	    	<span>Displaying student <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?> students</span><br>
+	    	Displaying student <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?><br>
 			<input type="submit" class="button" name="submit" value="<?php echo FIRST_RECORD?>" <?php echo $button['First'];?>>&nbsp;
 			<input type="submit" class="button" name="submit" value="<?php echo PREVIOUS_RECORD?>" <?php echo $button['Previous'];?>>&nbsp;
 			<input type="submit" class="button" name="submit" value="<?php echo NEXT_RECORD?>" <?php echo $button['Next'];?>>&nbsp;

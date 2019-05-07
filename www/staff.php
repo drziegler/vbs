@@ -575,7 +575,7 @@ do {
         <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
         <input name="offset" type="hidden" value="<?php echo $offset;?>">
         <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
-		<tr><td colspan='2' style="margin:0;padding:0;"><hr></td></tr>
+		<tr><td colspan='2' class='narrow'><hr></td></tr>
 		<tr><td colspan='2' style="margin-top:0;padding-top:0;">
 		<div id="buttonSubGroup" class="center" style="padding-top:0;margin-top:0;">
     		Displaying staff member <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?><br>
