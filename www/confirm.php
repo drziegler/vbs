@@ -173,9 +173,10 @@ function formatFamily($famID){
 		$family = mysqli_fetch_assoc($result);
 
 		// Add the family data to the email body
-		$fam = '<div id="Family">';
-		$fam .= '<h2 style="margin:0">Family Information</h2>';
+		$fam = '<div id="Find" class="center">';
+		//$fam .= '<h2 style="margin:0">Family Information</h2>';
 		$fam .= '<table>';
+		$fam .= '<tr><td colspan="2" class="center">Family Information</td></tr>';
 		$fam .= '<tr><td class="label">Family Name:</td><td class="confo value">' . $family['family_name'] . "</td></tr>";
 		$fam .= '<tr><td class="label">Address:</td><td class="confo value">' . $family['address'] . "</td></tr>";
 		$fam .= '<tr><td class="label">City State Zip:</td><td class="value">' . $family['city'] . " " . $family['state'] . " " . $family['zipcode'] . "</td></tr>";
@@ -233,7 +234,7 @@ global $vbsDBi, $studentTotal;
 
 	if ($result) {
 		$s = mysqli_fetch_assoc($result);
-		$stud = '<div id="Student">';
+		$stud = '<div id="Find" class="center">';
 		$stud .= "<h2>Student Information</h2>";
 		$stud .= '<table>';
 
@@ -282,7 +283,7 @@ global $vbsDBi, $staffTotal;
 	else {
 		$s = mysqli_fetch_assoc($result);
 
-		$stf = '<div id="Staff">';
+		$stf = '<div id="Find" class="center">';
 		$stf .= "<h2>Volunteer Information</h2>";
 		$stf .= '<table cellspacing="0">';
 
@@ -601,8 +602,8 @@ if (DEBUG) print "Total students = $studentTotal.  Total staff = $staffTotal.<br
     <link href="css/layout.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-    <div id="Confirm" class="gridContainer">
-    <div><h2>VBS-Registration Summary</h2></div>
+    <div id="Find" class="gridContainer">
+    <div><h1>VBS-Registration Summary</h1></div>
     <?php
         echo formatFamily($_SESSION['family_id']);
         //echo formatConfoPhone($_SESSION['family_id']);
