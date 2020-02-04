@@ -506,13 +506,17 @@ $offset = --$offset;
 <script src="scripts/vbsUtils.js"></script>
 </head>
 <body>
-<div id="Staff" class="gridContainer">
+<div id="Find" class="gridContainer">
 	<h1>VBS - Volunteers</h1>
-	<h2>Edit information and save.</h2>
-    <?php if ($validateError) echo "<h3>" . $errMsgText . "</h3>";?>
-	<div id="dataLayout">
+	<div id="dataLayout center">
 	<form method="post" name="frmStaff" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
 	<table cellspacing="0">
+		<?php if ($validateError) { ?> 
+			<tr><td colspan="2" class="error center"> <?php echo $errMsgText; ?>
+		<?php } else { ?>
+			<tr><td colspan="2" class="center">Edit information and save</td></tr> 
+	 	<?php } ?>
+	
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAtt')">Helping at VBS?<span class="popuptext" id="hAtt">Select yes if <?php echo (empty($row_rsStudent['first_name']) ? "you are" : $row_rsStudent['first_name'] . " is");?> helping at VBS in <?php echo date("Y");?>; otherwise select No.</span></span></td>
 			<td class="value">
 			<label><input type="radio" name="registered" id="reg-yes" value="<?php echo $yesVal?>" <?php echo $yesChk . $fldEnabled?>> Yes</label>

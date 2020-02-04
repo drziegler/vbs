@@ -20,7 +20,7 @@ $_SESSION['confoNo'] = $confoNo;
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS Registration</title>
 <link href="css/boilerplate.css" rel="stylesheet" type="text/css">
-<link href="css/layout.css?v1" rel="stylesheet" type="text/css">
+<link href="css/layout.css?v2" rel="stylesheet" type="text/css">
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
@@ -38,7 +38,7 @@ $_SESSION['confoNo'] = $confoNo;
     <a href="staff.php"><div id="mnuBtn" class="staff"><span>Volunteers</span></div></a>
 </div>
 </div>
-<div id="Footer"><div id="counter">Over&nbsp;<?php echo registrationCount();?>&nbsp;students&nbsp;marooned on Mars</div>&copy; <?php echo date("Y");?> David R Ziegler &amp; Hope Lutheran Church</div>
+<div id="Footer"><div id="counter">Over&nbsp;<?php echo registrationCount();?>&nbsp;students&nbsp;in the dungeon.</div>&copy; <?php echo date("Y");?> David R Ziegler &amp; Hope Lutheran Church</div>
 </div>
 </body>
 </html>
