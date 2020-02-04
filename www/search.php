@@ -27,27 +27,21 @@ switch ($_POST['submit']) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS-Find Family</title>
-<link href="css/layout.css" rel="stylesheet" type="text/css">
+<link href="css/layout.css?v2" rel="stylesheet" type="text/css">
 <link href="css/boilerplate.css" rel="stylesheet" type="text/css">
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 <script src="scripts/respond.min.js"></script>
-<script src="includes/ice/ice.js" type="text/javascript"></script>
+<!--   <script src="includes/ice/ice.js" type="text/javascript"></script> -->
 </head>
 <body>
 <div id="Find" class="gridContainer clearfix">
-<<<<<<< Updated upstream
-    <div><h1>VBS - Find</h1></div>
-    <div><h2>Search for previous registration records using your telephone number.</h2></div>
-    <div id="dataLayout">
-=======
     <div><h1>VBS - Search</h1></div>
     <div id="dataLayout" class="vertical-horizontal-center">
->>>>>>> Stashed changes
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post" name="frmPhone" target="_self">
     <table>
-        <tr><td class="center"><span>Enter your telephone number using only numbers.</span></td></tr>
+        <tr><td class="center">Enter your telephone number using only numbers.</td></tr>
 		<tr><td class="center"><input name="txtPhone" id="searchPhone" type="number" pattern="[1-9]" autofocus></td></tr>
     </table>
     <div id="buttonGroup" class="center">
