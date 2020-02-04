@@ -7,7 +7,7 @@ define("DEBUG", 		FALSE);
 define("SEND_TEXT",		TRUE);
 
 /* Pagination constants */
-define("HOME_PAGE",		'register.php');
+define("HOME_PAGE",		'index.php');
 define("SEARCH_PAGE",	'search.php');
 define("FAMILY_PAGE",	'family.php');
 define("CONTACT_PAGE",	'contacts.php');
@@ -48,13 +48,13 @@ define("UNREGISTER",	"Unregister");
 
 
 #Date constants
-define("VBS_DATE",                          '2019-07-08');
+define("VBS_DATE",                          '2020-07-06');
 define("VBS_DATE_MAX",                      '2016-07-01');
 define("VBS_DATE_MIN",                      '2006-09-01');
-define("VBS_SHIRT_DEADLINE",                '2019-06-16');
-define("VBS_SHIRT_DEADLINE_MMDDYYYY",	    '06-16-2019');
-define("VBS_MOM_ME_DEADLINE",               '2019-06-24');
-define("VBS_MOM_ME_DEADLINE_MMDDYYYY",      '06-24-2019');
+define("VBS_SHIRT_DEADLINE",                '2020-06-14');
+define("VBS_SHIRT_DEADLINE_MMDDYYYY",	    '06-14-2020');
+define("VBS_MOM_ME_DEADLINE",               '2020-06-20');
+define("VBS_MOM_ME_DEADLINE_MMDDYYYY",      '06-20-2020');
 
 #Validation constants
 define("NO_DUPES",		false);
