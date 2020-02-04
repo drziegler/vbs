@@ -63,24 +63,26 @@ function sendVBSmail($famID){
 	$mail_header .= "Reply-to: " .$email['family_name']." <".$email['email'].">\r\n";
 	$mail_header .= "Content-Type: text/html; charset=utf-8\r\n";
 
-	/* Temporarily set the php.ini file to the sendmail_from value specified here */
-	ini_set("sendmail_from", "vbs@hopecherryville.org");
 
 	//TEST
 	//$mail_status = mail("david@the-zieglers.com", 'VBS Registration', $mailbody, $mail_header);
-    $mail_status = mail(VBS_EMAIL, 'VBS Registration', $mailbody, $mail_header);
-	if(!$mail_status){
-         writeLog(FILE_NAME . __LINE__ . "  Mail could not be sent due to an error while trying to send the mail.  Mail status is $mail_status");
+	if ( mail(VBS_EMAIL, 'VBS Registration', $mailbody, $mail_header)){
+        writeLog(FILE_NAME . __LINE__ . ' Sent email to ' . VBS_EMAIL . ' for ' . $email['family_name']);
+	}
+	else {
+        writeErr(FILE_NAME . __LINE__ . ' Could not send email to '.VBS_EMAIL . ' for ' . $email['family_name']);
 	}
 
 	/* HLR lookup api - to get mobil carrier name */
 
 	if (SEND_TEXT){
-		writeLog(FILE_NAME . __LINE__ . "  Sending text message to " . VBS_TEXT);
 		$text_headers = 'From: vbs@hopecherryville.org' . "\r\n";
 		$textMsg  = "New VBS registration for " . trim($family['family_name']) . " for $studentTotal students and $staffTotal volunteers\r\n";
 		if (mail(VBS_TEXT, '', $textMsg, $text_headers)) {
-		    writeLog(FILE_NAME . __LINE__ . "  Sent text to " . VBS_TEXT . " for " . trim($family['family_name']));
+		    writeLog(FILE_NAME . __LINE__ . "  Sent VBS text to " . VBS_TEXT . " for " . $family['family_name']);
+		}
+		else {
+		    writeErr('', FILE_NAME, __LINE__, " Unable to send VBS text for " . $family['family_name']);
 		}
 	}
 
@@ -114,15 +116,13 @@ function sendConfo($famID){
 
 	$email = getEmail($famID);
 
-	writeLog(FILE_NAME . __LINE__ . " Sent to " . $email['family_name'] . " at " . $email['email']);
 	$sendTo = $email['family_name'] . "<" . $email['email'] . ">";
 
-	$mail_status = mail($sendTo, "VBS Confirmation", $mailbody, implode("\r\n", $headers));
-	if(!$mail_status){
-         writeErr(FILE_NAME . "Failed to send email to " . $sendTo . " on " . date("F dS, Y"));
+	if( mail($sendTo, "VBS Confirmation", $mailbody, implode("\r\n", $headers)) ){
+	    writeLog(FILE_NAME . __LINE__ . " Sent confirmation email to " . $email['family_name'] . " at " . $email['email']);
 	}
-	else{
-		writeLog(FILE_NAME . __LINE__ . " Sent confirmation email to " . $email['family_name'] . " at " . $email['email']);
+	else {
+         writeErr(FILE_NAME . "Failed to send email to " . $sendTo . " on " . date("F dS, Y"));
 	}
 }
 
@@ -134,28 +134,28 @@ function sendClearanceMail($famID){
     $mailbody .= "</head><body>";
     $mailbody .= "<h1>VBS Adult Volunteer Registration Confirmation.</h1><br />";
     $mailbody .= "Registration date: " . date("F dS, Y") . "<br><br>";
-    
     $mailbody .="The following have registered as adult volunteers for VBS " . date("Y") . ". The following information has been sent to the VBS office.";
     $mailbody .="<br><br>";
     $mailbody .= formatFamily($famID) . "\r\n";
     $mailbody .= formatConfoPhone($famID) . "\r\n";
-    $mailbody .= formatStaff($famID) . "\r\n";
+    if ( ! getMomAndMeCount()==0) $mailbody .= formatStudents($famID) ."\r\n";
+    if ( ! getStaffCount(ADULT_VOLUNTEERS) == 0) $mailbody .= formatStaff($famID) . "\r\n";
     $mailbody .= "</body></html>";			/* just so we're well formed ! */
     
     // Append lines to $mail_header that you wish to be added to the headers of the e-mail. (SMTP Format
     // with newline char ending each line)
     $headers = array();
     $headers[] = "MIME-Version: 1.0";
-    $headers[] = "From: VBS Office <" . VBS_EMAIL . ">";
-    $headers[] = "Reply-to: VBS Office <" . VBS_EMAIL . ">";
+    $headers[] = "From: VBS Registration Office <" . VBS_EMAIL . ">";
+    $headers[] = "Reply-to: VBS Registration Office <" . VBS_EMAIL . ">";
     $headers[] = "Content-Type: text/html; charset=utf-8";
-    $headers[] = "Subject: VBS Adult Volunteer Registration";
-    
+    $headers[] = "Subject: VBS Adult Volunteer Registration (clearances)";
 
-    $sendTo = "Clearance Coordinator <" . VBS_CLEARANCES_EMAIL . ">";
+    $sendTo = 'Clearance Coordinator<' . VBS_CLEARANCES_EMAIL . '>';
+    writelog(FILE_NAME.__LINE__.' '.$sendTo);
     
-    if ( mail($sendTo, "VBS Adult Volunteer Registration (clearances)", $mailbody, implode("\r\n", $headers))){
-        writeLog('', FILE_NAME, __LINE__, ' Sent email to Clearance Coordinator at ' . VBS_CLEARANCES_EMAIL);
+    if ( mail($sendTo, "VBS Adult Volunteer Registration (clearances)", $mailbody, implode("\r\n", $headers)) ){
+        writeLog(FILE_NAME.__LINE__. ' Sent email to ' . $sendTo);
     }
     else {
         writeErr('', FILE_NAME, __LINE__, " Failed to send email to $sendTo" );
@@ -165,7 +165,7 @@ function sendClearanceMail($famID){
 
 function formatFamily($famID){
 	global $vbsDBi, $family;
-	$sql = $ph = $fam = "";
+	$sql = $fam = "";
 
 	$sql = "select * from family fam left join zipcodes zip on LEFT(fam.zipcode, 5)=zip.zipcode where family_id=" . $famID;
 	$result = mysqli_query($vbsDBi, $sql);
@@ -173,19 +173,11 @@ function formatFamily($famID){
 		$family = mysqli_fetch_assoc($result);
 
 		// Add the family data to the email body
-<<<<<<< Updated upstream
-		$fam = '<div id="Family">';
-		$fam .= '<h2 style="margin:0">Family Information</h2>';
-		$fam .= '<table cellspace="0" class="confo">';
-		$fam .= '<tr><td class="label">Family Name:</td><td class="value">' . $family['family_name'] . "</td></tr>";
-		$fam .= '<tr><td class="label">Address:</td><td class="value">' . $family['address'] . "</td></tr>";
-=======
 		$fam = '<div id="Find" class="center">';
 		$fam .= '<table>';
 		$fam .= '<tr><td colspan="2" class="center">Family Information</td></tr>';
 		$fam .= '<tr><td class="label">Family Name:</td><td class="confo value">' . $family['family_name'] . "</td></tr>";
 		$fam .= '<tr><td class="label">Address:</td><td class="confo value">' . $family['address'] . "</td></tr>";
->>>>>>> Stashed changes
 		$fam .= '<tr><td class="label">City State Zip:</td><td class="value">' . $family['city'] . " " . $family['state'] . " " . $family['zipcode'] . "</td></tr>";
 		$fam .= '<tr><td class="label">Email:</td><td class="value">'.$family['email']."</a></td></tr>";
 		$fam .= "<tr><td class='label'>Home Church:</td><td class='value'>" . $family['home_church'] . "</td></tr>";
@@ -196,6 +188,7 @@ function formatFamily($famID){
 	}
 	else {
 		$sqlErr = mysqli_error($vbsDBi);
+		writeErr('', FILE_NAME, __LINE__, "-No family results for $famID " . $sql);
 		writeErr('', FILE_NAME, __LINE__, "-No family results for $famID " . $sqlErr);
 	}
 
@@ -214,7 +207,7 @@ global $vbsDBi;
 		$phone = mysqli_fetch_assoc($result);
 		$ph = '<div id="Phone">';
 		$ph .= "<h2>Phone Contacts</h2>";
-		$ph .= '<table class="confo" cellspacing="0">';
+		$ph .= '<table class="confo">';
 		$ph .= '<tr><th>Contact Name</th><th>Telephone Number</th></tr>';
 		do {
 			$ph .= "<tr><td>" . $phone['contact_name'] . "</td>";
@@ -232,20 +225,16 @@ global $vbsDBi;
 function formatStudents($famID){
 global $vbsDBi, $studentTotal;
 
+    $studentTotal = 0;
+
 	$sql = "SELECT CONCAT(first_name, ' ',last_name) as name, birthdate, class, shirt_size, picture, buddy, comments, confo, last_name, first_name
 			FROM students WHERE (registered='Y' or registered='C') and family_id=" . $famID . " ORDER BY last_name, first_name";
 	$result = mysqli_query($vbsDBi, $sql);
 
 	if ($result) {
 		$s = mysqli_fetch_assoc($result);
-<<<<<<< Updated upstream
-		$stud = '<div id="Student">';
-		$stud .= "<h2>Student Information</h2>";
-		$stud .= '<table cellspacing="0">';
-=======
 		$stud = '<div id="Find" class="center">';
 		$stud .= '<table>';
->>>>>>> Stashed changes
 
 		if (! is_null($s)){
             $stud .= "<tr><td colspan='7'>Student Information</td></tr>";
@@ -260,7 +249,6 @@ global $vbsDBi, $studentTotal;
 				$stud .= "<td class='left'>" . $s['shirt_size'] . "</td>";
 				$stud .= "<td class='left'>" . $s['buddy'] . "</td>";
 				$stud .= "<td>" . $s['comments'] . "</td>";
-				//20180402-removed confo no.$stud .= "<td>" . $s['confo'] . "</td>";
 				$stud .= "</tr>";
 				$studentTotal++;
 			} while ($s = mysqli_fetch_assoc($result));
@@ -281,22 +269,20 @@ global $vbsDBi, $studentTotal;
 function formatStaff($famID){
 global $vbsDBi, $staffTotal;
 
+    $staffTotal = 0;
+	
 	$sql = "SELECT CONCAT(first_name, ' ',last_name) as name, picture, mon, tue, wed, thur, fri, kitchen, craft, classroom, anything,
 			teach_with, shirt_size, age_group, confo, comments, last_name, first_name
 			FROM staff WHERE (registered='Y' or registered='C') and family_id=" . $famID . " ORDER BY last_name, first_name";
 	$result = mysqli_query($vbsDBi, $sql);
 	if ($result===false){
 		$sqlErr = mysqli_error($vbsDBi);
-		writeErr("No volunteer results", FILE_NAME, __LINE__, $sqlErr);}
+		writeErr('', FILE_NAME, __LINE__. " Error on staff select: $sqlErr");
+	}
 	else {
 		$s = mysqli_fetch_assoc($result);
 
-<<<<<<< Updated upstream
-		$stf = '<div id="Staff">';
-		$stf .= "<h2>Volunteer Information</h2>";
-=======
 		$stf = '<div id="Find" class="center">';
->>>>>>> Stashed changes
 		$stf .= '<table cellspacing="0">';
 
 		if (! is_null($s)){
@@ -308,7 +294,6 @@ global $vbsDBi, $staffTotal;
 			$stf .= "<th>Class</th><th>Craft</th><th>Kitchen</th><th>Any</th>";
 			$stf .= "<th>Picture</th>";
 			$stf .= "<th>T-Shirt</th><th>Teach with</th>";
-			//20180402-removed confo no. $stf .= "<th>Age Group</th><th>Conf #</th></tr>";
 			$stf .= "<th>Clearance Required</th></tr>";
 
 			do {
@@ -384,18 +369,19 @@ function getFamilyErrors(){
 
 		foreach($mandatory as $key=>$value){
 			if (strlen(trim($value))===0){
-				$error .= $value . ",";
+				$errMsg .= $value . ",";
 			}
 		}
 	}
 	else {
 		$sqlErr = mysqli_error($vbsDBi);
-		writeErr("Error selecting family name", FILE_NAME, __LINE__, $sqlErr);
+		writeErr('', FILE_NAME, __LINE__, $sql);
+		writeErr('Error selecting family name', FILE_NAME, __LINE__, $sqlErr);
 	}
 	@mysqli_free_result($rsResult);
 
 	$errMsg = trim($errMsg, ',');
-	$errMsg = ((strlen($errMsg)>0) ? " cannot be blank.":"");
+	$errMsg = ((strlen($errMsg)>0) ? ' cannot be blank.':'');
 	return $errMsg;
 }
 
@@ -405,7 +391,7 @@ function getStudentErrors(){
 	$notEmpty = Array('first_name'=>'First Name', 'last_name'=>'Last Name', 'birthdate'=>'Birthdate', 'class'=>'Class', 'shirt_size'=>'Shirt Size', 'picture'=>'Picture opt out');
 
 	/* Pull the family record */
-	$sql = "SELECT first_name, last_name, birthdate, class, shirt_size, picture from students where family_id=" . $_SESSION['family_id'];
+	$sql = 'SELECT first_name, last_name, birthdate, class, shirt_size, picture from students where family_id=' . $_SESSION['family_id'];
 	$rsResult = mysqli_query($vbsDBi, $sql);
 	$students = mysqli_fetch_all($rsResult, MYSQLI_ASSOC);
 	foreach ($students as $sKey=>$sValue){
@@ -417,7 +403,7 @@ function getStudentErrors(){
 			}
 		}
 	}
-	@mysqli_free_result($rsStudent);
+	@mysqli_free_result($rsResult);
 
 	$errMsg = trim($errMsg, ',');
 	$errMsg = ((strlen($errMsg)>0) ? " cannot be blank.":"");
@@ -501,9 +487,7 @@ function getMomAndMeCount(){
     $result = mysqli_query($vbsDBi, $sql);
     $recCount = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
-    writeLog(FILE_NAME . __LINE__ . " getMomandMeCount = " . $recCount['count']);
     return $recCount['count'];
-    
 }
 
 /********************************************************************
@@ -562,6 +546,7 @@ if (isset($_POST['submit'])) {
 			break;
 		case SUBMIT_REGISTRATION :
 			if (confirm($_SESSION['family_id'])){
+			    ini_set("sendmail_from", "vbs@hopecherryville.org");
 				sendConfo($_SESSION['family_id']);
 			    sendVBSMail($_SESSION['family_id']);
 				if (clearancesRequired()){
@@ -576,7 +561,7 @@ if (isset($_POST['submit'])) {
 			else
 			{
 				/* Send error notice to vbs mailbox */
-				writeErr("Confirm error", "confirm", __LINE__, 2003);
+				writeErr("Confirm error", FILE_NAME, __LINE__, 2003);
 				header("Location: " . HOME_PAGE);
 				break;
 			}
@@ -616,8 +601,8 @@ if (DEBUG) print "Total students = $studentTotal.  Total staff = $staffTotal.<br
     <link href="css/layout.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-    <div id="Confirm" class="gridContainer">
-    <div><h2>VBS-Registration Summary</h2></div>
+    <div id="Find" class="gridContainer">
+    <div><h1>VBS-Registration Summary</h1></div>
     <?php
         echo formatFamily($_SESSION['family_id']);
         echo formatStudents($_SESSION['family_id']);
