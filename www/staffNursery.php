@@ -406,13 +406,15 @@ $offset = --$offset;
 <script src="scripts/respond.min.js"></script>
 </head>
 <body>
-<div id="Staff" class="gridContainer">
-	<div id="header"><h1>VBS - Staff Nursery</h1></div>
-	<div id="status"><h2>Edit information and click save or update.</h2></div>
-	<?php if ($validateError) { ?><div class="error"><h3><?php echo $errMsgText;?></h3></div><?php } ?>
-	<div id="dataLayout">
+<div id="Find" class="gridContainer">
+	<h1>VBS - Staff Nursery</h1>
+	<div id="dataLayout center">
 	<form method="post" name="frmStudent" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
-	<table cellspacing="0">
+	<table>
+		<tr><td colspan="2" class="center  
+		<?php if ($validateError) { ?>error"><?php echo $errMsgText; }
+			  else {?>">Edit information and click save or update.<?php } ?>
+		</td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAtt')">In Nursery?<span class="popuptext" id="hAtt">Select yes if <?php echo (empty($row_rsStudent['first_name']) ? "this child" : $row_rsStudent['first_name']);?> will be in the staff nursery in <?php echo date("Y");?>; otherwise select No.</span></span></td>
 		<td class="value">
 			<label><input type="radio" name="registered" id="reg-yes" value="<?php echo $yesVal?>" <?php echo $yesChk . $fldEnabled?> > Yes</label>
@@ -455,7 +457,6 @@ do {
             <label><input type="radio" name="picture" id="pic-no" value="N" <?php if (!(strcasecmp($row_rsStudent['picture'],"N"))) {echo "checked";} echo $fldEnabled;?>>No</label>
     	</td></tr>
         <tr><td class="label"><span class="popup" onclick="myPopUp('sComment')">Comments<span class="popuptext" id="sComment">Enter comments here that are specifically related to this child. Allergies, medications, preferred nap times and other important information should be included.</span></span></td><td class="value"><textarea name="comments" cols="" rows="" <?php echo $fldEnabled;?>><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
-    <!--   	<tr><td class="label">Status:</td><td class="value"><?php echo ($registered ? "Registered (#".$row_rsStudent['confo'].")" : "Not registered"); ?></td></tr> -->
         <tr><td>*&nbsp;required   <span class="popup" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to register a child in the staff nursery.  To engage the services of the nursery, an adult in the family must be a volunteer.  Click the underlined labels for detailed field level help.  Click the pop-up box to close it.</span></span></td><td class="value">
 		<?php if ($fldEnabled=='') {if ($_REQUEST['submit']==NEW_BUTTON) { ?>
 			<input type="submit" name="submit" value="Save">&nbsp;
@@ -464,22 +465,21 @@ do {
 			  <input type="submit" name="submit" value="Update">
         <?php } } ?>
 		</td></tr>
-	</table>
-    <input name="student_id" type="hidden" value="<?php echo $row_rsStudent['student_id']; ?>">
-    <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
-    <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
-    <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
-    <input name="offset" type="hidden" value="<?php echo $offset;?>">
-    <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
-	<table style=margin-top:-0.6em><tr><td>
-		<div id="buttonSubGroup" class="center">
-	    	<span>Displaying student <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?> students</span><br>
+	<tr><td colspan='2' class='narrow'><hr>
+        <input name="student_id" type="hidden" value="<?php echo $row_rsStudent['student_id']; ?>">
+        <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
+        <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
+        <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
+        <input name="offset" type="hidden" value="<?php echo $offset;?>">
+        <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
+	</td></tr>
+	<tr><td colspan='2' class='center'>
+		   	Displaying student <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?><br>
 			<input type="submit" class="button" name="submit" value="First" <?php echo $button['First'];?>>&nbsp;
 			<input type="submit" class="button" name="submit" value="Previous" <?php echo $button['Previous'];?>>&nbsp;
 			<input type="submit" class="button" name="submit" value="Next" <?php echo $button['Next'];?>>&nbsp;
 			<input type="submit" class="button" name="submit" value="Last" <?php echo $button['Last'];?>>&nbsp;&nbsp;&nbsp;
 			<input type="submit" class="button" name="submit" value="<?php echo NEW_BUTTON?>" <?php echo $button['New'];?>>
-		</div>
 		</td></tr>
 	</table>
 		<div id="buttonSubGroup" class="center">
