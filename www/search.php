@@ -37,9 +37,14 @@ switch ($_POST['submit']) {
 </head>
 <body>
 <div id="Find" class="gridContainer clearfix">
+<<<<<<< Updated upstream
     <div><h1>VBS - Find</h1></div>
     <div><h2>Search for previous registration records using your telephone number.</h2></div>
     <div id="dataLayout">
+=======
+    <div><h1>VBS - Search</h1></div>
+    <div id="dataLayout" class="vertical-horizontal-center">
+>>>>>>> Stashed changes
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post" name="frmPhone" target="_self">
     <table>
         <tr><td class="center"><span>Enter your telephone number using only numbers.</span></td></tr>

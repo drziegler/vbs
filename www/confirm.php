@@ -173,11 +173,19 @@ function formatFamily($famID){
 		$family = mysqli_fetch_assoc($result);
 
 		// Add the family data to the email body
+<<<<<<< Updated upstream
 		$fam = '<div id="Family">';
 		$fam .= '<h2 style="margin:0">Family Information</h2>';
 		$fam .= '<table cellspace="0" class="confo">';
 		$fam .= '<tr><td class="label">Family Name:</td><td class="value">' . $family['family_name'] . "</td></tr>";
 		$fam .= '<tr><td class="label">Address:</td><td class="value">' . $family['address'] . "</td></tr>";
+=======
+		$fam = '<div id="Find" class="center">';
+		$fam .= '<table>';
+		$fam .= '<tr><td colspan="2" class="center">Family Information</td></tr>';
+		$fam .= '<tr><td class="label">Family Name:</td><td class="confo value">' . $family['family_name'] . "</td></tr>";
+		$fam .= '<tr><td class="label">Address:</td><td class="confo value">' . $family['address'] . "</td></tr>";
+>>>>>>> Stashed changes
 		$fam .= '<tr><td class="label">City State Zip:</td><td class="value">' . $family['city'] . " " . $family['state'] . " " . $family['zipcode'] . "</td></tr>";
 		$fam .= '<tr><td class="label">Email:</td><td class="value">'.$family['email']."</a></td></tr>";
 		$fam .= "<tr><td class='label'>Home Church:</td><td class='value'>" . $family['home_church'] . "</td></tr>";
@@ -230,21 +238,27 @@ global $vbsDBi, $studentTotal;
 
 	if ($result) {
 		$s = mysqli_fetch_assoc($result);
+<<<<<<< Updated upstream
 		$stud = '<div id="Student">';
 		$stud .= "<h2>Student Information</h2>";
 		$stud .= '<table cellspacing="0">';
+=======
+		$stud = '<div id="Find" class="center">';
+		$stud .= '<table>';
+>>>>>>> Stashed changes
 
 		if (! is_null($s)){
-			$stud .= "<tr><th>Name</th><th>Birthdate</th><th>Picture</th>";
+            $stud .= "<tr><td colspan='7'>Student Information</td></tr>";
+		    $stud .= "<tr><th>Name</th><th>Birthdate</th><th>Picture</th>";
 			$stud .= "<th>Class</th><th>T-Shirt</th><th>Friend Request</th><th>Comments</th></tr>";
 			$stud .= "<tr>";
 			do {
-				$stud .= "<td class='nowrap'>" . $s['name'] . "</td>";
+				$stud .= "<td class='nowrap left'>" . $s['name'] . "</td>";
 				$stud .= "<td class='nowrap centerText'>" . $s['birthdate'] . "</td>";
 				$stud .= "<td class='centerText'>" . (($s['picture']=='Y')?"Yes":"No") . "</td>";
-				$stud .= "<td class='centerText'>" . $s['class'] . "</td>";
-				$stud .= "<td class='centerText'>" . $s['shirt_size'] . "</td>";
-				$stud .= "<td class='centerText'>" . $s['buddy'] . "</td>";
+				$stud .= "<td class='left'>" . $s['class'] . "</td>";
+				$stud .= "<td class='left'>" . $s['shirt_size'] . "</td>";
+				$stud .= "<td class='left'>" . $s['buddy'] . "</td>";
 				$stud .= "<td>" . $s['comments'] . "</td>";
 				//20180402-removed confo no.$stud .= "<td>" . $s['confo'] . "</td>";
 				$stud .= "</tr>";
@@ -277,12 +291,17 @@ global $vbsDBi, $staffTotal;
 	else {
 		$s = mysqli_fetch_assoc($result);
 
+<<<<<<< Updated upstream
 		$stf = '<div id="Staff">';
 		$stf .= "<h2>Volunteer Information</h2>";
+=======
+		$stf = '<div id="Find" class="center">';
+>>>>>>> Stashed changes
 		$stf .= '<table cellspacing="0">';
 
 		if (! is_null($s)){
 			/* Add the STAFF SECTION */
+		    $stf .= "<tr><td colspan='14'>Volunteer Information</td></tr>";
 			$stf .= "<tr>";
 			$stf .= "<th>Name</th>";
 			$stf .= "<th>M</th><th>T</th><th>W</th><th>Th</th><th>F</th>";
@@ -601,11 +620,9 @@ if (DEBUG) print "Total students = $studentTotal.  Total staff = $staffTotal.<br
     <div><h2>VBS-Registration Summary</h2></div>
     <?php
         echo formatFamily($_SESSION['family_id']);
-        //echo formatConfoPhone($_SESSION['family_id']);
         echo formatStudents($_SESSION['family_id']);
         echo formatStaff($_SESSION['family_id']);
     ?>
-    <p>&nbsp;</p>
     <div id="buttonGroup" class="center">
 		<form method="post" name="frmStudent" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" style="display:inline-block">
 			<input type="submit" name="submit" class="button" value="<?php echo HOME_BUTTON?>">&nbsp;

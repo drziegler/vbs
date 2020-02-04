@@ -124,9 +124,11 @@ $offset = --$offset;
     <div id="dataLayout">
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post" name="frmResults" target="_self">
 	<?php if ($numFamilies == 0){ ?>
-		<div><h2><?php echo $errMsg?><input name="family_id" type="hidden" value="0"></h2></div>
+	<table>
+		<tr><td class="center"><?php echo $errMsg?><input name="family_id" type="hidden" value="0"></td></tr>
 	<?php } else {?>
 	<table>
+	
 		<tr><td class="center"><?php echo $row_rsFamily['family_name']; ?></td></tr>
         <tr><td class="center"><?php echo $row_rsFamily['address']; ?><input type="hidden" name="address" value="<?php echo $row_rsFamily['address']; ?>"></td></tr>
         <tr><td class="center"><?php echo $row_rsFamily['city']; ?></td></tr>

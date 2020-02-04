@@ -1,5 +1,15 @@
 @charset "utf-8";
+<<<<<<< Updated upstream
 /* Simple fluid media
+=======
+@font-face{
+	font-family: "Castle Font";
+	src: url('../fonts/castlefont.ttf');
+	/*src: url('../fonts/Old London.ttf'); */
+	font-weight: 100 1700;
+}
+/* Simple fluid media  Version 1
+>>>>>>> Stashed changes
    Note: Fluid media requires that you remove the media's height and width attributes from the HTML
    http://www.alistapart.com/articles/fluid-images/ 
 */
@@ -22,6 +32,13 @@ img, object, embed, video {
 .width-equal-thirds{
 	width:33%;
 }
+<<<<<<< Updated upstream
+=======
+.border-on{
+	/* Used to turn borders on and off to test view layouts */
+	border: .25em solid black;
+}
+>>>>>>> Stashed changes
 .popup {
 	position: relative;
 	display: inline-block;
@@ -60,7 +77,10 @@ img, object, embed, video {
     -webkit-animation: fadeIn 1s;
     animation: fadeIn 1s
 } 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 /**************************************** Mobile Layout: 480px and below. ****************************/
 h1, h2 {
 	width: 99%;
@@ -68,9 +88,25 @@ h1, h2 {
 	text-align: center;
 	font-size: 8vw;
 }
+<<<<<<< Updated upstream
 h2, .h2 {
 	font-weight:normal;
 	font-size: 6vw;
+=======
+
+h2, .h2 {
+	width: 99%;
+	margin: auto;
+	text-align: center;
+	font-size: 4vw;
+	font-weight:normal;
+}
+
+#Staff h2{
+	/* This formats the staff page to fix on 1 mobile screen. */
+	margin-bottom:0;
+	padding-bottom:0;
+>>>>>>> Stashed changes
 }
 h3{
 	font-size:5vw;
@@ -163,7 +199,11 @@ input[type=checkbox], input[type=radio]{
 	float: left;
 	margin-left: 0;
 	margin-top: .5em;
+<<<<<<< Updated upstream
 	width: 100%;
+=======
+	width: auto;
+>>>>>>> Stashed changes
 	display: block;
 }
 #buttonGroup{
@@ -227,10 +267,25 @@ tr *{
 	font-size: 3vw;
 	padding: 0.30em;
 }
+<<<<<<< Updated upstream
 
 #Find table{
 	border-color:rgba(255,102,0,1);
 	background-color: rgba(255,102,0,0.25)
+=======
+hr {border:none;}
+#Find table, p{
+	border: 5px solid black;
+	background-color: LightGrey;
+	opacity: 0.9;
+}
+#Find p{
+	font-size: 1.25em;
+	padding: 0.5em;
+}
+#Find hr{
+	background-color:rgba(255,102,0,1);
+>>>>>>> Stashed changes
 }
 #Family table{
 	border-color: rgba(68, 121, 186, 1);
@@ -518,7 +573,13 @@ input[type=checkbox], input[type=radio]{
 /*@media only screen and (min-width: 769px) { */
 @media only screen and (min-width: 836px) {
 h1 {
+<<<<<<< Updated upstream
 	font-size: 3vw;
+=======
+	font-family: "Castle Font";
+	font-size: 5vw;
+	color:black;
+>>>>>>> Stashed changes
 }
 h2, .h2 {
 	font-weight:normal;
@@ -580,6 +641,11 @@ input[type=checkbox], input[type=radio]{
 .value{
 	padding-left:1.5em;
 }
+<<<<<<< Updated upstream
+=======
+#Find td{font-size: 1vw;}
+
+>>>>>>> Stashed changes
 #Menu1 {
 	clear: both;
 	float: left;
