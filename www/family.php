@@ -262,16 +262,16 @@ if (DEBUG) print_r($_SESSION);
 <script src="css/respond.min.js"></script>
 </head>
 <body>
-<div id="Family" class="gridContainer">
-<div><h1>VBS - Family</h1></div>
-<?php if (strlen($errMsgText)) { ?>
-	<div><h2 class="error"><?php echo $errMsgText?></h2></div>
-<?php } else { ?>
-	<div><h2>Edit your family information then click next.</h2></div>
-<?php } ?>
-<div id="dataLayout">
+<div id="Find" class="gridContainer">
+	<h1>VBS - Family</h1>
+<div id="dataLayout center">
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post" name="frmFamily" target="_self">
 <table>
+	<?php if (strlen($errMsgText)) { ?> 
+		<tr><td colspan="2" class="error center"> <?php echo $errMsgText; ?>
+	<?php } else { ?>
+		<tr><td colspan="2" class="center">Edit family information</td></tr> 
+ 	<?php } ?>
 	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFamName')">Family Name<span class="popuptext" id="hFamName">Enter your family name in the format you want it to appear on correspondence to you, e.g. Mr &amp; Mrs John Doe.</span></span></td><td class="value"><input name="family_name" type="text" value="<?php echo $rsFam['family_name']; ?>" style="width:60%" maxlength='40'></td></tr>
 	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAddress')">Address<span class="popuptext" id="hAddress">Enter your street address or mailing address.</span></span></td><td class="value"><input name="address" type="text" value="<?php echo $rsFam['address'];?>"  style="width:60%;" maxlength='64'></td></tr>
 	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hZip')">Zipcode<span class="popuptext" id="hZip">Enter your 5-digit zipcode.  We'll look up the city and state.</span></span></td><td class="value"><input name="zipcode" type="number" min="0" max="99999" value="<?php echo $rsFam['zipcode'];?>" style="width:5em;" maxlength='5'></td></tr>
