@@ -500,21 +500,23 @@ $offset = --$offset;
 <title>VBS Staff</title>
 <link href="css/boilerplate.css" rel="stylesheet" type="text/css">
 <link href="css/layout.css" rel="stylesheet" type="text/css">
-<!-- <link href="css/textural.css" rel="stylesheet" type="text/css"> -->
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 <script src="scripts/vbsUtils.js"></script>
-<!-- Removed 4-9-19 <script src="scripts/respond.min.js"></script>  -->
 </head>
 <body>
-<div id="Staff" class="gridContainer">
+<div id="Find" class="gridContainer">
 	<h1>VBS - Volunteers</h1>
-	<h2>Edit information and save.</h2>
-    <?php if ($validateError) echo "<h3>" . $errMsgText . "</h3>";?>
-	<div id="dataLayout">
+	<div id="dataLayout center">
 	<form method="post" name="frmStaff" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
 	<table cellspacing="0">
+		<?php if ($validateError) { ?> 
+			<tr><td colspan="2" class="error center"> <?php echo $errMsgText; ?>
+		<?php } else { ?>
+			<tr><td colspan="2" class="center">Edit information and save</td></tr> 
+	 	<?php } ?>
+	
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAtt')">Helping at VBS?<span class="popuptext" id="hAtt">Select yes if <?php echo (empty($row_rsStudent['first_name']) ? "you are" : $row_rsStudent['first_name'] . " is");?> helping at VBS in <?php echo date("Y");?>; otherwise select No.</span></span></td>
 			<td class="value">
 			<label><input type="radio" name="registered" id="reg-yes" value="<?php echo $yesVal?>" <?php echo $yesChk . $fldEnabled?>> Yes</label>
@@ -571,22 +573,23 @@ do {
         	<input type="submit" name="submit" value="Update">
         <?php } ?>
 		</td></tr>
-	</table>
-    <input name="staff_id" type="hidden" value="<?php echo $row_rsStudent['staff_id']; ?>">
-    <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
-    <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
-    <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
-    <input name="offset" type="hidden" value="<?php echo $offset;?>">
-    <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
-	<table style=margin-top:-0.6em><tr><td>
-		<div id="buttonSubGroup" class="center">
-    		<span>Displaying staff member <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?></span><br>
+        <input name="staff_id" type="hidden" value="<?php echo $row_rsStudent['staff_id']; ?>">
+        <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
+        <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
+        <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
+        <input name="offset" type="hidden" value="<?php echo $offset;?>">
+        <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
+		<tr><td colspan='2' class='narrow'><hr></td></tr>
+		<tr><td colspan='2' style="margin-top:0;padding-top:0;">
+		<div id="buttonSubGroup" class="center" style="padding-top:0;margin-top:0;">
+    		Displaying staff member <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?><br>
 			<input type="submit" name="submit" class="button" value="First"<?php echo $button['First']?>>&nbsp;
 			<input type="submit" name="submit" class="button" value="Previous"<?php echo $button['Previous']?>>&nbsp;
 			<input type="submit" name="submit" class="button" value="Next"<?php echo $button['Next']?>>&nbsp;
 			<input type="submit" name="submit" class="button" value="Last"<?php echo $button['Last']?>>&nbsp;&nbsp;&nbsp;
 			<input type="submit" name="submit" class="button" value="<?php echo NEW_BUTTON?>"<?php  echo $button['New']?>><br>
 		</div>
+		</td></tr>
 	</table>
 	<div id="buttonGroup" class="buttonGroup center">
 		<input type="submit" name="submit" class="button" value="<?php echo HOME_BUTTON?>"<?php echo $button['Home']?>>&nbsp;
