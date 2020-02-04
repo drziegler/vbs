@@ -1,30 +1,31 @@
-<?php 
+<?php
 session_start();
 require_once('./Connections/vbsDB.php');
-include_once('vbsUtils.inc'); 
+include_once('vbsUtils.inc');
 define("USE_THIS_RECORD",	"Use this record");
 define("SEARCH_AGAIN",		"Search again");
 define("NEXT_FAMILY",       "Next family");
 define("PREVIOUS_FAMILY",   "Previous family");
 define("NEW_FAMILY",		"New family");
+define('FILE_NAME',         '[RESULTS] ');
+$button = Array();
 $numFamilies = 0;
 
 /* We are coming back to ourselves, process as necessary */
-print_r($_POST);
-if ((DEBUG) and !empty($_POST['submit'])) {
-    print '$_POST[\'submit\'] = ' . $_POST['submit'] . "<br>";
+if ((DEBUG) and !empty($_REQUEST['submit'])) {
+    print '$_REQUEST[\'submit\'] = ' . $_REQUEST['submit'] . "<br>";
 }
-if (!empty($_POST['submit'])){
-    $offset=$_POST['offset'];
-    $numFamilies=$_POST['numFamilies'];
-    $_REQUEST['txtPhone']=$_POST['txtPhone'];
-    
-    switch ($_POST['submit']) {
+if (!empty($_REQUEST['submit'])){
+    $offset=$_REQUEST['offset'];
+    $numFamilies=$_REQUEST['numFamilies'];
+    $_REQUEST['txtPhone']=$_REQUEST['txtPhone'];
+
+    switch ($_REQUEST['submit']) {
     	case USE_THIS_RECORD :
     		if (DEBUG) print "Line: " . __LINE__ . "<br>";
-    		$_SESSION['family_id'] = $_POST['family_id'];
-    		$_SESSION['family_name'] = 
-    		insertStats($vbsDBi, $_POST['family_id'], 'reused');
+    		$_SESSION['family_id'] = $_REQUEST['family_id'];
+    		$_SESSION['family_name'] =
+    		insertStats($vbsDBi, $_REQUEST['family_id'], 'reused');
     		header("Location: " . FAMILY_PAGE);
     		break;
     	case SEARCH_AGAIN :
@@ -34,7 +35,7 @@ if (!empty($_POST['submit'])){
     		break;
     	case NEW_FAMILY :
     		if (DEBUG) print "Line: " . __LINE__ . "<br>";
-    		if (!empty($_POST['family_id'])){
+    		if (!empty($_REQUEST['family_id'])){
     			/* This means we found an existing record but the user doesn't want to use it.  We need to clear out the
     			   phone number used to search so that we don't create a new phone entry with the existing phone number
     			   for the new family id */
@@ -46,7 +47,7 @@ if (!empty($_POST['submit'])){
     }
 }
 else {
-    $_POST['submit']='';    /* Avoid the undeclared error */
+    $_REQUEST['submit']='';    /* Avoid the undeclared error */
     $offset = 0;            /* Initialize the offset variable */
 }
 
@@ -65,7 +66,7 @@ switch ($_REQUEST['submit']) {
 if (isset($_REQUEST["txtPhone"])) {
 	if (DEBUG) print "Line: " . __LINE__ . "<br>";
 	$query_rsFamily = "SELECT FAM.*, TRIM(CONCAT(COALESCE(ZIP.city,''), ' ', COALESCE(ZIP.state,''), ' ', FAM.zipcode)) city FROM family FAM ";
-	$query_rsFamily .= "JOIN phone_numbers PHONE ON FAM.family_id = PHONE.family_id LEFT JOIN zipcodes ZIP ON substr(FAM.zipcode,1,5) = ZIP.zipcode ";
+	$query_rsFamily .= "JOIN phone_numbers PHONE ON FAM.family_id = PHONE.family_id LEFT JOIN zipcodes ZIP ON FAM.zipcode = ZIP.zipcode ";
 	$query_rsFamily .= "WHERE PHONE.phone = " . unformatPhone($_REQUEST["txtPhone"]);
 	$rsFamily = mysqli_query($vbsDBi, $query_rsFamily);
 	if ($rsFamily){
@@ -75,12 +76,12 @@ if (isset($_REQUEST["txtPhone"])) {
 		$query_limit_rsFamily = sprintf("%s LIMIT %d, %d", $query_rsFamily, $offset, $numFamilies);
 		$rsStudent = mysqli_query($vbsDBi, $query_limit_rsFamily);
 		$row_rsFamily = mysqli_fetch_assoc($rsStudent);
-		
+
 		if (DEBUG) print "Total rows: " . $numFamilies;
 		if ($numFamilies ==0){
-			$errMsg = "No records found matching phone number " . formatPhone($_REQUEST["txtPhone"]);}			
+			$errMsg = "No records found matching phone number " . formatPhone($_REQUEST["txtPhone"]);}
 		}
-	else {		
+	else {
 		if (DEBUG) print "Line: " . __LINE__ . "<br>";
 		$_SESSION['newPhone'] = $_REQUEST["txtPhone"];  		/* This will be used to create the first reference phone record for this family id */
 		$errMsg = "No records found matching phone number " . formatPhone($_REQUEST['txtPhone']);}
@@ -88,6 +89,7 @@ if (isset($_REQUEST["txtPhone"])) {
 else {
 	if (DEBUG) print "Line: " . __LINE__ . "<br>";
 	$errMsg = "No phone number submitted to search. Try again.";
+	writeLog(FILE_NAME.__LINE__." No search phone number entered.");
 }
 
 /* Set the button disabled properties */
@@ -111,7 +113,7 @@ $offset = --$offset;
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS Search Results</title>
-<link href="css/layout.css" rel="stylesheet" type="text/css">
+<link href="css/layout.css?v1" rel="stylesheet" type="text/css">
 <link href="css/boilerplate.css" rel="stylesheet" type="text/css">
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -121,7 +123,7 @@ $offset = --$offset;
 <body>
 <div id="Find" class="gridContainer">
 	<div><h1>VBS - Search Results</h1></div>
-    <div id="dataLayout">
+    <div id="dataLayout" class="vertical-horizontal-center">
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post" name="frmResults" target="_self">
 	<?php if ($numFamilies == 0){ ?>
 	<table>
@@ -133,23 +135,22 @@ $offset = --$offset;
         <tr><td class="center"><?php echo $row_rsFamily['address']; ?><input type="hidden" name="address" value="<?php echo $row_rsFamily['address']; ?>"></td></tr>
         <tr><td class="center"><?php echo $row_rsFamily['city']; ?></td></tr>
         <tr><td class="center"><input name="family_id" type="hidden" value="<?php echo $row_rsFamily['family_id']; ?>"><?php echo $row_rsFamily['email']; ?></td></tr>
-	</table>
-	<table style=margin-top:-0.6em><tr><td>
-		<div id="buttonSubGroup" class="center">
-	    	<span>Displaying family <?php echo (($numFamilies >0)?$offset+1:0)?> of <?php echo $numFamilies ?> families</span><br>
+	<?php if ($numFamilies>1) {?>
+	    <tr><td class='narrow'><hr></td></tr>
+	    <tr><td class="center">
+    		Displaying family <?php echo (($numFamilies >0)?$offset+1:0)?> of <?php echo $numFamilies ?><br>
 			<input type="submit" class="button" name="submit" value="<?php echo PREVIOUS_RECORD?>" <?php echo $button['Previous'];?>>&nbsp;
 			<input type="submit" class="button" name="submit" value="<?php echo NEXT_RECORD?>" <?php echo $button['Next'];?>>&nbsp;
-		</div>
+		</td></tr>
+    <?php } } ?>
 	</table>
-    <?php } ?>
-
 	<div id="buttonGroup" class="center">
 	<?php if ($numFamilies > 0){ ?>
 		<input type="submit" name="submit" class="button" value="<?php echo USE_THIS_RECORD ?>">&nbsp;
-	<?php } ?>        
+	<?php } ?>
 		<input type="submit" name="submit" class="button" value="<?php echo SEARCH_AGAIN ?>">&nbsp;
 		<input type="submit" name="submit" class="button" value="<?php echo NEW_FAMILY ?>">
-	</div></td></tr>
+	</div>
     <input name="offset" type="hidden" value="<?php echo $offset;?>">
     <input name="numFamilies" type="hidden" value="<?php echo $numFamilies;?>">
     <input name="txtPhone" type="hidden" value="<?php echo $_REQUEST['txtPhone']?>">
