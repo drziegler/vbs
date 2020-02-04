@@ -1,10 +1,23 @@
 @charset "utf-8";
+@font-face{
+	font-family: "Castle Font";
+	/*src: url('../fonts/castlefont.ttf'); */
+	src: url('../fonts/Old London.ttf');
+	font-weight: 100 1700;
+}
 /* Simple fluid media  Version 1
    Note: Fluid media requires that you remove the media's height and width attributes from the HTML
    http://www.alistapart.com/articles/fluid-images/ 
 */
 html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-body { margin: 0; line-height: 1.231; }
+body { 
+	margin: 0; 
+	line-height: 1.231; 
+	background-image: url("../images/stonewall.jpg");
+	background-size: cover;
+}
+
+
 /* DO NOT REMOVE - IN USE */
 body, input, select, textarea {
 	font-family: sans-serif;
@@ -21,6 +34,10 @@ img, object, embed, video {
 /* POPUPS format the popup help text boxes */
 .width-equal-thirds{
 	width:33%;
+}
+.border-on{
+	/* Used to turn borders on and off to test view layouts */
+	border: solid .25em black;
 }
 .popup {
 	position: relative;
@@ -60,14 +77,30 @@ img, object, embed, video {
     -webkit-animation: fadeIn 1s;
     animation: fadeIn 1s
 } 
+#welcome {
+	background-color: gray;
+	opacity: .7;
+	color: black;
+	font-size: 1.25vw;
+	font-weight: bold;
+}
 
 /**************************************** Mobile Layout: 480px and below. ****************************/
-h1, h2 {
+h1 {
 	width: 99%;
+	font-family: "Castle Font";
 	margin: auto;
 	text-align: center;
 	font-size: 8vw;
 }
+
+h2 {
+	width: 99%;
+	margin: auto;
+	text-align: center;
+	font-size: 4vw;
+}
+
 #Staff h2{
 	/* This formats the staff page to fix on 1 mobile screen. */
 	margin-bottom:0;
@@ -138,11 +171,20 @@ input[type=checkbox], input[type=radio]{
 }
 .vertical-center{
 	margin:0;
-	position:fixed;
+	position: absolute;
 	top:50%;
 	width: inherit;
 	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
+}
+.vertical-horizontal-center{
+	margin:0;
+	position: absolute;
+	top:50%;
+	left:50%;
+	width: inherit;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
 }
 .nowrap{
 	white-space: nowrap;
@@ -180,22 +222,25 @@ input[type=checkbox], input[type=radio]{
 	float: left;
 	margin-left: 0;
 	margin-top: .5em;
-	width: 100%;
+	opacity: 0.75;
+	/*width: 90%; */
+	width: auto;
 	display: block;
 }
 #buttonGroup{
-	margin-top: 0;  /* was .5em */
-	padding-top: 0;  /* was 1% */
+	margin-top: 0;
+	padding-top: 0;
 	width:95%;
+	opacity: 0%;
 	margin-left:auto;
 	margin-right:auto;
 	text-size:100%;
 }
 .button{
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius:4px;
-	border: solid 1px #20538D;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius:8px;
+	border: solid .25em #20538D;
 	text-shadow: 0 -1px 0 rgba(0,0,0,0.4);
 	-webkit-box-shadow: inset 0 1px 0 rgba(255,255,255, 0.4), 0 1px;
 	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px; 
@@ -236,8 +281,9 @@ tr *{
 }
 hr {border:none;}
 #Find table{
-	border-color:rgba(255,102,0,1);
-	background-color: rgba(255,102,0,0.25);
+	boder-color: Grey;
+	background-color: LightGrey;
+	opacity: 0.9;
 }
 #Find hr{
 	background-color:rgba(255,102,0,1);
@@ -292,16 +338,23 @@ hr {border:none;}
 	height: 25%;
 	padding-top: 35%;
 	margin:.1em;
-	font-family: Tahoma, Geneva, sans-serif;
+	color: white;
+	font-family: "Castle Font";
 	font-size: 6vw;
 	text-align: center;
 	background-size: contain;
 }
+
 #mnuBtn span {
-	position: relative;
+	font-family: "Castle Font";
+	display:table-cell;
+	vertical-align:middle;
+	width:inherit;
+	height:99%;
 	font-size: 125%;
-	bottom: 12vw;
+ 
 }
+
 .find{
 	background-image:url("../images/find.jpg");
 	border: thick solid rgba(255,102,0,1);
@@ -319,15 +372,17 @@ hr {border:none;}
 	border: thick solid rgba(153,51,153,1);
 }
 .register{
-	background-image: url("../images/vbs-logo.jpg");
-	border: thick solid black;
+	background-image: url("../images/window1.gif");
 }
 .schedule{
 	border: thick solid orange;
 	background-image: url("../images/schedules.jpg");
 }
 .pictures{
-	background-image: url("../images/photos.jpg");
+	border: thick solid green;
+}
+.monday{
+	border: thick solid green;
 }
 .stats{
 	background-image: url("../images/stats.jpg");
@@ -335,7 +390,7 @@ hr {border:none;}
 a:link{
 	/* Used to remove the hyperlink style from the Menu buttons */
 	text-decoration:none;
-	color:black;
+	color:white;
 }
 .bottom{
 /* Used to place the bottom menu at the bottom */
@@ -392,22 +447,23 @@ a:link{
 	padding: .25em;
 	font-size: .5vw; 
 }
+.buttonGroup.center.border-on #mnuBtn a {
+}
+.buttonGroup.center.border-on #mnuBtn a {
+}
+
+
+
 
 /* Tablet Layout: 481px to 768px. Inherits styles from: Mobile Layout. */
 /********************************************************  TABLET LAYOUT ********************* TABLET LAYOUT ************************************/
 @media only screen and (min-width: 481px) {
-
-/*h1, h2{*/
-h1 {
-	font-size: 3vw;
-}
-h2, .h2{
-	font-weight:normal;
-	font-size: 3vw;
-}
 h3{
 	font-size: 2.5vw;
 }
+.buttonGroup.center.border-on #mnuBtn a {
+}
+
 textarea{
 	width:90%;
 	height:6em;
@@ -481,7 +537,7 @@ input[type=checkbox], input[type=radio]{
 	height: 25%;
 	padding-top: 20%;
 	margin:.1em;
-	font-family: Tahoma, Geneva, sans-serif;
+	font-family: "Castle Font";
 	font-size: 2.5vw;
 	color: blue;
 }
@@ -499,12 +555,14 @@ input[type=checkbox], input[type=radio]{
 /*@media only screen and (min-width: 769px) { */
 @media only screen and (min-width: 836px) {
 h1 {
-	font-size: 3vw;
-	font-size: 300%;
+	font-family: "Castle Font";
+	font-size: 5vw;
+	color:black;
+	/*font-size: 300%; */
 }
 h2, .h2 {
 	font-weight:normal;
-	font-size: 250%;
+	font-size: 1.5vw;
 }
 h3{
 	font-size: 1vw;
@@ -527,9 +585,17 @@ h3{
 .button{
 	font-size: 1vw;
 }
+.vertical-center{
+	margin:0;
+	position: absolute;
+	top:50%;
+	width: inherit;
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
 tr *{
 	font-size: 1vw;
-	padding: 0.25em;
+	padding: 0.1em;
 }
 input[type=checkbox], input[type=radio]{
 	transform:scale(2,2);
@@ -546,7 +612,7 @@ input[type=checkbox], input[type=radio]{
 #dataLayout {
 	margin-left: auto;
 	margin-right: auto;
-	width: 100%;
+	width: auto;
 }
 #Phone table{
 	width:75%;
@@ -574,16 +640,20 @@ input[type=checkbox], input[type=radio]{
 }
 
 #mnuBtn{
-	width: 23%;
-	padding-top: 23%;
+	background-image: url(../images/window1.gif);
+	background-size: contain; /* was cover */
+	/*width: 23%; 
+	padding-top: 25%; */
 	font-size: 2vw;
-	color: black;
+	vertical-align: middle;
+	color: blue;
 }
 
-#mnuBtn span {
-	position:relative;
-	bottom: 10vw;	
+mnuBtn span{
+	margin-bottom: 45%;
+	marign-top: 45%;
 }
+
 
 #mnuButton{
 	font-size: 2em;
@@ -621,4 +691,12 @@ table #schedule{
 #logo img{
 	height: 40%;
 	width: 40%;
+}
+
+/* * * * * * * * * * * * * * *   TEST CLASSES * * * * * * * * * * * * * */
+.test-border{
+	border: solid;
+	border-color:black;
+}
+
 }
