@@ -1,7 +1,4 @@
 @charset "utf-8";
-<<<<<<< Updated upstream
-/* Simple fluid media
-=======
 @font-face{
 	font-family: "Castle Font";
 	src: url('../fonts/castlefont.ttf');
@@ -9,12 +6,18 @@
 	font-weight: 100 1700;
 }
 /* Simple fluid media  Version 1
->>>>>>> Stashed changes
    Note: Fluid media requires that you remove the media's height and width attributes from the HTML
    http://www.alistapart.com/articles/fluid-images/ 
 */
 html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-body { margin: 0; line-height: 1.231; }
+body { 
+	margin: 0; 
+	line-height: 1.231; 
+	background-image: url("../images/stonewall.jpg");
+	background-size: cover;
+}
+
+
 /* DO NOT REMOVE - IN USE */
 body, input, select, textarea {
 	font-family: sans-serif;
@@ -32,13 +35,10 @@ img, object, embed, video {
 .width-equal-thirds{
 	width:33%;
 }
-<<<<<<< Updated upstream
-=======
 .border-on{
 	/* Used to turn borders on and off to test view layouts */
 	border: .25em solid black;
 }
->>>>>>> Stashed changes
 .popup {
 	position: relative;
 	display: inline-block;
@@ -77,22 +77,14 @@ img, object, embed, video {
     -webkit-animation: fadeIn 1s;
     animation: fadeIn 1s
 } 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 /**************************************** Mobile Layout: 480px and below. ****************************/
-h1, h2 {
+h1 {
 	width: 99%;
+	font-family: "Castle Font";
 	margin: auto;
 	text-align: center;
 	font-size: 8vw;
 }
-<<<<<<< Updated upstream
-h2, .h2 {
-	font-weight:normal;
-	font-size: 6vw;
-=======
 
 h2, .h2 {
 	width: 99%;
@@ -106,7 +98,6 @@ h2, .h2 {
 	/* This formats the staff page to fix on 1 mobile screen. */
 	margin-bottom:0;
 	padding-bottom:0;
->>>>>>> Stashed changes
 }
 h3{
 	font-size:5vw;
@@ -167,8 +158,29 @@ input[type=checkbox], input[type=radio]{
 .centerText{
 	text-align:center;
 }
+.vertical-center{
+	margin:0;
+	position: absolute;
+	top:50%;
+	width: inherit;
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+.vertical-horizontal-center{
+	margin:0;
+	position: absolute;
+	top:50%;
+	left:50%;
+	width: inherit;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
 .nowrap{
 	white-space: nowrap;
+}
+.narrow{
+	margin:0;
+	padding:0;
 }
 .left{
 	text-align: left;
@@ -176,10 +188,10 @@ input[type=checkbox], input[type=radio]{
 #header {
 	clear: both;
 	float: left;
-	padding-top: 0;
+	padding-top: 1px;
 	margin: 0 1em;
 	margin-left: 0;
-	width: 100%;
+	width: 98%;
 	display: block;
 	font-size: 7vw;
 	text-align: center;
@@ -199,28 +211,23 @@ input[type=checkbox], input[type=radio]{
 	float: left;
 	margin-left: 0;
 	margin-top: .5em;
-<<<<<<< Updated upstream
-	width: 100%;
-=======
 	width: auto;
->>>>>>> Stashed changes
 	display: block;
 }
 #buttonGroup{
-	margin-top: 0;  /* was .5em */
-	padding-top: 0;  /* was 1% */
+	margin-top: 0;
+	padding-top: 0;
 	width:95%;
+	opacity: 0%;
 	margin-left:auto;
 	margin-right:auto;
-}
-#buttonGroup span{
-	font-size:large;
+	text-size:100%;
 }
 .button{
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius:4px;
-	border: solid 1px #20538D;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius:8px;
+	border: solid .25em #20538D;
 	text-shadow: 0 -1px 0 rgba(0,0,0,0.4);
 	-webkit-box-shadow: inset 0 1px 0 rgba(255,255,255, 0.4), 0 1px;
 	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px; 
@@ -231,19 +238,11 @@ input[type=checkbox], input[type=radio]{
 	display:inline;
 	margin: .25em .15em;
 	background: #4479BA;
-	color: #FFF;
+	color: white;
 	-webkit-transition-duration: 0.2s;
 	-moz-transition-duration: 0.2s;
 	transition-duration: 0.2s;
-}
-.button{
-	font-size: 3vw;
-}
-.home {
-	display: inline;
-	/*position:fixed; 
-	width:100%; 
-	top:50em;*/
+	font-size: 4vw;
 }
 .button:disabled{
 	background-color: LightGray;
@@ -257,7 +256,7 @@ table {
 	margin-top:1em;
 	border:.25em solid;
 	border-collapse:collapse;
-	border-spacing:0px;
+	border-spacing:0px;		/* equivalent to cellspacing*/ 
 }
 td {
 	padding: 0.45em;
@@ -267,12 +266,6 @@ tr *{
 	font-size: 3vw;
 	padding: 0.30em;
 }
-<<<<<<< Updated upstream
-
-#Find table{
-	border-color:rgba(255,102,0,1);
-	background-color: rgba(255,102,0,0.25)
-=======
 hr {border:none;}
 #Find table, p{
 	border: 5px solid black;
@@ -285,8 +278,8 @@ hr {border:none;}
 }
 #Find hr{
 	background-color:rgba(255,102,0,1);
->>>>>>> Stashed changes
 }
+#Find td{font-size: 4.5vh;}
 #Family table{
 	border-color: rgba(68, 121, 186, 1);
 	background-color: rgba(0,0,255,0.25);
@@ -295,6 +288,7 @@ hr {border:none;}
 	border-color: rgb(31,122,31);
 	background-color: rgb(153,255,153);
 }
+#Student hr{background-color: rgb(31,122,31);}
 /* Only the summary screen has a th for Student */
 #Student th{
 	background-color: rgb(31,122,31);
@@ -304,6 +298,7 @@ hr {border:none;}
 	border-color: rgb(153,51,153);
 	background-color: rgb(230,179,230);
 }
+#Staff hr{background-color: rgb(153,51,153);}
 #Staff th{
 	background-color: rgb(153,51,153);
 	color:white;
@@ -325,19 +320,6 @@ hr {border:none;}
 	width: 47.3684%;
 	display: block;
 }
-#mnuButton{
-	border-radius: 25px;
-	border: thick solid black;
-	width: 50%;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 4vh;
-	padding: 5px;
-	font-family:Tahoma, Geneva, sans-serif;
-	font-size: 1.5em;
-	text-align: center;
-}
-
 #mnuBtn {
 	display: inline-block;
 	border-radius: 25px;
@@ -347,17 +329,23 @@ hr {border:none;}
 	height: 25%;
 	padding-top: 35%;
 	margin:.1em;
-	font-family: Tahoma, Geneva, sans-serif;
+	color: white;
+	font-family: "Castle Font";
 	font-size: 6vw;
-	color: black;
 	text-align: center;
 	background-size: contain;
 }
+
 #mnuBtn span {
-	position: relative;
+	font-family: "Castle Font";
+	display:table-cell;
+	vertical-align:middle;
+	width:inherit;
+	height:99%;
 	font-size: 125%;
-	bottom: 12vw;
+ 
 }
+
 .find{
 	background-image:url("../images/find.jpg");
 	border: thick solid rgba(255,102,0,1);
@@ -375,13 +363,17 @@ hr {border:none;}
 	border: thick solid rgba(153,51,153,1);
 }
 .register{
-	background-image: url("../images/register.jpg");
+	background-image: url("../images/window1.gif");
 }
 .schedule{
-	background-image: url("../images/schedule.png");
+	border: thick solid orange;
+	background-image: url("../images/schedules.jpg");
 }
 .pictures{
-	background-image: url("../images/photos.jpg");
+	border: thick solid green;
+}
+.monday{
+	border: thick solid green;
 }
 .stats{
 	background-image: url("../images/stats.jpg");
@@ -389,7 +381,7 @@ hr {border:none;}
 a:link{
 	/* Used to remove the hyperlink style from the Menu buttons */
 	text-decoration:none;
-	color:black;
+	color:white;
 }
 .bottom{
 /* Used to place the bottom menu at the bottom */
@@ -403,24 +395,17 @@ a:link{
 	max-height: 25px;
 }
 #Footer {
+	width: 96%;
 	position: absolute;
+	clear: both;
+	float: left;
+	margin-left: 0;
 	text-align:center;
-	clear: both;
-	float: left;
-	margin-left: 0;
-	width: 90%;
 	display: block;
-	padding:15px;
-	bottom:0;
-	left:0;
-	font-size: 3vw;
-}
-#LayoutDiv2{
-	clear: both;
-	float: left;
-	margin-left: 0;
-	width: 100%;
-	display: block;
+	padding: 2.5vmin; 
+	bottom:1px;
+	left:1px;
+	font-size: 1vmax; /* 80%; */
 }
 #Button0{
 	clear: both;
@@ -436,11 +421,12 @@ a:link{
 	margin: auto;
 }
 #counter{
-	display: block;
-	width: 90%;
+	width: 100%;
 	margin: auto;
+	top: 0%;
 	text-align: center;
-	font-size: 12vw;
+	font-size: 5vmin;
+	margin-bottom: 2.5vh;
 }
 /************************************************ CONFO PAGE *********************************************************************************/
 /* Styles that apply only to the confirmation screen */
@@ -450,23 +436,25 @@ a:link{
 }
 #Family .confo td{
 	padding: .25em;
-/*	font-size: 1vw; */
+	font-size: .5vw; 
 }
+.buttonGroup.center.border-on #mnuBtn a {
+}
+.buttonGroup.center.border-on #mnuBtn a {
+}
+
+
+
 
 /* Tablet Layout: 481px to 768px. Inherits styles from: Mobile Layout. */
 /********************************************************  TABLET LAYOUT ********************* TABLET LAYOUT ************************************/
 @media only screen and (min-width: 481px) {
-
-h1, h2{
-	font-size: 5vw;
-}
-h2 {
-	font-weight:normal;
-	font-size: 4vw;
-}
 h3{
 	font-size: 2.5vw;
 }
+.buttonGroup.center.border-on #mnuBtn a {
+}
+
 textarea{
 	width:90%;
 	height:6em;
@@ -507,9 +495,6 @@ input[type=checkbox], input[type=radio]{
 	width: 100%;
 	display: block;
 }
-#Results table{
-	font-size: 3vw;
-}
 #Family td.label {
 	width:30%;
 }
@@ -539,19 +524,13 @@ input[type=checkbox], input[type=radio]{
 	width: 48.7179%;
 }
 #mnuBtn{
-	font-size: 5vw;
-}
-#Footer {
-	position: absolute;
-	clear: both;
-	float: left;
-	margin-left: 0;
-	width: 100%;
-	display: block;
-	padding:15;
-	bottom:0;
-	left:0;
-	font-size: 3vw;
+	width: 20%;
+	height: 25%;
+	padding-top: 20%;
+	margin:.1em;
+	font-family: "Castle Font";
+	font-size: 2.5vw;
+	color: blue;
 }
 #logo img{
 	display: block;
@@ -559,31 +538,21 @@ input[type=checkbox], input[type=radio]{
 	width: 60%;
 	margin: auto;
 }
-#counter{
-	display: block;
-	width: 90%;
-	margin: auto;
-	text-align: center;
-	font-size: 12vw;
 }
-}
+
 
 /* Desktop Layout: 769px to a max of 1232px.  Inherits styles from: Mobile Layout and Tablet Layout. */
 /********************************************************  DESKTOP LAYOUT ********************* DESKTOP LAYOUT ************************************/
 /*@media only screen and (min-width: 769px) { */
 @media only screen and (min-width: 836px) {
 h1 {
-<<<<<<< Updated upstream
-	font-size: 3vw;
-=======
 	font-family: "Castle Font";
 	font-size: 5vw;
 	color:black;
->>>>>>> Stashed changes
 }
 h2, .h2 {
 	font-weight:normal;
-	font-size: 2vw;
+	font-size: 1.5vw;
 }
 h3{
 	font-size: 1vw;
@@ -604,16 +573,19 @@ h3{
 	margin: auto;
 }
 .button{
-	font-size: 0.8vw;
+	font-size: 1vw;
 }
-.home {
-	position:fixed; 
-	width:100%; 
-	top:0;
+.vertical-center{
+	margin:0;
+	position: absolute;
+	top:50%;
+	width: inherit;
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
 }
 tr *{
 	font-size: 1vw;
-	padding: 0.25em;
+	padding: 0.1em;
 }
 input[type=checkbox], input[type=radio]{
 	transform:scale(2,2);
@@ -630,10 +602,7 @@ input[type=checkbox], input[type=radio]{
 #dataLayout {
 	margin-left: auto;
 	margin-right: auto;
-	width: 100%;
-}
-#Results table{
-	font-size: 1.5vw;
+	width: auto;
 }
 #Phone table{
 	width:75%;
@@ -641,11 +610,8 @@ input[type=checkbox], input[type=radio]{
 .value{
 	padding-left:1.5em;
 }
-<<<<<<< Updated upstream
-=======
 #Find td{font-size: 1vw;}
 
->>>>>>> Stashed changes
 #Menu1 {
 	clear: both;
 	float: left;
@@ -664,51 +630,36 @@ input[type=checkbox], input[type=radio]{
 }
 
 #mnuBtn{
-	width: 23%;
-	padding-top: 23%;
+	background-image: url(../images/window1.gif);
+	background-size: contain; /* was cover */
+	/*width: 23%; 
+	padding-top: 25%; */
 	font-size: 2vw;
+	vertical-align: middle;
+	color: blue;
 }
 
-#mnuBtn span {
-	position:relative;
-	bottom: 10vw;	
+mnuBtn span{
+	margin-bottom: 45%;
+	marign-top: 45%;
 }
+
 
 #mnuButton{
 	font-size: 2em;
 }
-#Footer {
-	position: absolute;
-	clear: both;
-	float: left;
-	margin-left: 0;
-	width: 100%;
-	display: block;
-	padding:15;
-	bottom:0;
-	left:0;
-	font-size: .75vw;
-}
-
 #buttonGroup{
-	display: block;
-	width: 90%;
 	margin-top: 1%;
+/*	display: block;
+	width: 90%;
 	margin-left:auto;
-	margin-right:auto;
+	margin-right:auto; */
 }
 #Button0 {
 	clear: both;
 	float: left;
 	margin-left: 0;
 	width: 15.2542%;
-	display: block;
-}
-#LayoutDiv2 {
-	clear: both;
-	float: left;
-	margin-left: 0;
-	width: 100%;
 	display: block;
 }
 }
@@ -731,7 +682,11 @@ table #schedule{
 	height: 40%;
 	width: 40%;
 }
-#counter{
-	font-size: 2vw;
-	margin-top: 8vh;
+
+/* * * * * * * * * * * * * * *   TEST CLASSES * * * * * * * * * * * * * */
+.test-border{
+	border: solid;
+	border-color:black;
+}
+
 }
