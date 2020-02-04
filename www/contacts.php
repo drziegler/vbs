@@ -343,16 +343,16 @@ if (DEBUG) {
 </head>
 <title>VBS-Telephone Contacts</title>
 <body>
-<div id="Phone" class="gridContainer">
+<div id="Find" class="gridContainer">
 <div><h1>VBS - Contact Info</h1></div>
-<?php if (strlen($errMsgText)>0) { ?>
-	<div><h3 class="error"><?php echo $errMsgText;?></h3></div>
-<?php } else { ?>
-	<div><h2>Provide at least two different phone numbers.</h2></div>
-<?php } ?>
-	<div id="dataLayout">
+	<div id="dataLayout center">
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="POST" name="frmContacts" target="_self">
 <table>
+    <?php if (strlen($errMsgText)>0) { ?>
+    	<tr><td colspan="3" class="center error"><?php echo $errMsgText;?></td></tr>
+    <?php } else { ?>
+    	<tr><td colspan="3" class="center">Provide at least two different phone numbers.</td></tr>
+    <?php } ?>
 	<tr><th>*&nbsp;Name</th><th>*&nbsp;Phone</th><th class="left">Select</th></tr>
     <?php for ($i=0; $i<count($rsPhone); $i++){ ?>
     <tr>
@@ -369,7 +369,7 @@ if (DEBUG) {
 	    <input type="submit" name="submit" value="Add">&nbsp;
 	    <input type="submit" name="submit" value="Delete">&nbsp;
 		</td>
-	</tr>s
+	</tr>
 </table>
 <div id="buttonGroup" class="center">
 	<input type="submit" name="submit" class="button" value="<?php echo HOME_BUTTON?>">&nbsp;
