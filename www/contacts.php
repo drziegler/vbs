@@ -344,25 +344,25 @@ if (DEBUG) {
 <title>VBS-Telephone Contacts</title>
 <body>
 <div id="Find" class="gridContainer">
-<div><h1>VBS - Contact Info</h1></div>
+	<h1>Contact Info</h1>
 	<div id="dataLayout center">
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="POST" name="frmContacts" target="_self">
-<table>
+<table id="Phone">
     <?php if (strlen($errMsgText)>0) { ?>
     	<tr><td colspan="3" class="center error"><?php echo $errMsgText;?></td></tr>
     <?php } else { ?>
     	<tr><td colspan="3" class="center">Provide at least two different phone numbers.</td></tr>
     <?php } ?>
-	<tr><th>*&nbsp;Name</th><th>*&nbsp;Phone</th><th class="left">Select</th></tr>
+	<tr><th>*&nbsp;Name</th><th>*&nbsp;Phone</th><th>Select</th></tr>
     <?php for ($i=0; $i<count($rsPhone); $i++){ ?>
     <tr>
         <td><input type="text" name="phone[<?php echo $i;?>][contact_name]" value="<?php echo $rsPhone[$i]['contact_name']; ?>" style="width:99%" maxlength="50"></td>
-        <td><input type="text" name="phone[<?php echo $i;?>][phone]" maxlength="12" value="<?php echo formatPhone($rsPhone[$i]['phone']); ?>" style="width:99%"></td>
-		<td><input name="phone[<?php echo $i;?>][sel]" type="checkbox" value="">
+        <td class="col2"><input type="text" name="phone[<?php echo $i;?>][phone]" maxlength="12" value="<?php echo formatPhone($rsPhone[$i]['phone']); ?>" style="width:99%"></td>
+		<td class="center col3"><input name="phone[<?php echo $i;?>][sel]" type="checkbox" value="">
         <input type="hidden" name="phone[<?php echo $i;?>][family_id]" value="<?php echo $_SESSION['family_id']?>"></td>
 	</tr>
     <?php } ?>
-    <tr><td colspan="4">* required  <span class="popup" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Enter family contact information on this page.  You may enter as many names and phone numbers as you wish but you must provide at least two different phone numbers.  Each contact must have a name &amp; phone number.<br>To delete a contact, first check the Select box(es) of the lines you want to delete then click the delete button.</span></span></td></tr>
+    <tr><td class="left"><span>*&nbsp;required</span></td><td colspan="2" class="right"><span class="popup right" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Enter family contact information on this page.  You may enter as many names and phone numbers as you wish but you must provide at least two different phone numbers.  Each contact must have a name &amp; phone number.<br>To delete a contact, first check the Select box(es) of the lines you want to delete then click the delete button.</span></span></td></tr>
 	<tr class="center">
 		<td colspan="4">
     	<input type="submit" name="submit" value="Save">&nbsp;

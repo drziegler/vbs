@@ -213,9 +213,11 @@ input[type=checkbox], input[type=radio]{
 	font-size: 7vw;
 	text-align: center;
 }
+/* NOT USED ?
 #error {
 	color:red;
 }
+*/
 #status{
 	font-family:Verdana, Geneva, sans-serif;
 	text-align:center;
@@ -311,6 +313,23 @@ hr {border:none;}
 }
 #Family .label{min-width: 12%;}
 
+/* PHONE / CONTACTS PAGE */
+#Phone table{
+	border: 2px solid white;
+}
+#Phone th, #Phone td{
+	font-size: 1.2rem;
+	padding: 1.2vh 0.25vh;
+}
+#Phone .col3{
+	width: 10%;
+}
+#Phone .col2{
+	width: 30%;
+}
+
+
+
 #Student table{
 	border-color: rgb(31,122,31);
 	background-color: rgb(153,255,153);
@@ -330,22 +349,8 @@ hr {border:none;}
 	background-color: rgb(153,51,153);
 	color:white;
 }
-#Phone table{
-	border-color: rgba(68, 121, 186, 1);
-	background-color: rgba(0,0,255,0.25);
-}
-#Phone th{
-	background-color: #4479BA;
-	color:white;
-}
 #Staff td.label {
 	width:33%;
-}
-#Menu2 {
-	float: left;
-	margin-left: 5.2631%;
-	width: 47.3684%;
-	display: block;
 }
 #mnuBtn {
 	display: inline-block;
@@ -543,17 +548,6 @@ input[type=checkbox], input[type=radio]{
 	margin-left:auto;
 	margin-right:auto;
 }
-#Menu1 {
-	float: left;
-	margin-left: 0;
-	width: 48.7179%;
-	display: inline-block;
-}
-#Menu2 {
-	float: right;
-	margin-left: 2.5641%;
-	width: 48.7179%;
-}
 #mnuBtn{
 	width: 20%;
 	height: 25%;
@@ -645,30 +639,7 @@ input[type=checkbox], input[type=radio]{
 	min-width: 25vw;
 	width: auto;
 }
-#Phone table{
-	width:75%;
-}
-.value{
-	padding-left:1.5em;
-}
 #Find td{font-size: 2em;}
-
-#Menu1 {
-	clear: both;
-	float: left;
-	width: 25%;
-	margin-right: 0;
-	margin-left: 12%;
-	display: block;
-}
-#Menu2 {
-	clear: none;
-	float:right;
-	width: 25%;
-	margin-left: 0;
-	margin-right: 12%;
-	display: block;
-}
 
 #mnuBtn{
 	background-image: url(../images/window1.gif);
