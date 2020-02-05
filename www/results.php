@@ -122,7 +122,7 @@ $offset = --$offset;
 </head>
 <body>
 <div id="Find" class="gridContainer">
-	<div><h1>VBS - Search Results</h1></div>
+	<div><h1>Search Results</h1></div>
     <div id="dataLayout" class="vertical-horizontal-center">
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post" name="frmResults" target="_self">
 	<?php if ($numFamilies == 0){ ?>

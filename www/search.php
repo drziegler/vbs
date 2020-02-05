@@ -28,28 +28,25 @@ switch ($_POST['submit']) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS-Find Family</title>
 <link href="css/layout.css?v2" rel="stylesheet" type="text/css">
-<link href="css/boilerplate.css" rel="stylesheet" type="text/css">
-<!--[if lt IE 9]>
-<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
 <script src="scripts/respond.min.js"></script>
-<!--   <script src="includes/ice/ice.js" type="text/javascript"></script> -->
 </head>
 <body>
 <div id="Find" class="gridContainer clearfix">
-    <div><h1>VBS - Search</h1></div>
+    <h1>Search</h1>
     <div id="dataLayout" class="vertical-horizontal-center">
+    <div id="Search">
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post" name="frmPhone" target="_self">
-    <table>
-        <tr><td class="center">Enter your telephone number using only numbers.</td></tr>
-		<tr><td class="center"><input name="txtPhone" id="searchPhone" type="number" pattern="[1-9]" autofocus></td></tr>
-    </table>
-    <div id="buttonGroup" class="center">
-		<input type="submit" name="submit" class="button" value="<?php echo SEARCH ?>">&nbsp;
-		<input type="submit" name="submit" class="button" value="<?php echo HOME_BUTTON ?>">
-    </div>
+        <table>
+            <tr><td class="center">Enter your telephone number.</td></tr>
+    		<tr><td class="center"><input name="txtPhone" id="searchPhone" type="number" pattern="[1-9]" autofocus></td></tr>
+        </table>
+        <div id="buttonGroup" class="center">
+    		<input type="submit" name="submit" class="button" value="<?php echo SEARCH ?>">&nbsp;
+    		<input type="submit" name="submit" class="button" value="<?php echo HOME_BUTTON ?>">
+        </div>
     </form>
-  </div>
+    </div>
+  	</div>
 </div>
 </body>
 </html>
