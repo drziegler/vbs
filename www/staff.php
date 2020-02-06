@@ -499,7 +499,7 @@ $offset = --$offset;
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS Staff</title>
 <link href="css/boilerplate.css" rel="stylesheet" type="text/css">
-<link href="css/layout.css" rel="stylesheet" type="text/css">
+<link href="css/layout.css?v7" rel="stylesheet" type="text/css">
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
@@ -507,8 +507,9 @@ $offset = --$offset;
 </head>
 <body>
 <div id="Find" class="gridContainer">
-	<h1>VBS - Volunteers</h1>
-	<div id="dataLayout center">
+	<h1>Volunteer Info</h1>
+	<div id="dataLayout">
+	<div id="Staff">
 	<form method="post" name="frmStaff" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
 	<table cellspacing="0">
 		<?php if ($validateError) { ?> 
@@ -525,17 +526,17 @@ $offset = --$offset;
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter the first name of the staff volunteer.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']; ?>" maxlength="20" <?php echo $fldEnabled ?> style="width:60%"></td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter the last name of the staff volunteer.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20" <?php echo $fldEnabled ?> style="width:60%"></td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAvail')">Availability<span class="popuptext" id="hAvail">Select the days you are available to help during the week of VBS.  You must select at least one day.</span></span></td><td class="value">
-            <input type="checkbox" name="mon" value="Y" <?php echo (empty($row_rsStudent['mon'])||$row_rsStudent['mon']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Mo
-            <input type="checkbox" name="tue" value="Y" <?php echo (empty($row_rsStudent['tue'])||$row_rsStudent['tue']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Tu
-            <input type="checkbox" name="wed" value="Y" <?php echo (empty($row_rsStudent['wed'])||$row_rsStudent['wed']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;We
-            <input type="checkbox" name="thur" value="Y" <?php echo (empty($row_rsStudent['thur'])||$row_rsStudent['thur']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Th
-            <input type="checkbox" name="fri" value="Y" <?php echo (empty($row_rsStudent['fri'])||$row_rsStudent['fri']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Fr
+            <input type="checkbox" name="mon" id="mon" value="Y" <?php echo (empty($row_rsStudent['mon'])||$row_rsStudent['mon']=='N' ?'':'checked ') . $fldEnabled;?>><label for="mon">Mo</label>
+            <input type="checkbox" name="tue" id="tue" value="Y" <?php echo (empty($row_rsStudent['tue'])||$row_rsStudent['tue']=='N' ?'':'checked ') . $fldEnabled;?>><label for="tue">Tu</label>
+            <input type="checkbox" name="wed" id="wed" value="Y" <?php echo (empty($row_rsStudent['wed'])||$row_rsStudent['wed']=='N' ?'':'checked ') . $fldEnabled;?>><label for="wed">We</label>
+            <input type="checkbox" name="thur" id="thur" value="Y" <?php echo (empty($row_rsStudent['thur'])||$row_rsStudent['thur']=='N' ?'':'checked ') . $fldEnabled;?>><label for="thur">Th</label>
+            <input type="checkbox" name="fri" id="fri" value="Y" <?php echo (empty($row_rsStudent['fri'])||$row_rsStudent['fri']=='N' ?'':'checked ') . $fldEnabled;?>><label for="Fri">Fr</label>
         </td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hPref')">Preferences<span class="popuptext" id="hPref">If you are particular about where you help, check only those boxes for the area in which you have an interest.  You must select at least one.</span></span></td><td class="value">
-	        <input type="checkbox" name="classroom" value="Y" <?php echo (empty($row_rsStudent['classroom'])||$row_rsStudent['classroom']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Classroom
-			<input type="checkbox" name="craft" value="Y" <?php echo (empty($row_rsStudent['craft'])||$row_rsStudent['craft']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Craft
-            <input type="checkbox" id="kitchen" name="kitchen" value="Y" <?php echo (empty($row_rsStudent['kitchen'])||$row_rsStudent['kitchen']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Kitchen
-            <input type="checkbox" name="anything" value="Y" <?php echo (empty($row_rsStudent['anything'])||$row_rsStudent['anything']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;Anything
+	        <input type="checkbox" name="classroom" id="classroom" value="Y" <?php echo (empty($row_rsStudent['classroom'])||$row_rsStudent['classroom']=='N' ?'':'checked ') . $fldEnabled;?>><label for="classroom">Classroom</label>
+			<input type="checkbox" name="craft" id="craft" value="Y" <?php echo (empty($row_rsStudent['craft'])||$row_rsStudent['craft']=='N' ?'':'checked ') . $fldEnabled;?>><label for="craft">Craft</label>
+            <input type="checkbox" name="kitchen" id="kitchen" value="Y" <?php echo (empty($row_rsStudent['kitchen'])||$row_rsStudent['kitchen']=='N' ?'':'checked ') . $fldEnabled;?>><label for="kitchen">Kitchen</label>
+            <input type="checkbox" name="anything" id="anything" value="Y" <?php echo (empty($row_rsStudent['anything'])||$row_rsStudent['anything']=='N' ?'':'checked ') . $fldEnabled;?>><label for="anything">Anything</label>
 	    <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hShirt')">Shirt Size<span class="popuptext" id="hShirt">Select the shirt size you want for this volunteer.  T-Shirt are only available for those who register before <?php echo VBS_SHIRT_DEADLINE_MMDDYYYY?></span></span></td><td class="value"><select name="shirt_size" <?php echo $fldEnabled?>>
       <?php
 do {  
@@ -565,13 +566,14 @@ do {
 		<tr>
           <td class="label"><span class="popup" onclick="myPopUp('hClass')">I want to help in my child's class<span class="popuptext" id="hClass">If you want to be in the same class as your child, enter the child's name in this space.</span></span></td><td class="value"><input type="text" name="teach_with" placeholder="Your child's name and grade" value="<?php echo $row_rsStudent['teach_with'];?>" <?php echo $fldEnabled;?> style="width:60%"></td></tr>
         <tr><td class="label"><span class="popup" onclick="myPopUp('hComment')">Comments<span class="popuptext" id="hComment">This block is for comments specifically related to this volunteer.  Comments are optional.</span></span></td><td class="value"><textarea name="comments"<?php echo $fldEnabled?> ><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
-        <tr><td>*&nbsp;required  <span class="popup" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to register volunteers for the week of VBS.  Volunteers must be in 7th grade or older.  Click the underlined labels for detailed popup help. Click again to close it.</span></span></td><td class="value">
+        <tr><td class="label left"><span>*&nbsp;required</span></td><td class="value">
    		<?php if ($staffID==0) { ?>
 			<input type="submit" name="submit" value="Save">&nbsp;
 			<input type="submit" name="submit" value="Cancel">
         <?php } else { ?>
         	<input type="submit" name="submit" value="Update">
         <?php } ?>
+		<span class="popup float-right" onclick="myFunction('help')">Help available<span class="popuptext" id="help">Use this form to register volunteers for the week of VBS.  Volunteers must be in 7th grade or higher.  Click the underlined labels for detailed popup help. Click again to close it.</span></span>
 		</td></tr>
         <input name="staff_id" type="hidden" value="<?php echo $row_rsStudent['staff_id']; ?>">
         <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
@@ -581,7 +583,7 @@ do {
         <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
 		<tr><td colspan='2' class='narrow'><hr></td></tr>
 		<tr><td colspan='2' style="margin-top:0;padding-top:0;">
-		<div id="buttonSubGroup" class="center" style="padding-top:0;margin-top:0;">
+		<div id="buttonSubGroup" class="center">
     		Displaying staff member <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?><br>
 			<input type="submit" name="submit" class="button" value="First"<?php echo $button['First']?>>&nbsp;
 			<input type="submit" name="submit" class="button" value="Previous"<?php echo $button['Previous']?>>&nbsp;
@@ -596,7 +598,9 @@ do {
 		<input type="submit" name="submit" class="button" value="<?php echo PREVIOUS_BUTTON?>"<?php echo $button['Back']?>>&nbsp;
 		<input type="submit" name="submit" class="button" value="<?php echo NEXT_PAGE ?>"<?php  echo $button['NextPage']?>>
 	</div>
-  </form></div>
+  </form>
+  </div>
+  </div>
 </div>
 </body>
 </html>

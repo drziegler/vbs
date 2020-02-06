@@ -397,7 +397,7 @@ $offset = --$offset;
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS Staff Nursery</title>
-<link href="css/boilerplate.css" rel="stylesheet" type="text/css">
+<!--  <link href="css/boilerplate.css" rel="stylesheet" type="text/css">  -->
 <link href="css/layout.css" rel="stylesheet" type="text/css">
 <script src="scripts/vbsUtils.js"></script>
 <!--[if lt IE 9]>
@@ -407,8 +407,9 @@ $offset = --$offset;
 </head>
 <body>
 <div id="Find" class="gridContainer">
-	<h1>VBS - Staff Nursery</h1>
-	<div id="dataLayout center">
+	<h1>Staff Nursery</h1>
+	<div id="dataLayout">
+	<div id="Student">
 	<form method="post" name="frmStudent" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
 	<table>
 		<tr><td colspan="2" class="center  
@@ -488,6 +489,7 @@ do {
 			<input type="submit" class="button" name="submit" value="<?php echo NEXT_PAGE ?>">
 	</div>
   </form></div>
+  </div>
 </div>
 </body>
 </html>

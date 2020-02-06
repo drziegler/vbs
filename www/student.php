@@ -422,8 +422,8 @@ $offset = --$offset;
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS Student</title>
-<link href="css/boilerplate.css" rel="stylesheet" type="text/css">
-<link href="css/layout.css" rel="stylesheet" type="text/css">
+<!-- ? REMOVE ? <link href="css/boilerplate.css" rel="stylesheet" type="text/css"> -->
+<link href="css/layout.css?v1" rel="stylesheet" type="text/css">
 <script src="scripts/vbsUtils.js"></script>
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -432,8 +432,9 @@ $offset = --$offset;
 </head>
 <body>
 <div id="Find" class="gridContainer">
-	<h1>VBS - Student</h1>
-	<div id="dataLayout center">
+	<h1>Student Info</h1>
+	<div id="dataLayout">
+	<div id="Student">
 	<form method="post" name="frmStudent" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
 	<table>
 		<?php if ($validateError) { ?> 
@@ -448,7 +449,7 @@ $offset = --$offset;
 		</td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter your child's first name exactly as you want it to appear on name tags, project labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']?>" maxlength="20" <?php echo  $fldEnabled?> style="width:60%"></td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter your child's last name exactly as you want it to appear on name tags, project labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20" <?php echo  $fldEnabled?> style="width:60%"></td></tr>
-		<tr><td class="label">*&nbsp;Birthdate</td><td class="value"><input name="birthdate" type="date" value="<?php echo $row_rsStudent['birthdate']; ?>" min="<?php echo VBS_DATE_MIN?>" max="<?php echo VBS_DATE_MAX?>" <?php echo  $fldEnabled?>></td></tr>
+		<tr><td class="label">*&nbsp;<span>Birthdate</span></td><td class="value"><input name="birthdate" type="date" value="<?php echo $row_rsStudent['birthdate']; ?>" min="<?php echo VBS_DATE_MIN?>" max="<?php echo VBS_DATE_MAX?>" <?php echo  $fldEnabled?>></td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hGrade')">Grade Completed<span class="popuptext" id="hGrade">Select the grade your child is in right now or just completed.  DO NOT select the grade your child is going to in the fall.  Mom and Me students must register by <?php echo VBS_MOM_ME_DEADLINE_MMDDYYYY ?> because of the requirement for security clearances to be completed.</span></span></td><td class="value">
         <select name="class" <?php echo $fldEnabled?>>
 		<?php do {  ?>
@@ -459,7 +460,7 @@ $offset = --$offset;
 		} while ($row_rsClassList = mysqli_fetch_assoc($rsClassList));
 ?>
         </select></td></tr>
-    <tr><td class="label">*&nbsp;Shirt Size</td><td class="value"><select name="shirt_size" <?php echo $fldEnabled?>>
+    <tr><td class="label">*&nbsp;<span>Shirt Size</span></td><td class="value"><select name="shirt_size" <?php echo $fldEnabled?>>
       <?php
 do {  
 ?>
@@ -481,9 +482,9 @@ do {
         </td></tr>
         <tr><td class="label"><span class="popup" onclick="myPopUp('hBud')">Friend<span class="popuptext" id="hBud">If your child wants to be with a specific friend, enter their name here.  Their friend must be in the same grade.  We will do our best to accommodate your request.</span></span></td><td class="value"><input name="buddy" type="text" value="<?php echo $row_rsStudent['buddy']; ?>" maxlength="20" <?php echo $fldEnabled;?>></td></tr>
         <tr>
-          <td class="label"><span class="popup" onclick="myPopUp('sComment')">&nbsp;Comments:<span class="popuptext" id="sComment">Enter comments here that are related to this child.</span></span></td><td class="value"><textarea name="comments" cols="" rows="" <?php echo $fldEnabled?>><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
+          <td class="label"><span class="popup" onclick="myPopUp('sComment')">Comments:<span class="popuptext" id="sComment">Enter comments here that are related to this child.</span></span></td><td class="value"><textarea name="comments" cols="" rows="" <?php echo $fldEnabled?>><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
         <tr>
-          <td>*&nbsp;required <span class="popup" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to register students for VBS.  Click the first row of navigation buttons to move between children in your family.  Use the bottom row of navigation buttons to move between pages.  Click the 'new' button to start a new record.  Click the underlined labels for each item ot get detailed help. Click again to close the popup..</span></span></td>
+          <td class="label left"><span>*&nbsp;required</span></td>
           <td class="value">
    		<?php if ($fldEnabled=='') {if ($_REQUEST['submit']==NEW_BUTTON) { ?>
 			<input type="submit" name="submit" value="Save">&nbsp;
@@ -491,6 +492,7 @@ do {
         <?php } else { ?>			
 			  <input type="submit" name="submit" value="Update">
         <?php } }?>
+        <span class="popup float-right" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to register students for VBS.  Click the first row of navigation buttons to move between children in your family.  Use the bottom row of navigation buttons to move between pages.  Click the 'new' button to start a new record.  Click the underlined labels for each item to get detailed help. Click again to close the popup..</span></span>
 		</td></tr>
 		<tr><td colspan='2' class='narrow'><hr></td></tr>
 		<tr><td colspan='2'>
@@ -499,7 +501,7 @@ do {
 			<input type="submit" class="button" name="submit" value="<?php echo FIRST_RECORD?>" <?php echo $button['First'];?>>&nbsp;
 			<input type="submit" class="button" name="submit" value="<?php echo PREVIOUS_RECORD?>" <?php echo $button['Previous'];?>>&nbsp;
 			<input type="submit" class="button" name="submit" value="<?php echo NEXT_RECORD?>" <?php echo $button['Next'];?>>&nbsp;
-			<input type="submit" class="button" name="submit" value="<?php echo LAST_RECORD?>" <?php echo $button['Last'];?>>&nbsp;&nbsp;&nbsp;
+			<input type="submit" class="button" name="submit" value="<?php echo LAST_RECORD?>" <?php echo $button['Last'];?>>&nbsp;
         	<input type="submit" class="button" name="submit" value="<?php echo NEW_BUTTON?>" <?php echo $button['New'];?>><br>
 		</div>
 		</td></tr>
@@ -514,7 +516,9 @@ do {
 		<input type="submit" class="button" name="submit" value="<?php echo PREVIOUS_BUTTON?>"<?php echo $button['Back'];?>>&nbsp;
 		<input type="submit" class="button" name="submit" value="<?php echo NEXT_PAGE?>"<?php echo $button['NextPage'];?>>
 	</div>
-  </form></div>
+  </form>
+  </div>
+  </div>
 </div>
 </body>
 </html>

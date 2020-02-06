@@ -123,7 +123,7 @@ $offset = --$offset;
 <body>
 <div id="Find" class="gridContainer">
 	<div><h1>Search Results</h1></div>
-    <div id="dataLayout" class="vertical-horizontal-center">
+    <div id="dataLayout">
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post" name="frmResults" target="_self">
 	<?php if ($numFamilies == 0){ ?>
 	<table>

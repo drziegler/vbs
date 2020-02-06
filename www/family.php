@@ -264,7 +264,7 @@ if (DEBUG) print_r($_SESSION);
 <body>
 <div id="Find" class="gridContainer">
 	<h1>Family Info</h1>
-<div id="dataLayout center">
+<div id="dataLayout">
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post" name="frmFamily" target="_self">
 <table id="Family">
 	<?php if (strlen($errMsgText)) { ?> 
