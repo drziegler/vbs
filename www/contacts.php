@@ -345,7 +345,7 @@ if (DEBUG) {
 <body>
 <div id="Find" class="gridContainer">
 	<h1>Contact Info</h1>
-	<div id="dataLayout center">
+	<div id="dataLayout">
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="POST" name="frmContacts" target="_self">
 <table id="Phone">
     <?php if (strlen($errMsgText)>0) { ?>
