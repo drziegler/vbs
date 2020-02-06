@@ -347,7 +347,7 @@ if (DEBUG) {
 	<h1>Contact Info</h1>
 	<div id="dataLayout">
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="POST" name="frmContacts" target="_self">
-<table id="Phone">
+<table id="Phone" border="1">
     <?php if (strlen($errMsgText)>0) { ?>
     	<tr><td colspan="3" class="center error"><?php echo $errMsgText;?></td></tr>
     <?php } else { ?>
@@ -362,14 +362,14 @@ if (DEBUG) {
         <input type="hidden" name="phone[<?php echo $i;?>][family_id]" value="<?php echo $_SESSION['family_id']?>"></td>
 	</tr>
     <?php } ?>
-    <tr><td class="left"><span>*&nbsp;required</span></td><td colspan="2" class="right"><span class="popup right" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Enter family contact information on this page.  You may enter as many names and phone numbers as you wish but you must provide at least two different phone numbers.  Each contact must have a name &amp; phone number.<br>To delete a contact, first check the Select box(es) of the lines you want to delete then click the delete button.</span></span></td></tr>
-	<tr class="center">
-		<td colspan="4">
+    <tr><td colspan="3"><span class="float-left">*&nbsp;required</span>
+    	<span class="horizontal-center">
     	<input type="submit" name="submit" value="Save">&nbsp;
 	    <input type="submit" name="submit" value="Add">&nbsp;
 	    <input type="submit" name="submit" value="Delete">&nbsp;
-		</td>
-	</tr>
+		</span>
+		<span class="popup float-right" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Enter family contact information on this page.  You may enter as many names and phone numbers as you wish but you must provide at least two different phone numbers.  Each contact must have a name &amp; phone number.<br>To delete a contact, first check the Select box(es) of the lines you want to delete then click the delete button.</span></span>
+	</td></tr>	
 </table>
 <div id="buttonGroup" class="center">
 	<input type="submit" name="submit" class="button" value="<?php echo HOME_BUTTON?>">&nbsp;
