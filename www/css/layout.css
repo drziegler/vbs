@@ -1,9 +1,7 @@
 @charset "utf-8";
 @font-face{
 	font-family: "Castle Font";
-	/*src: url('../fonts/castlefont.ttf'); */
 	src: url('../fonts/oldenglishfive.ttf');
-	/*src: url('../fonts/Old London.ttf'); */
 	font-weight: 100 1700;
 }
 /* Simple fluid media  Version 1
@@ -19,6 +17,12 @@ body {
 }
 
 
+/******************* FOR TESTING ******************/
+div {border:5px dashed blue;}
+div div {border: 5px dashed green;}
+
+
+/************* GENERAL ELEMENT STYLES ****************/
 /* DO NOT REMOVE - IN USE */
 body, input, select, textarea {
 	font-family: sans-serif;
@@ -27,11 +31,67 @@ body, input, select, textarea {
 img, object, embed, video {
 	max-width: 100%;
 }
-
-/* IE 6 does not support max-width so default to width 100% */
-.ie6 img {
-	width:100%;
+h1 {
+	width: 99%;
+	font-family: "Castle Font";
+	margin: auto;
+	text-align: center;
+	font-size: 6.5vmin;
 }
+h2, .h2 {
+	width: 99%;
+	margin: auto;
+	text-align: center;
+	font-size: 2rem;
+	font-weight:normal;
+}
+h3{
+	font-size:5vw;
+	font-weight: normal;
+	text-align: center;
+	margin: 0;
+	color:red;
+}
+hr {border:none;}
+input {
+	box-sizing: border-box;
+}
+input[type=checkbox], input[type=radio]{
+	transform:scale(1.25,1.25);
+}
+label{	 /* label the element not the class.  Used to compress the Mo Tu Wed ... options */
+	padding-left: 0;
+	padding-right: 0;
+	margin-left: 0;
+	margin-right: 0;
+	
+}
+table {
+	width:99%;
+	margin:auto;
+	margin-top:1em;
+	border: 0.25em solid;
+	border-collapse: collapse;
+	border-spacing: 0px;		/* equivalent to cellspacing*/ 
+}
+td {padding: 0.45em;}
+a:link{
+	/* Used to remove the hyperlink style from the Menu buttons */
+	text-decoration:none;
+	color:white;
+}
+textarea{
+	maxlength:256;
+}
+tr *{
+	font-size: 1rem;
+	padding: 0.3vw;
+}
+
+
+
+/******************************************* GENERAL CLASS STYLES *********************************/
+
 /* POPUPS format the popup help text boxes */
 .width-equal-thirds{
 	width:33%;
@@ -39,6 +99,12 @@ img, object, embed, video {
 .border-on{
 	/* Used to turn borders on and off to test view layouts */
 	border: .25em solid black;
+}
+.border-bottom{	/* Puts a border at the bottom of the element. Good for header rows in tables */
+	border-bottom: inherit;
+	border-bottom-color: inherit;
+	border-bottom-width: inherit;
+	border-bottom-style: solid;
 }
 
 /* Contain floats: h5bp.com/q */ 
@@ -55,19 +121,22 @@ img, object, embed, video {
 }
 .popup .popuptext {
 	visibility: hidden;
-	/* default width, overrides are in tablet and desktop media types */
-    width: 160px;
-    background-color: #555;
-    color: #fff;
+    width: auto;   /* default width, overrides are in tablet and desktop media types */
+    background-color: black;
+    border: 3px dashed yellow;
+    color: white;
     text-align: left;
-    border-radius: 6px;
+    font-size: 1rem;
+    border-radius: 8px;
     padding: 8px 6px;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    margin-left: -80px;	
+    position: fixed;
+    z-index: 2;
+    right: 0;
+    margin-left: -280px;	
 }
-/* This displays the little down arrow from the text box */
+
+
+/* ? IS THIS USED ? This displays the little down arrow from the text box */
 .popup .popuptext::after {
     content: "";
     position: absolute;
@@ -83,45 +152,15 @@ img, object, embed, video {
     visibility: visible;
     -webkit-animation: fadeIn 1s;
     animation: fadeIn 1s
-} 
+}
+
+/******************************************* BROWSER SPECIFIC STYLES *********************************/
+/* IE 6 does not support max-width so default to width 100% */
+.ie6 img {
+	width:100%;
+}
+ 
 /**************************************** Mobile Layout: 480px and below. ****************************/
-h1 {
-	width: 99%;
-	font-family: "Castle Font";
-	margin: auto;
-	text-align: center;
-	font-size: 7.5vw;
-}
-
-h2, .h2 {
-	width: 99%;
-	margin: auto;
-	text-align: center;
-	font-size: 4vw;
-	font-weight:normal;
-}
-
-#Staff h2{
-	/* This formats the staff page to fix on 1 mobile screen. */
-	margin-bottom:0;
-	padding-bottom:0;
-}
-h3{
-	font-size:5vw;
-	font-weight: normal;
-	text-align: center;
-	margin: 0;
-	color:red;
-}
-textarea{
-	maxlength:256;
-}
-input {
-	box-sizing: border-box;
-}
-input[type=checkbox], input[type=radio]{
-	transform:scale(1.25,1.25);
-}
 .popup .popuptext{
 	width:160px;	
 	left:100%;
@@ -143,6 +182,7 @@ input[type=checkbox], input[type=radio]{
 	width: 30%;
 	padding-right: 0;
 	text-align: right;
+	vertical-align: top;
 }
 .value{
 	text-align: left;
@@ -153,8 +193,7 @@ input[type=checkbox], input[type=radio]{
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 0;
-	/*padding-top: -2em;*/
-	width: 98%;
+	width: 98%;		/* Increasing this causes left-right scroll on mobile */
 	max-height: 88vh;
 	overflow: auto;
 }
@@ -162,14 +201,12 @@ input[type=checkbox], input[type=radio]{
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 0;
-	/*padding-top: -2em;*/
-	width: 98%;
+	width: 98%;		/* Increasing this causes left-right scroll on mobile */
 	overflow: auto;
 }
 .center{
-	margin-left:auto;
-	margin-right:auto;
-	width:99%;
+	margin: auto;
+	width:90%;
 	text-align:center;
 }
 .centerText{
@@ -183,6 +220,14 @@ input[type=checkbox], input[type=radio]{
 	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
 }
+.horizontal-center{
+	margin:0;
+	position: absolute;
+	left:50%;
+	width: inherit;
+	-ms-transform: translateX(-50%);
+	transform: translateX(-50%);
+}
 .vertical-horizontal-center{
 	margin:0;
 	position: absolute;
@@ -192,16 +237,16 @@ input[type=checkbox], input[type=radio]{
 	-ms-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
 }
-.nowrap{
-	white-space: nowrap;
-}
+.nowrap{white-space: nowrap}
 .narrow{
 	margin:0;
 	padding:0;
 }
-.left{
-	text-align: left;
-}
+.left{text-align: left}
+.right{text-align: right}
+.float-right{float: right}
+.float-left{float: left}
+
 #header {
 	clear: both;
 	float: left;
@@ -213,11 +258,6 @@ input[type=checkbox], input[type=radio]{
 	font-size: 7vw;
 	text-align: center;
 }
-/* NOT USED ?
-#error {
-	color:red;
-}
-*/
 #status{
 	font-family:Verdana, Geneva, sans-serif;
 	text-align:center;
@@ -225,23 +265,56 @@ input[type=checkbox], input[type=radio]{
 	font-weight:normal;
 	padding: 0.25em 0em;
 }
+#dataLayout{  /* Includes automatic horizontal centering */
+	clear: both;
+	margin: 0;
+	position: absolute;
+	left:50%;
+	margin-top: .5em;
+	width: inherit;
+	-ms-transform: translateX(-50%);
+	transform: translateX(-50%);
+}
+#mnuBtn { /* Only used in index page right now */
+	width: 12rem;
+	border: 5px solid darkblue;
+	border-radius: 20px;
+	background-color: LightSlateGray;
+	padding: 0.5vw;
+	margin-top: 5vh;
+	margin-left: auto;
+	margin-right: auto;
+	color: DarkBlue;
+	font-family: "Castle Font";
+	font-size: 2rem;
+}
+#mnuBtn:hover{
+	color: LightSlateGray;
+	background-color: DarkBlue;
+}
+/*
 #dataLayout{
 	clear: both;
-	float: left;
-	margin-left: 0;
+	margin: auto;
 	margin-top: .5em;
-	width: 90%;
+	width: 100%;
 	display: block;
 }
+*/
 #buttonGroup{
 	margin-top: 0;
 	padding-top: 0;
-	width:95%;
-	opacity: 0%;
+	width: inherit;
 	margin-left:auto;
 	margin-right:auto;
-	text-size: 100%;
 }
+#buttonSubGroup{
+	padding-left: 0;
+	padding-right: 0;
+	margin: 0;
+	width: inherit;
+}
+
 .button{
 	-webkit-border-radius: 8px;
 	-moz-border-radius: 8px;
@@ -272,32 +345,12 @@ input[type=checkbox], input[type=radio]{
 	color: #4478BA;
 	background: white;
 }
-/* All table elements basic display */
-table {
-	width:99%;
-	margin:auto;
-	margin-top:1em;
-	border:.25em solid;
-	border-collapse:collapse;
-	border-spacing:0px;		/* equivalent to cellspacing*/ 
-}
-td {
-	padding: 0.45em;
-}
-/* Any element inside a tr tag on the Search page*/
-#Search.tr *{
-	font-size: 0.75em;
-	padding: 0.3vw;
-}
-tr *{
-	font-size: 0.75em;
-	padding: 0.3vw;
-}
-hr {border:none;}
+
+/*************************** GENERIC PAGE LEVEL STYLES **********************/
 #Find table, p{
 	border: 5px solid black;
 	background-color: LightGray;
-	opacity: 0.9;
+	opacity: 0.8;
 }
 #Find p{
 	font-size: 1.25em;
@@ -306,14 +359,29 @@ hr {border:none;}
 #Find hr{background-color: black;}
 #Find td{font-size: 2em;}
 
-/* FAMILY PAGE */
+/************************* SPECIFIC PAGE LEVEL STYLES - Used only on one page ***************/
+#Register p{
+	margin: auto;
+	font-size: 3.25vmin;
+}
+#Register a:link, #Register a:visited{
+	/* Used to remove the hyperlink style from the Menu buttons */
+	text-decoration: none;
+	color: blue;
+}
+
+/****************** SEARCH & RESULTS PAGES /*****************/
+#Result {margin-top: 10vh;}
+#Search {margin-top: 10vh;}
+
+/****************** FAMILY PAGE /*****************/
 #Family .value, #Family .label, #Family td {
-	font-size: 1.2rem;
+	font-size: 1.4rem;
 	padding-bottom: 1.2vh;
 }
 #Family .label{min-width: 12%;}
 
-/* PHONE / CONTACTS PAGE */
+/****************** PHONE / CONTACTS PAGE *********/
 #Phone table{
 	border: 2px solid white;
 }
@@ -328,71 +396,32 @@ hr {border:none;}
 	width: 30%;
 }
 
-
-
-#Student table{
-	border-color: rgb(31,122,31);
-	background-color: rgb(153,255,153);
+/****************** STUDENT PAGE (Mobile) *****************/
+#Student .value, #Student .label, #Student td{
+	font-size: 1.25rem;
+	padding-bottom: 0.75vh;
 }
-#Student hr{background-color: rgb(31,122,31);}
-/* Only the summary screen has a th for Student */
-#Student th{
-	background-color: rgb(31,122,31);
-	color: white;
-}
-#Staff table{
-	border-color: rgb(153,51,153);
-	background-color: rgb(230,179,230);
-}
-#Staff hr{background-color: rgb(153,51,153);}
-#Staff th{
-	background-color: rgb(153,51,153);
-	color:white;
-}
-#Staff td.label {
-	width:33%;
-}
-#mnuBtn {
-	display: inline-block;
-	border-radius: 25px;
-	background-repeat: no-repeat;
-	background-position: center;
-	width: 45%;
-	height: 25%;
-	padding-top: 35%;
-	margin:.1em;
-	color: white;
-	font-family: "Castle Font";
-	font-size: 6vw;
-	text-align: center;
-	background-size: contain;
+#Student .label{width: 34%;}  /* label the class, not the element */
+#Student #buttonSubGroup{
+	padding-left: 0;
+	padding-right: 0;
 }
 
-#mnuBtn span {
-	font-family: "Castle Font";
-	display:table-cell;
-	vertical-align:middle;
-	width:inherit;
-	height:99%;
-	font-size: 125%;
- 
-}
 
-.find{
-	background-image:url("../images/find.jpg");
-	border: thick solid rgba(255,102,0,1);
+/****************** STAFF PAGE  *****************/
+#Staff .value, #Staff .label, #Staff td{
+	font-size: 1.2rem;
+	padding-bottom: 1vh;
 }
-.student{
-	background-image: url("../images/students.jpg");
-	border: thick solid rgba(31,122,31,1);
-}
-.staff{
-	background-image: url("../images/volunteer.jpg");
-	border: thick solid rgba(153,51,153,1);
-}
-.register{
-	background-image: url("../images/window1.gif");
-}
+#Staff td.label {width:33%}
+
+/****************** CONFIRMATION (CONFO) PAGE  (Mobile) *****************/
+#Confo td{font-size: 1rem}
+
+#Confo #Student td{font-size: 0.75rem}
+
+
+
 .schedule{
 	border: thick solid orange;
 	background-image: url("../images/schedules.jpg");
@@ -402,14 +431,6 @@ hr {border:none;}
 }
 .monday{
 	border: thick solid green;
-}
-.stats{
-	background-image: url("../images/stats.jpg");
-}
-a:link{
-	/* Used to remove the hyperlink style from the Menu buttons */
-	text-decoration:none;
-	color:white;
 }
 .bottom{
 /* Used to place the bottom menu at the bottom */
@@ -430,6 +451,7 @@ a:link{
 	width: 100%;
 	max-height: 12vh;
 }
+/*
 #OLDFooter {
 	width: 96%;
 	position: absolute;
@@ -443,6 +465,7 @@ a:link{
 	left:1px;
 	font-size: 1vmax; /* 80%; */
 }
+*/
 #Button0{
 	clear: both;
 	float: left;
@@ -472,11 +495,7 @@ a:link{
 }
 #Family .confo td{
 	padding: .25em;
-	font-size: .5vw; 
-}
-.buttonGroup.center.border-on #mnuBtn a {
-}
-.buttonGroup.center.border-on #mnuBtn a {
+	font-size: .5rem; 
 }
 
 
@@ -484,11 +503,9 @@ a:link{
 
 /* Tablet Layout: 481px to 768px. Inherits styles from: Mobile Layout. */
 /********************************************************  TABLET LAYOUT ********************* TABLET LAYOUT ************************************/
-@media only screen and (min-width: 481px) {
+@media only screen and (min-width: 481px) and (max-width: 835px) {
 h3{
 	font-size: 2.5vw;
-}
-.buttonGroup.center.border-on #mnuBtn a {
 }
 
 textarea{
@@ -504,7 +521,7 @@ table{
 	border:.5em solid;
 }
 tr *{
-	font-size: 2.5vw;
+	font-size: 2.5rem;
 	padding: 0.25em;
 }
 td *{
@@ -516,8 +533,17 @@ input[type=checkbox], input[type=radio]{
 #status{
 	font-size: 1vw;
 }
+.gridContainer-footer {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 0;
+	width: 98%;		/* Increasing this causes left-right scroll on mobile */
+	max-height: 88vh;
+	overflow: auto;
+}
 .gridContainer {
-	width: 90.675%;
+	/*width: 90.675%; */
+	width: 98%;
 	padding-left: 1.1625%;
 	padding-right: 1.1625%;
 }
@@ -538,24 +564,17 @@ input[type=checkbox], input[type=radio]{
 	padding-left:.5em;
 }
 #buttonGroup{
-	width:75%;
+	margin-top: 0;
+	padding-top: 0;
+	width: inherit;
 	margin-left:auto;
 	margin-right:auto;
 }
-#buttonSubGroup{
+#buttonSubGroup{  /* Desktop only */
 	width:75%;
 	margin-top:0;
 	margin-left:auto;
 	margin-right:auto;
-}
-#mnuBtn{
-	width: 20%;
-	height: 25%;
-	padding-top: 20%;
-	margin:.1em;
-	font-family: "Castle Font";
-	font-size: 2.5vw;
-	color: blue;
 }
 #logo img{
 	display: block;
@@ -568,16 +587,16 @@ input[type=checkbox], input[type=radio]{
 
 /* Desktop Layout: 769px to a max of 1232px.  Inherits styles from: Mobile Layout and Tablet Layout. */
 /********************************************************  DESKTOP LAYOUT ********************* DESKTOP LAYOUT ************************************/
-/*@media only screen and (min-width: 769px) { */
-@media only screen and (min-width: 836px) {
+@media only screen 
+and (min-width: 836px) {
+
 h1 {
 	font-family: "Castle Font";
 	font-size: 5vw;
 	color:black;
 }
 h2, .h2 {
-	font-weight:normal;
-	font-size: 1.5vw;
+	font-size: 4rem;
 }
 h3{
 	font-size: 1vw;
@@ -592,7 +611,9 @@ h3{
 }
 
 .gridContainer-footer {
-	width: 70%;
+	/* @@ TESTING ONLY */
+	border: 5px solid green;
+	width: 90%;
 	height: 88vh;
 	padding-left: 0.75%;
 	padding-right: 0.75%;
@@ -607,7 +628,7 @@ h3{
 	overflow: auto;
 }
 .button{
-	font-size: 1vw;
+	font-size: 1.25vw;
 }
 .vertical-center{
 	margin:0;
@@ -618,7 +639,7 @@ h3{
 	transform: translateY(-50%);
 }
 tr *{
-	font-size: 1em;
+	font-size: 1.25rem;
 	padding: 0.3vw;
 }
 input[type=checkbox], input[type=radio]{
@@ -641,27 +662,18 @@ input[type=checkbox], input[type=radio]{
 }
 #Find td{font-size: 2em;}
 
-#mnuBtn{
-	background-image: url(../images/window1.gif);
-	background-size: contain; /* was cover */
-	/*width: 23%; 
-	padding-top: 25%; */
-	font-size: 2vw;
-	vertical-align: middle;
-	color: blue;
+/****************** STUDENT PAGE (Desktop) *****************/
+#Student .value, #Student .label, #Family td{
+	font-size: 1rem;
+	padding-bottom: 0;
 }
-
-mnuBtn span{
-	margin-bottom: 45%;
-	marign-top: 45%;
-}
-
 
 #mnuButton{
 	font-size: 2em;
 }
 #buttonGroup{
 	margin-top: 1%;
+	width: inherit;
 /*	display: block;
 	width: 90%;
 	margin-left:auto;
