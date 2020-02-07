@@ -33,7 +33,7 @@ switch ($_POST['submit']) {
 <body>
 <div id="Find" class="gridContainer clearfix">
     <h1>Search</h1>
-    <div id="dataLayout" class="vertical-horizontal-center">
+    <div id="dataLayout" class="horizontal-center">
     <div id="Search">
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post" name="frmPhone" target="_self">
         <table>

@@ -122,8 +122,9 @@ $offset = --$offset;
 </head>
 <body>
 <div id="Find" class="gridContainer">
-	<div><h1>Search Results</h1></div>
+	<h1>Search Results</h1>
     <div id="dataLayout">
+    <div id="Result">
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post" name="frmResults" target="_self">
 	<?php if ($numFamilies == 0){ ?>
 	<table>
@@ -137,10 +138,12 @@ $offset = --$offset;
         <tr><td class="center"><input name="family_id" type="hidden" value="<?php echo $row_rsFamily['family_id']; ?>"><?php echo $row_rsFamily['email']; ?></td></tr>
 	<?php if ($numFamilies>1) {?>
 	    <tr><td class='narrow'><hr></td></tr>
-	    <tr><td class="center">
+	    <tr><td>
+	    <div id="buttonSubGroup" class="center">
     		Displaying family <?php echo (($numFamilies >0)?$offset+1:0)?> of <?php echo $numFamilies ?><br>
 			<input type="submit" class="button" name="submit" value="<?php echo PREVIOUS_RECORD?>" <?php echo $button['Previous'];?>>&nbsp;
 			<input type="submit" class="button" name="submit" value="<?php echo NEXT_RECORD?>" <?php echo $button['Next'];?>>&nbsp;
+		</div>
 		</td></tr>
     <?php } } ?>
 	</table>
@@ -156,6 +159,7 @@ $offset = --$offset;
     <input name="txtPhone" type="hidden" value="<?php echo $_REQUEST['txtPhone']?>">
     </form>
 </div></div>
+</div>
 </body>
 </html>
 <?php
