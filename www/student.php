@@ -22,7 +22,7 @@ function quickSave(){
 	if (isset($_POST['registered'])) $sqlUpdate .= ",registered='" . $_POST['registered'] . "'";
 	if (isset($_POST['class'])) $sqlUpdate .= ",class='" . $_POST['class'] . "'";
 	if (isset($_POST['shirt_size']) && !$_POST['shirt_size']=="Select size") $sqlUpdate .= ",shirt_size='" . $_POST['shirt_size'] . "'";
-	$sqlUpdate .= ",confo='" . $_SESSION['confoNo'] . "'";
+	//$sqlUpdate .= ",confo='" . $_SESSION['confoNo'] . "'";
 	$sqlUpdate .= ",last_update=now() ";
 	$sqlUpdate .= " WHERE student_id = " . $_POST['student_id'];
 	mysqli_real_escape_string($vbsDBi, $sqlUpdate);

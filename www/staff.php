@@ -523,20 +523,20 @@ $offset = --$offset;
 			<label><input type="radio" name="registered" id="reg-yes" value="<?php echo $yesVal?>" <?php echo $yesChk . $fldEnabled?>> Yes</label>
             <label><input type="radio" name="registered" id="reg-no" value="N" <?php echo $noChk . $fldEnabled?>> No</label>
 			</td></tr>
-		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter the first name of the staff volunteer.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']; ?>" maxlength="20" <?php echo $fldEnabled ?> style="width:60%"></td></tr>
-		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter the last name of the staff volunteer.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20" <?php echo $fldEnabled ?> style="width:60%"></td></tr>
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter the first name of the staff volunteer.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']; ?>" maxlength="20" <?php echo $fldEnabled ?>></td></tr>
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter the last name of the staff volunteer.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20" <?php echo $fldEnabled ?>></td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAvail')">Availability<span class="popuptext" id="hAvail">Select the days you are available to help during the week of VBS.  You must select at least one day.</span></span></td><td class="value">
-            <input type="checkbox" name="mon" id="mon" value="Y" <?php echo (empty($row_rsStudent['mon'])||$row_rsStudent['mon']=='N' ?'':'checked ') . $fldEnabled;?>><label for="mon">Mo</label>
-            <input type="checkbox" name="tue" id="tue" value="Y" <?php echo (empty($row_rsStudent['tue'])||$row_rsStudent['tue']=='N' ?'':'checked ') . $fldEnabled;?>><label for="tue">Tu</label>
-            <input type="checkbox" name="wed" id="wed" value="Y" <?php echo (empty($row_rsStudent['wed'])||$row_rsStudent['wed']=='N' ?'':'checked ') . $fldEnabled;?>><label for="wed">We</label>
-            <input type="checkbox" name="thur" id="thur" value="Y" <?php echo (empty($row_rsStudent['thur'])||$row_rsStudent['thur']=='N' ?'':'checked ') . $fldEnabled;?>><label for="thur">Th</label>
-            <input type="checkbox" name="fri" id="fri" value="Y" <?php echo (empty($row_rsStudent['fri'])||$row_rsStudent['fri']=='N' ?'':'checked ') . $fldEnabled;?>><label for="Fri">Fr</label>
+            <div class="item"><input type="checkbox" name="mon" id="mon" value="Y" <?php echo (empty($row_rsStudent['mon'])||$row_rsStudent['mon']=='N' ?'':'checked ') . $fldEnabled;?>><label for="mon">Mo</label></div>
+            <div class="item"><input type="checkbox" name="tue" id="tue" value="Y" <?php echo (empty($row_rsStudent['tue'])||$row_rsStudent['tue']=='N' ?'':'checked ') . $fldEnabled;?>><label for="tue">Tu</label></div>
+            <div class="item"><input type="checkbox" name="wed" id="wed" value="Y" <?php echo (empty($row_rsStudent['wed'])||$row_rsStudent['wed']=='N' ?'':'checked ') . $fldEnabled;?>><label for="wed">We</label></div>
+            <div class="item"><input type="checkbox" name="thur" id="thur" value="Y" <?php echo (empty($row_rsStudent['thur'])||$row_rsStudent['thur']=='N' ?'':'checked ') . $fldEnabled;?>><label for="thur">Th</label></div>
+            <div class="item"><input type="checkbox" name="fri" id="fri" value="Y" <?php echo (empty($row_rsStudent['fri'])||$row_rsStudent['fri']=='N' ?'':'checked ') . $fldEnabled;?>><label for="Fri">Fr</label></div>
         </td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hPref')">Preferences<span class="popuptext" id="hPref">If you are particular about where you help, check only those boxes for the area in which you have an interest.  You must select at least one.</span></span></td><td class="value">
-	        <input type="checkbox" name="classroom" id="classroom" value="Y" <?php echo (empty($row_rsStudent['classroom'])||$row_rsStudent['classroom']=='N' ?'':'checked ') . $fldEnabled;?>><label for="classroom">Classroom</label>
-			<input type="checkbox" name="craft" id="craft" value="Y" <?php echo (empty($row_rsStudent['craft'])||$row_rsStudent['craft']=='N' ?'':'checked ') . $fldEnabled;?>><label for="craft">Craft</label>
-            <input type="checkbox" name="kitchen" id="kitchen" value="Y" <?php echo (empty($row_rsStudent['kitchen'])||$row_rsStudent['kitchen']=='N' ?'':'checked ') . $fldEnabled;?>><label for="kitchen">Kitchen</label>
-            <input type="checkbox" name="anything" id="anything" value="Y" <?php echo (empty($row_rsStudent['anything'])||$row_rsStudent['anything']=='N' ?'':'checked ') . $fldEnabled;?>><label for="anything">Anything</label>
+	        <div class="item"><input type="checkbox" name="classroom" id="classroom" value="Y" <?php echo (empty($row_rsStudent['classroom'])||$row_rsStudent['classroom']=='N' ?'':'checked ') . $fldEnabled;?>><label for="classroom">Classroom</label></div>
+			<div class="item"><input type="checkbox" name="craft" id="craft" value="Y" <?php echo (empty($row_rsStudent['craft'])||$row_rsStudent['craft']=='N' ?'':'checked ') . $fldEnabled;?>><label for="craft">Craft</label></div>
+            <div class="item"><input type="checkbox" name="kitchen" id="kitchen" value="Y" <?php echo (empty($row_rsStudent['kitchen'])||$row_rsStudent['kitchen']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;<label for="kitchen">Kitchen</label></div>
+            <div class="item"><input type="checkbox" name="anything" id="anything" value="Y" <?php echo (empty($row_rsStudent['anything'])||$row_rsStudent['anything']=='N' ?'':'checked ') . $fldEnabled;?>><label for="anything">Anything</label></div>
 	    <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hShirt')">Shirt Size<span class="popuptext" id="hShirt">Select the shirt size you want for <?php echo (empty($row_rsStudent['first_name']) ? "this volunteer" : $row_rsStudent['first_name']); ?>.  T-Shirts are only available for those who register before <?php echo VBS_SHIRT_DEADLINE_MMDDYYYY?></span></span></td><td class="value"><select name="shirt_size" <?php echo $fldEnabled?>>
       <?php
 do {  
@@ -575,9 +575,8 @@ do {
         <?php } ?>
 		<span class="popup float-right" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to register volunteers for the week of VBS.  Volunteers must be in 7th grade or higher.  Click the underlined labels for detailed popup help. Click again to close it.</span></span>
 		</td></tr>
-        
 		<tr><td colspan='2' class='narrow'><hr></td></tr>
-		<tr><td colspan='2' style="margin-top:0;padding-top:0;">
+		<tr><td colspan='2'>
 		<div id="buttonSubGroup" class="center">
     		Displaying staff member <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?><br>
 			<input type="submit" name="submit" class="button" value="First"<?php echo $button['First']?>>&nbsp;

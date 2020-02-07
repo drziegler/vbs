@@ -18,8 +18,8 @@ body {
 
 
 /******************* FOR TESTING ******************/
-div {border:5px dashed blue;}
-div div {border: 5px dashed green;}
+/*div {border:5px dashed blue;} */
+/* div div {border: 5px dashed green;} */
 
 
 /************* GENERAL ELEMENT STYLES ****************/
@@ -52,19 +52,12 @@ h3{
 	margin: 0;
 	color:red;
 }
-hr {border:none;}
+hr {border-top: 5px solid black;}
 input {
 	box-sizing: border-box;
 }
 input[type=checkbox], input[type=radio]{
 	transform:scale(1.25,1.25);
-}
-label{	 /* label the element not the class.  Used to compress the Mo Tu Wed ... options */
-	padding-left: 0;
-	padding-right: 0;
-	margin-left: 0;
-	margin-right: 0;
-	
 }
 table {
 	width:99%;
@@ -112,6 +105,15 @@ tr *{
 .clearfix:after { clear: both; }
 .clearfix { zoom: 1; }
 
+/* This is used to keep check boxes and labels on the same line */
+.item {
+	white-space: nowrap;
+	display: inline;
+	padding-left: 0;
+	padding-right: 0;
+	margin: 0;
+}
+
 .popup {
 	position: relative;
 	display: inline-block;
@@ -121,7 +123,8 @@ tr *{
 }
 .popup .popuptext {
 	visibility: hidden;
-    width: auto;   /* default width, overrides are in tablet and desktop media types */
+    width: 45vw;   /* default width, overrides are in tablet and desktop media types */
+    max-width: 400px;
     background-color: black;
     border: 3px dashed yellow;
     color: white;
@@ -131,10 +134,8 @@ tr *{
     padding: 8px 6px;
     position: fixed;
     z-index: 2;
-    right: 0;
-    margin-left: -280px;	
+    right: 10vw;
 }
-
 
 /* ? IS THIS USED ? This displays the little down arrow from the text box */
 .popup .popuptext::after {
@@ -161,10 +162,7 @@ tr *{
 }
  
 /**************************************** Mobile Layout: 480px and below. ****************************/
-.popup .popuptext{
-	width:160px;	
-	left:100%;
-}
+
 .red{
 	color:red;
 }
@@ -356,7 +354,6 @@ tr *{
 	font-size: 1.25em;
 	padding: 0.5em;
 }
-#Find hr{background-color: black;}
 #Find td{font-size: 2em;}
 
 /************************* SPECIFIC PAGE LEVEL STYLES - Used only on one page ***************/
@@ -413,6 +410,14 @@ tr *{
 	font-size: 1.2rem;
 	padding-bottom: 1vh;
 }
+/* @@
+#Staff label{	 		 label the element not the class and only for the Staff page
+	padding-left: 0.1;
+	padding-right: 0;
+	margin-left: 0.1;
+	margin-right: 0;
+}*/
+
 #Staff td.label {width:33%}
 
 /****************** CONFIRMATION (CONFO) PAGE  (Mobile) *****************/
@@ -604,12 +609,6 @@ h3{
 #status{
 	font-size: 1.5vw;
 }
-
-.popup .popuptext{
-	width:260px;
-	left:25%;
-}
-
 .gridContainer-footer {
 	/* @@ TESTING ONLY */
 	border: 5px solid green;
@@ -640,7 +639,7 @@ h3{
 }
 tr *{
 	font-size: 1.25rem;
-	padding: 0.3vw;
+	padding-bottom: 0.05;
 }
 input[type=checkbox], input[type=radio]{
 	transform:scale(2,2);
@@ -663,10 +662,12 @@ input[type=checkbox], input[type=radio]{
 #Find td{font-size: 2em;}
 
 /****************** STUDENT PAGE (Desktop) *****************/
-#Student .value, #Student .label, #Family td{
+#Student .value, #Student .label, #Family td, #Staff .value, #Staff .label{
 	font-size: 1rem;
 	padding-bottom: 0;
 }
+#Staff tr{padding-top: 0; padding-bottom: 0;}
+
 
 #mnuButton{
 	font-size: 2em;

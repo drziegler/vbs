@@ -9,7 +9,7 @@ require('vbsUtils.inc');
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS Home - Hope Lutheran Church</title>
-<link rel="stylesheet" type="text/css" href="css/layout.css?v3" >
+<link rel="stylesheet" type="text/css" href="css/layout.css?v5" >
 </head>
 <body>
 <div id="Find">
@@ -27,7 +27,7 @@ require('vbsUtils.inc');
 	If you have registration questions, email the VBS office (<a href="mailto:vbs@hopecherryville.org" class="email">vbs@hopecherryville.org</a>) or call 610&#8209;767&#8209;7203 Ext 17.
 	</p>
 	<div class="buttonGroup center">
-   		<a href="search.php"><div id="mnuBtn"><span>Register</span></div></a>
+   		<a href="search.php"><div id="mnuBtn">Register</div></a>
    	</div>
 </div>
 </div>
