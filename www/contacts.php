@@ -333,7 +333,7 @@ if (DEBUG) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS-Contact Information</title>
-<link href="css/boilerplate.css" rel="stylesheet" type="text/css">
+<!-- <link href="css/boilerplate.css" rel="stylesheet" type="text/css"> -->
 <link href="css/layout.css" rel="stylesheet" type="text/css">
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>

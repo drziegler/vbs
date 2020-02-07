@@ -253,7 +253,7 @@ if (DEBUG) print_r($_SESSION);
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS - Family</title>
-<link href="css/boilerplate.css" rel="stylesheet" type="text/css">
+<!--  <link href="css/boilerplate.css" rel="stylesheet" type="text/css"> -->
 <link href="css/layout.css" rel="stylesheet" type="text/css">
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -284,7 +284,7 @@ if (DEBUG) print_r($_SESSION);
     <?php } while ($rsChurchList = mysqli_fetch_assoc($rsChurchResult)); ?>
     </select></td></tr>
 	<tr><td class="label"><span>Family Comments:</span></td><td class="value"><textarea name="comments" cols="" rows="3" style="width:90%;"><?php echo $rsFam['comments']; ?></textarea></td></tr>
-    <tr><td class="label left"><span>*&nbsp;required</span></td><td class="value"><input type="submit" name="submit" value="Save"><span class="popup" style="margin-left:25%" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to update family information.  When done, click 'Next' to continue. Click the underlined labels for detailed popup help. Click again to close it.</span></span></td></tr>
+    <tr><td class="label left"><span>*&nbsp;required</span></td><td class="value"><input type="submit" name="submit" value="Save"><span class="popup float-right" style="margin-left:25%" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to update family information.  When done, click 'Next' to continue. Click the underlined labels for detailed popup help. Click again to close it.</span></span></td></tr>
 </table>
 
 	<input type="hidden" name="family_id" value="<?php echo $rsFam['family_id'];?>">

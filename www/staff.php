@@ -498,7 +498,7 @@ $offset = --$offset;
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS Staff</title>
-<link href="css/boilerplate.css" rel="stylesheet" type="text/css">
+<!-- <link href="css/boilerplate.css" rel="stylesheet" type="text/css"> -->
 <link href="css/layout.css?v7" rel="stylesheet" type="text/css">
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -537,7 +537,7 @@ $offset = --$offset;
 			<input type="checkbox" name="craft" id="craft" value="Y" <?php echo (empty($row_rsStudent['craft'])||$row_rsStudent['craft']=='N' ?'':'checked ') . $fldEnabled;?>><label for="craft">Craft</label>
             <input type="checkbox" name="kitchen" id="kitchen" value="Y" <?php echo (empty($row_rsStudent['kitchen'])||$row_rsStudent['kitchen']=='N' ?'':'checked ') . $fldEnabled;?>><label for="kitchen">Kitchen</label>
             <input type="checkbox" name="anything" id="anything" value="Y" <?php echo (empty($row_rsStudent['anything'])||$row_rsStudent['anything']=='N' ?'':'checked ') . $fldEnabled;?>><label for="anything">Anything</label>
-	    <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hShirt')">Shirt Size<span class="popuptext" id="hShirt">Select the shirt size you want for this volunteer.  T-Shirt are only available for those who register before <?php echo VBS_SHIRT_DEADLINE_MMDDYYYY?></span></span></td><td class="value"><select name="shirt_size" <?php echo $fldEnabled?>>
+	    <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hShirt')">Shirt Size<span class="popuptext" id="hShirt">Select the shirt size you want for <?php echo (empty($row_rsStudent['first_name']) ? "this volunteer" : $row_rsStudent['first_name']); ?>.  T-Shirts are only available for those who register before <?php echo VBS_SHIRT_DEADLINE_MMDDYYYY?></span></span></td><td class="value"><select name="shirt_size" <?php echo $fldEnabled?>>
       <?php
 do {  
 ?>
@@ -573,14 +573,9 @@ do {
         <?php } else { ?>
         	<input type="submit" name="submit" value="Update">
         <?php } ?>
-		<span class="popup float-right" onclick="myFunction('help')">Help available<span class="popuptext" id="help">Use this form to register volunteers for the week of VBS.  Volunteers must be in 7th grade or higher.  Click the underlined labels for detailed popup help. Click again to close it.</span></span>
+		<span class="popup float-right" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to register volunteers for the week of VBS.  Volunteers must be in 7th grade or higher.  Click the underlined labels for detailed popup help. Click again to close it.</span></span>
 		</td></tr>
-        <input name="staff_id" type="hidden" value="<?php echo $row_rsStudent['staff_id']; ?>">
-        <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
-        <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
-        <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
-        <input name="offset" type="hidden" value="<?php echo $offset;?>">
-        <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
+        
 		<tr><td colspan='2' class='narrow'><hr></td></tr>
 		<tr><td colspan='2' style="margin-top:0;padding-top:0;">
 		<div id="buttonSubGroup" class="center">
@@ -598,6 +593,12 @@ do {
 		<input type="submit" name="submit" class="button" value="<?php echo PREVIOUS_BUTTON?>"<?php echo $button['Back']?>>&nbsp;
 		<input type="submit" name="submit" class="button" value="<?php echo NEXT_PAGE ?>"<?php  echo $button['NextPage']?>>
 	</div>
+	<input name="staff_id" type="hidden" value="<?php echo $row_rsStudent['staff_id']; ?>">
+        <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
+        <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
+        <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
+        <input name="offset" type="hidden" value="<?php echo $offset;?>">
+        <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
   </form>
   </div>
   </div>

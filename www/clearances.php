@@ -12,10 +12,6 @@ include("vbsUtils.inc");
 <link rel="stylesheet" media="screen and (max-device-width:360px)" href="css/mobile.css?j" >
 <link rel="stylesheet" media="screen and (max-device-width:640px)" href="css/mobile.css?l" >
 <link rel="stylesheet" media="screen and (min-device-width:961px)" href="css/desktop.css?d" >
- 
-<!-- <link rel="stylesheet" media="screen and (max-device-width: 640px) and (orientation: landscape)" href="css/mobile.css" > -->
-<!-- <link rel="stylesheet" media="screen and (min-device-width: 768px) and (orientation: landscape)" href="css/tablet.css" > -->
-<!-- <link rel="stylesheet" media="screen and (min-device-width: 481px) and (orientation: portrait)" href="css/tablet.css" > -->
 
 </head>
 <body>

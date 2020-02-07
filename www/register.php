@@ -19,15 +19,15 @@ $_SESSION['confoNo'] = $confoNo;
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS Registration</title>
-<link href="css/boilerplate.css" rel="stylesheet" type="text/css">
-<link href="css/layout.css?v2" rel="stylesheet" type="text/css">
+<!--  <link href="css/boilerplate.css" rel="stylesheet" type="text/css"> -->
+<link href="css/layout.css?v3" rel="stylesheet" type="text/css">
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 <script src="scripts/respond.min.js"></script>
 </head>
 <body>
-<div id="Register" class="gridContainer">
+<div id="Register" class="gridContainer-footer">
 <h1 class='center'>Hope Lutheran Church</h1>
 <table style='border:none; padding:0px; margin:0;' width='100%'><tr><td width="10%"><a href="/index.php"><input type="submit" class="button" name="submit" value="<?php echo HOME_BUTTON?>" ></a></td>
 	<td width="80%" align="center" class="h2" style='padding:0; margin:0;'>VBS-Registration</td><td width="10%">&nbsp;</td></tr></table>
