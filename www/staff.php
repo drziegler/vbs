@@ -244,9 +244,9 @@ switch ($_POST['submit']) {
 		    if (DEBUG) print "Line " . __LINE__ . " Save - passed validation<br>";
 		    $errMsg = '';
 			/* This is a new record to insert */
-			$sql = "INSERT into staff (family_id, first_name, last_name, shirt_size, picture, registered, teach_with, confo, ";
+		    $sql = "INSERT into staff (family_id, first_name, last_name, shirt_size, picture, registered, teach_with, ";
 			$sql .= "classroom, nursery, craft, kitchen, anything, mon, tue, wed, thur, fri, age_group, create_date, last_update)";
-			$sql .= "VALUES (%u,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',now(),now())";
+			$sql .= "VALUES (%u,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',now(),now())";
 			$sqlStmt = 	sprintf($sql, 
 				$_SESSION['family_id'],
 				mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
@@ -255,7 +255,6 @@ switch ($_POST['submit']) {
 				(isset($_POST['picture'])    ? $_POST['picture']    : 'N'),
 				(isset($_POST['registered']) ? $_POST['registered'] : 'N'),
 				mysqli_real_escape_string($vbsDBi, $_POST['teach_with']),
-				$_SESSION['confoNo'],
 				(isset($_POST['classroom'])?'Y':'N'),
 			    (isset($_POST['nursery'])  ?'Y':'N'),
 				(isset($_POST['craft'])    ?'Y':'N'),
@@ -434,7 +433,7 @@ else {                      /* PASSED validation */
 	}
 	else {
 		if (DEBUG) print 'Line '.__LINE__ . " Validation Passed. Selecting record from database for family_id " . $_SESSION['family_id'] . "<br>";
-		$query_rsStudent = "SELECT staff_id, family_id, first_name, last_name, Assignment, picture, mon, tue, wed, thur, fri, kitchen, craft, classroom, nursery, anything, shirt_size, teach_with, age_group, confo, registered, comments, create_date, last_update, deleted FROM staff WHERE family_id=".$_SESSION['family_id'];
+		$query_rsStudent = "SELECT staff_id, family_id, first_name, last_name, Assignment, picture, mon, tue, wed, thur, fri, kitchen, craft, classroom, nursery, anything, shirt_size, teach_with, age_group, registered, comments, create_date, last_update, deleted FROM staff WHERE family_id=".$_SESSION['family_id'];
 		if (DEBUG) writeLog(FILE_NAME . __LINE__ . "-" . $query_rsStudent);
 		$all_rsStudent = mysqli_query($vbsDBi, $query_rsStudent);
 		if (DEBUG and $all_rsStudent===FALSE) writeLog(FILE_NAME . __LINE__ . "-SQL Query failed.");
@@ -513,9 +512,9 @@ $offset = --$offset;
 	<form method="post" name="frmStaff" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
 	<table cellspacing="0">
 		<?php if ($validateError) { ?> 
-			<tr><td colspan="2" class="error center"> <?php echo $errMsgText; ?>
+			<tr><td colspan="2" class="error title center"> <?php echo $errMsgText; ?>
 		<?php } else { ?>
-			<tr><td colspan="2" class="center">Edit information and save</td></tr> 
+			<tr><td colspan="2" class="center title">Edit information and save</td></tr> 
 	 	<?php } ?>
 	
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAtt')">Helping at VBS?<span class="popuptext" id="hAtt">Select yes if <?php echo (empty($row_rsStudent['first_name']) ? "you are" : $row_rsStudent['first_name'] . " is");?> helping at VBS in <?php echo date("Y");?>; otherwise select No.</span></span></td>
@@ -595,7 +594,6 @@ do {
 	<input name="staff_id" type="hidden" value="<?php echo $row_rsStudent['staff_id']; ?>">
         <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
         <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
-        <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
         <input name="offset" type="hidden" value="<?php echo $offset;?>">
         <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
   </form>
