@@ -482,7 +482,6 @@ do {
         <?php } }?>
         <span class="popup float-right" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to register students for VBS.  Click the first row of navigation buttons to move between children in your family.  Use the bottom row of navigation buttons to move between pages.  Click the 'new' button to start a new record.  Click the underlined labels for each item to get detailed help. Click again to close the popup..</span></span>
 		</td></tr>
-		<tr><td colspan='2' class='narrow'><hr></td></tr>
 		<tr><td colspan='2'>
 		<div id="buttonSubGroup" class="center">
 	    	Displaying student <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?><br>

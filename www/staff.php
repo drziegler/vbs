@@ -565,7 +565,6 @@ do {
         <?php } ?>
 		<span class="popup float-right" onclick="myPopUp('help')">Help available<span class="popuptext" id="help">Use this form to register volunteers for the week of VBS.  Volunteers must be in 7th grade or higher.  Click the underlined labels for detailed popup help. Click again to close it.</span></span>
 		</td></tr>
-		<tr><td colspan='2' class='narrow'><hr></td></tr>
 		<tr><td colspan='2'>
 		<div id="buttonSubGroup" class="center">
     		Displaying staff member <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?><br>

@@ -466,27 +466,27 @@ do {
 			  <input type="submit" name="submit" value="Update">
         <?php } } ?>
 		</td></tr>
-	<tr><td colspan='2' class='narrow'><hr>
-        <input name="student_id" type="hidden" value="<?php echo $row_rsStudent['student_id']; ?>">
-        <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
-        <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
-        <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
-        <input name="offset" type="hidden" value="<?php echo $offset;?>">
-        <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
-	</td></tr>
-	<tr><td colspan='2' class='center'>
+    	<tr><td colspan='2' class='center'>
+    	    <input name="student_id" type="hidden" value="<?php echo $row_rsStudent['student_id']; ?>">
+            <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
+            <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
+            <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
+            <input name="offset" type="hidden" value="<?php echo $offset;?>">
+            <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
+            <div id="buttonSubGroup">
 		   	Displaying student <?php echo (($numStudents>0)?$offset+1:0)?> of <?php echo $numStudents ?><br>
-			<input type="submit" class="button" name="submit" value="First" <?php echo $button['First'];?>>&nbsp;
-			<input type="submit" class="button" name="submit" value="Previous" <?php echo $button['Previous'];?>>&nbsp;
-			<input type="submit" class="button" name="submit" value="Next" <?php echo $button['Next'];?>>&nbsp;
-			<input type="submit" class="button" name="submit" value="Last" <?php echo $button['Last'];?>>&nbsp;&nbsp;&nbsp;
-			<input type="submit" class="button" name="submit" value="<?php echo NEW_BUTTON?>" <?php echo $button['New'];?>>
+    			<input type="submit" class="button" name="submit" value="First" <?php echo $button['First'];?>>&nbsp;
+    			<input type="submit" class="button" name="submit" value="Previous" <?php echo $button['Previous'];?>>&nbsp;
+    			<input type="submit" class="button" name="submit" value="Next" <?php echo $button['Next'];?>>&nbsp;
+    			<input type="submit" class="button" name="submit" value="Last" <?php echo $button['Last'];?>>&nbsp;&nbsp;&nbsp;
+    			<input type="submit" class="button" name="submit" value="<?php echo NEW_BUTTON?>" <?php echo $button['New'];?>>
+			</div>
 		</td></tr>
 	</table>
-		<div id="buttonSubGroup" class="center">
-			<input type="submit" class="button" name="submit" value="<?php echo HOME_BUTTON?>">&nbsp;
-			<input type="submit" class="button" name="submit" value="<?php echo PREVIOUS_BUTTON?>">&nbsp;
-			<input type="submit" class="button" name="submit" value="<?php echo NEXT_PAGE ?>">
+	<div id="buttonSubGroup" class="center">
+		<input type="submit" class="button" name="submit" value="<?php echo HOME_BUTTON?>">&nbsp;
+		<input type="submit" class="button" name="submit" value="<?php echo PREVIOUS_BUTTON?>">&nbsp;
+		<input type="submit" class="button" name="submit" value="<?php echo NEXT_PAGE ?>">
 	</div>
   </form></div>
   </div>
