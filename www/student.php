@@ -22,7 +22,6 @@ function quickSave(){
 	if (isset($_POST['registered'])) $sqlUpdate .= ",registered='" . $_POST['registered'] . "'";
 	if (isset($_POST['class'])) $sqlUpdate .= ",class='" . $_POST['class'] . "'";
 	if (isset($_POST['shirt_size']) && !$_POST['shirt_size']=="Select size") $sqlUpdate .= ",shirt_size='" . $_POST['shirt_size'] . "'";
-	//$sqlUpdate .= ",confo='" . $_SESSION['confoNo'] . "'";
 	$sqlUpdate .= ",last_update=now() ";
 	$sqlUpdate .= " WHERE student_id = " . $_POST['student_id'];
 	mysqli_real_escape_string($vbsDBi, $sqlUpdate);
@@ -153,7 +152,7 @@ switch ($_POST['submit']) {
 		$row_rsStudent = array();
 		$row_rsStudent['first_name'] = $row_rsStudent['birthdate'] = $row_rsStudent['age'] = $row_rsStudent['class'] = '';
 		$row_rsStudent['buddy'] = $row_rsStudent['comments'] = $row_rsStudent['picture'] = '';
-		$row_rsStudent['deleted'] = $row_rsStudent['last_name'] = $row_rsStudent['confo'] = '';
+		$row_rsStudent['deleted'] = $row_rsStudent['last_name'] = '';
 		$row_rsStudent['shirt_size'] = '';
 		$row_rsStudent['registered'] = 'Y';  /* Default to Yes. Parents forget to enable this! */
 		$row_rsStudent['family_id'] = $_SESSION['family_id'];
@@ -180,8 +179,8 @@ switch ($_POST['submit']) {
             $errMsg = '';
             /* This is a new record to insert */
             $sql = "INSERT into students (family_id, first_name, last_name, birthdate, class, ";
-            $sql .= "shirt_size, picture, registered, buddy, comments, confo, create_date, last_update) ";
-            $sql .= "VALUES (%u,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s', now(), now())";
+            $sql .= "shirt_size, picture, registered, buddy, comments, create_date, last_update) ";
+            $sql .= "VALUES (%u,'%s','%s','%s','%s','%s','%s','%s','%s','%s', now(), now())";
             if (DEBUG) print "Registered value is " . $_POST['registered'] . "<br>";
             $sqlStmt = 	sprintf($sql, 
                 $_SESSION['family_id'],
@@ -193,8 +192,7 @@ switch ($_POST['submit']) {
                 mysqli_real_escape_string($vbsDBi, $_POST['picture']),
                 mysqli_real_escape_string($vbsDBi, $_POST['registered']),									
                 mysqli_real_escape_string($vbsDBi, $_POST['buddy']),
-                mysqli_real_escape_string($vbsDBi, $_POST['comments']),
-                $_SESSION['confoNo']
+                mysqli_real_escape_string($vbsDBi, $_POST['comments'])
             );
             /* Get the new student id after insert */
             writelog(FILE_NAME . __LINE__ . "-" . $sqlStmt);
@@ -350,7 +348,7 @@ else {   /* Passed validation */
 	}
 	else {
 	    if (DEBUG) print "Line " . __LINE__ . "-Validation OK: Redisplay<br>";
-		$query_rsStudent = 	"SELECT student_id, family_id, first_name, last_name, birthdate, class, shirt_size, picture, buddy, comments, confo, create_date, last_update, registered FROM students WHERE family_id=" .$_SESSION['family_id'] . " AND deleted=0 AND class<>'Staff Nursery'";
+		$query_rsStudent = 	"SELECT student_id, family_id, first_name, last_name, birthdate, class, shirt_size, picture, buddy, comments, create_date, last_update, registered FROM students WHERE family_id=" .$_SESSION['family_id'] . " AND deleted=0 AND class<>'Staff Nursery'";
 		$all_rsStudent = mysqli_query($vbsDBi, $query_rsStudent);
 		$numStudents = mysqli_num_rows($all_rsStudent);	
 		if ($_REQUEST['submit']=='Redisplay') $offset = $numStudents-1;  /* Go to last record */
@@ -412,23 +410,13 @@ $offset = --$offset;
 
 ?>
 <!doctype html>
-<!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
-<!--[if IE 7]>    <html class="ie7 oldie"> <![endif]-->
-<!--[if IE 8]>    <html class="ie8 oldie"> <![endif]-->
-<!--[if gt IE 8]><!-->
 <html class="">
-<!--<![endif]-->
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS Student</title>
-<!-- ? REMOVE ? <link href="css/boilerplate.css" rel="stylesheet" type="text/css"> -->
-<link href="css/layout.css?v1" rel="stylesheet" type="text/css">
+<link href="css/layout.css" rel="stylesheet" type="text/css">
 <script src="scripts/vbsUtils.js"></script>
-<!--[if lt IE 9]>
-<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-<!--<script src="scripts/respond.min.js"></script>-->
 </head>
 <body>
 <div id="Find" class="gridContainer">
@@ -438,9 +426,9 @@ $offset = --$offset;
 	<form method="post" name="frmStudent" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
 	<table>
 		<?php if ($validateError) { ?> 
-			<tr><td colspan="2" class="error center"> <?php echo $errMsgText; ?>
+			<tr><td colspan="2" class="error title center"> <?php echo $errMsgText; ?>
 		<?php } else { ?>
-			<tr><td colspan="2" class="center">Edit information and save</td></tr> 
+			<tr><td colspan="2" class="center title">Edit information and save</td></tr> 
 	 	<?php } ?>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAtt')">Attending VBS?<span class="popuptext" id="hAtt">Select yes if <?php echo (empty($row_rsStudent['first_name']) ? "this child" : $row_rsStudent['first_name']);?> is attending VBS in <?php echo date("Y");?>; otherwise select No.</span></span></td>
 		<td class="value">
@@ -508,7 +496,6 @@ do {
 	</table>
     <input name="student_id" type="hidden" value="<?php echo $row_rsStudent['student_id']; ?>">
     <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
-    <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
     <input name="offset" type="hidden" value="<?php echo $offset;?>">
     <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
 	<div id="buttonGroup" class="center">
