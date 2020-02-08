@@ -155,14 +155,6 @@ tr *{
     animation: fadeIn 1s
 }
 
-/******************************************* BROWSER SPECIFIC STYLES *********************************/
-/* IE 6 does not support max-width so default to width 100% */
-.ie6 img {
-	width:100%;
-}
- 
-/**************************************** Mobile Layout: 480px and below. ****************************/
-
 .red{
 	color:red;
 }
@@ -203,8 +195,9 @@ tr *{
 	overflow: auto;
 }
 .center{
+	/* @@ Removed 2/7/20 11 PM 
 	margin: auto;
-	width:90%;
+	width:90%; */
 	text-align:center;
 }
 .centerText{
@@ -237,13 +230,14 @@ tr *{
 }
 .nowrap{white-space: nowrap}
 .narrow{
-	margin:0;
-	padding:0;
+	margin: 0;
+	padding: 0;
 }
 .left{text-align: left}
 .right{text-align: right}
 .float-right{float: right}
 .float-left{float: left}
+
 
 #header {
 	clear: both;
@@ -307,6 +301,7 @@ tr *{
 	margin-right:auto;
 }
 #buttonSubGroup{
+	border-top: 5px solid black;
 	padding-left: 0;
 	padding-right: 0;
 	margin: 0;
@@ -367,7 +362,8 @@ tr *{
 	color: blue;
 }
 
-/****************** SEARCH & RESULTS PAGES /*****************/
+
+/****************** SEARCH & RESULTS PAGES *****************/
 #Result {margin-top: 10vh;}
 #Search {margin-top: 10vh;}
 
@@ -379,19 +375,23 @@ tr *{
 #Family .label{min-width: 12%;}
 
 /****************** PHONE / CONTACTS PAGE *********/
-#Phone table{
-	border: 2px solid white;
+#Contacts table{
+	border: 2px solid black;
 }
-#Phone th, #Phone td{
-	font-size: 1.2rem;
-	padding: 1.2vh 0.25vh;
+#Contacts th, #Contacts td{
+	padding: 1vh 0.5vh;
+	font-size: 0.75rem;
 }
-#Phone .col3{
+#Contacts .col3{
 	width: 10%;
 }
-#Phone .col2{
-	width: 30%;
+#Contacts .col2, #Contacts .col1{
+	width: 45%;
 }
+#Contacts .title{
+	font-size: 1rem;
+}
+
 
 /****************** STUDENT PAGE (Mobile) *****************/
 #Student .value, #Student .label, #Student td{
@@ -562,6 +562,14 @@ input[type=checkbox], input[type=radio]{
 	width: 100%;
 	display: block;
 }
+/********************** PAGE SPECIFIC OVERRIDES FOR TABLETS ***************************/
+#Contacts th, #Contacts td{
+	padding: 1vh 0.5vh;
+	font-size: 1.2rem;
+}
+#Contacts .title{
+	font-size: 2rem;
+}
 #Family td.label {
 	width:30%;
 }
@@ -576,7 +584,7 @@ input[type=checkbox], input[type=radio]{
 	margin-right:auto;
 }
 #buttonSubGroup{  /* Desktop only */
-	width:75%;
+	width: inherit;
 	margin-top:0;
 	margin-left:auto;
 	margin-right:auto;
@@ -610,8 +618,6 @@ h3{
 	font-size: 1.5vw;
 }
 .gridContainer-footer {
-	/* @@ TESTING ONLY */
-	border: 5px solid green;
 	width: 90%;
 	height: 88vh;
 	padding-left: 0.75%;
@@ -639,7 +645,7 @@ h3{
 }
 tr *{
 	font-size: 1.25rem;
-	padding-bottom: 0.05;
+	/* @@ padding-bottom: 0.05; */
 }
 input[type=checkbox], input[type=radio]{
 	transform:scale(2,2);
@@ -661,11 +667,27 @@ input[type=checkbox], input[type=radio]{
 }
 #Find td{font-size: 2em;}
 
-/****************** STUDENT PAGE (Desktop) *****************/
-#Student .value, #Student .label, #Family td, #Staff .value, #Staff .label{
+
+/******************* PAGE SPECIFIC OVERRIDES FOR DESKTOP **************************/
+#Contacts th, 
+#Contacts td{
+	padding: 1vh 0.5vh;
+	font-size: 1.2rem;
+}
+#Contacts .title{
+	font-size: 2rem;
+}
+#Student .value, 
+#Student .label, 
+#Family td, 
+#Staff .value, 
+#Staff .label{
 	font-size: 1rem;
 	padding-bottom: 0;
 }
+#Family .title, 
+#Student .title, 
+#Staff .title{font-size:1.45rem}
 #Staff tr{padding-top: 0; padding-bottom: 0;}
 
 
