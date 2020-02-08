@@ -243,21 +243,12 @@ if (DEBUG) print_r($_SESSION);
 
 ?>
 <!doctype html>
-<!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
-<!--[if IE 7]>    <html class="ie7 oldie"> <![endif]-->
-<!--[if IE 8]>    <html class="ie8 oldie"> <![endif]-->
-<!--[if gt IE 8]><!-->
 <html class="">
-<!--<![endif]-->
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS - Family</title>
-<!--  <link href="css/boilerplate.css" rel="stylesheet" type="text/css"> -->
 <link href="css/layout.css" rel="stylesheet" type="text/css">
-<!--[if lt IE 9]>
-<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
 <script src="scripts/vbsUtils.js"></script>
 <script src="css/respond.min.js"></script>
 </head>
@@ -268,9 +259,9 @@ if (DEBUG) print_r($_SESSION);
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post" name="frmFamily" target="_self">
 <table id="Family">
 	<?php if (strlen($errMsgText)) { ?> 
-		<tr><td colspan="2" class="error center"> <?php echo $errMsgText; ?>
+		<tr><td colspan="2" class="error title center"> <?php echo $errMsgText; ?>
 	<?php } else { ?>
-		<tr><td colspan="2" class="center">Edit family information</td></tr> 
+		<tr><td colspan="2" class="center title">Edit family information</td></tr> 
  	<?php } ?>
 	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFamName')">Family Name<span class="popuptext" id="hFamName">Enter your family name in the format you want it to appear on correspondence to you, e.g. Mr &amp; Mrs John Doe.</span></span></td><td class="value"><input name="family_name" type="text" value="<?php echo $rsFam['family_name']; ?>" maxlength='40'></td></tr>
 	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAddress')">Address<span class="popuptext" id="hAddress">Enter your street address or mailing address.</span></span></td><td class="value"><input name="address" type="text" value="<?php echo $rsFam['address'];?>" maxlength='64'></td></tr>
