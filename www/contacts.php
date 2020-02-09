@@ -52,18 +52,6 @@ function validate($form){
 
 	$notBlank   = array('phone'=>'Phone Number', 'contact_name'=>'Contact Name');	
 	
-	/* Remove leading and trailing spaces */
-	/*
-	for ($v=0; $v<count($form); $v++){
-		foreach ($form[$v] as $key => $value){
-			$form[$v][$key] = trim($value);
-		}
-	}
-	*/
-	
-	/* Assign trim changes back to the $_POST array */
-	//$_POST['phone'] = $form;
-
 	/* Check for blank elements */
 	for ($v=0; $v<count($form); $v++){
 		$blanks = array_intersect_key($form[$v], $notBlank);
@@ -358,7 +346,7 @@ if (DEBUG) {
             <input type="hidden" name="phone[<?php echo $i;?>][family_id]" value="<?php echo $_SESSION['family_id']?>"></td>
     	</tr>
         <?php } ?>
-        <tr><td colspan="3"><span class="float-left">*&nbsp;required</span>
+        <tr><td colspan="3" class="label"><span class="float-left">*&nbsp;required</span>
         	<span class="horizontal-center">
         	<input type="submit" name="submit" value="Save">&nbsp;
     	    <input type="submit" name="submit" value="Add">&nbsp;

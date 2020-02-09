@@ -150,14 +150,15 @@ function check4dupes($form){
  * If either condition is true, then the function returns true; otherwise false.
  */
 function gotoStaffNursery(){
-    print 'Line '.__LINE__.' Entering gotoStaffNursery()<br>';
+    if (DEBUG) print 'Line '.__LINE__.' Entering gotoStaffNursery()<br>';
     global $vbsDBi;
     $displayStaffNurseryPage = FALSE;
     
     /* Check for existing Staff Nursery records that may required update or edit */
-    $sql = "Select count(*) from students WHERE class='Staff Nursery' AND family_id = " . $_SESSION['family_id'];
-    $result = mysqli_query($vbsDBi, $sql);
-    $recCount = mysqli_fetch_row($result);
+    //$sql = "Select count(*) from students WHERE class='Staff Nursery' AND family_id = " . $_SESSION['family_id'];
+    //$result = mysqli_query($vbsDBi, $sql);
+    //$recCount = mysqli_fetch_row($result);
+    $recCount = countStaffNursery();
     writelog(FILE_NAME . __LINE__ . "-Staff Nursery Record count (existing): " . $recCount[0]);
     if ($recCount[0] == 0){
         /* Now count staff where need staff nursery is checked */
@@ -175,6 +176,19 @@ function gotoStaffNursery(){
     
 	return $displayStaffNurseryPage;
 
+}
+
+/* Returns a count of staff nursery registrants for this family id */
+function countStaffNursery(){
+    if (DEBUG) print 'Line '.__LINE__.' Entering '.__FUNCTION__ ;
+    global $vbsDBi;
+    
+    /* Check for existing Staff Nursery records that may required update or edit */
+    $sql = "Select count(*) from students WHERE class='Staff Nursery' AND (registered='C' OR registered='Y') AND family_id = " . $_SESSION['family_id'];
+    $result = mysqli_query($vbsDBi, $sql);
+    $recCount = mysqli_fetch_row($result);
+    writelog(FILE_NAME . __LINE__ . "-Staff Nursery Record count (existing): " . $recCount[0]);
+    return $recCount[0];        
 }
 
 /* * * * * * * * * * * * * * * * * *  MAIN * * * * * * * * * * * * * * * * * * * * * * * */
@@ -477,6 +491,7 @@ $totalRows_rsStudentShirtList = mysqli_num_rows($rsStudentShirtList);
 $_SESSION['staff_id'] = $row_rsStudent['staff_id'];
 
 $staffID = $row_rsStudent['staff_id'];
+$nurseryCount = countStaffNursery();
 /* Set the button disabled properties */
 $offset = ++$offset;
 $button['First'] = ($numStudents > 2 and $offset > 2) ? '' : ' disabled';
@@ -551,7 +566,7 @@ do {
             <label><input type="radio" name="age_group" value="Youth" <?php echo (strcasecmp($row_rsStudent['age_group'],"Youth")==0 ? "checked " : "") . $fldEnabled;?>>&nbsp;No</label>
     	</td></tr>
         <tr><td class="label"><span class="popup" onclick="myPopUp('nursery')">I need staff nursery<span class="popuptext" id="nursery">Check this box if you have a child under 3 and want to place them in the staff nursery.  You will be guided to register the child on the next page.  Leave box unchecked if you do not need these services. If a staff nursery record already exists, the text "Staff nursery registrant exists" will appear adjacent to the check box.</span></span></td><td class="value">
-            <label><input type="checkbox" name="nursery" <?php echo (empty($row_rsStudent['nursery']) || $row_rsStudent['nursery']=='N'?'':'checked ') . $fldEnabled;?>></label> <?php if ($staffNurseryExists) echo "Staff nursery registrant exists"?>
+            <label><input type="checkbox" name="nursery" <?php echo ($nurseryCount>0?'checked ':'') . $fldEnabled;?>></label> <?php if ($nurseryCount>0) echo "<a href='staffNursery.php'>Staff nursery exists</a>"?>
     	</td></tr>
 		<tr>
           <td class="label"><span class="popup" onclick="myPopUp('hClass')">I want to help in my child's class<span class="popuptext" id="hClass">If you want to be in the same class as your child, enter the child's name in this space.</span></span></td><td class="value"><input type="text" name="teach_with" placeholder="Your child's name and grade" value="<?php echo $row_rsStudent['teach_with'];?>" <?php echo $fldEnabled;?> style="width:60%"></td></tr>

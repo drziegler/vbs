@@ -21,7 +21,7 @@ function quickSave(){
        This is to avoid resetting the buttons' state back to that from the data base
     */
     $sql = "UPDATE students SET first_name='%s', last_name='%s', birthdate='%s',class='%s',shirt_size='%s',
-           picture='%s',registered='%s',comments='%s',confo='%d',last_update=now()";
+           picture='%s',registered='%s',comments='%s',last_update=now()";
     $sqlWhere = " WHERE student_id = " . $_POST['student_id'];
     $sqlStmt = sprintf($sql,
         mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
@@ -31,8 +31,7 @@ function quickSave(){
         (isset($_POST['shirt_size']) ? $_POST['shirt_size'] : ''),
         (isset($_POST['picture'])    ? $_POST['picture']    : ''),
         (isset($_POST['registered']) ? $_POST['registered'] : ''),
-        mysqli_real_escape_string($vbsDBi, $_POST['comments']),
-        mysqli_real_escape_string($vbsDBi, $_SESSION['confoNo'])
+        mysqli_real_escape_string($vbsDBi, $_POST['comments'])
     );
     $sqlUpdate = $sqlStmt . $sqlWhere;
 
@@ -147,8 +146,7 @@ switch ($_REQUEST['submit']) {
         $row_rsStudent = array();
         $row_rsStudent['first_name'] = $row_rsStudent['birthdate'] = $row_rsStudent['age'] = $row_rsStudent['class'] = '';
         $row_rsStudent['registered'] = $row_rsStudent['comments'] = $row_rsStudent['picture'] = '';
-        $row_rsStudent['deleted'] = $row_rsStudent['last_name'] = $row_rsStudent['confo'] = '';
-        $row_rsStudent['shirt_size'] = '';
+        $row_rsStudent['deleted'] = $row_rsStudent['last_name'] = $row_rsStudent['shirt_size'] = '';
         $row_rsStudent['family_id'] = $_SESSION['family_id'];
         $row_rsStudent['student_id'] = 0;
         $numStudents = 0;
@@ -176,8 +174,8 @@ switch ($_REQUEST['submit']) {
             $errMsg = '';
             /* This is a new record to insert */
             $sql = "INSERT into students (family_id, first_name, last_name, birthdate, class, ";
-            $sql .= "shirt_size, picture, registered, comments, confo, create_date, last_update) ";
-            $sql .= "VALUES (%u,'%s','%s','%s','%s','%s','%s','%s','%s','%s', now(), now())";
+            $sql .= "shirt_size, picture, registered, comments, create_date, last_update) ";
+            $sql .= "VALUES (%u,'%s','%s','%s','%s','%s','%s','%s','%s', now(), now())";
             $sqlStmt = 	sprintf($sql,
                 $_SESSION['family_id'],
                 mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
@@ -187,8 +185,7 @@ switch ($_REQUEST['submit']) {
                 mysqli_real_escape_string($vbsDBi, $_POST['shirt_size']),
                 (isset($_POST['picture'])        ? $_POST['picture']    : ''),
                 (isset($_POST['registered'])     ? $_POST['registered'] : ''),
-                mysqli_real_escape_string($vbsDBi, $_POST['comments']),
-                $_SESSION['confoNo']
+                mysqli_real_escape_string($vbsDBi, $_POST['comments'])
                 );
             
             /* Get the new student id after insert */
@@ -243,7 +240,7 @@ switch ($_REQUEST['submit']) {
                 if (DEBUG) print "Line " . __LINE__ . " Update<br>";
                 
                 $sql = "UPDATE students SET first_name='%s', last_name='%s', birthdate='%s', class='%s', 
-                        shirt_size='%s', picture='%s', registered='%s',comments='%s', confo='%d', last_update=now()";
+                        shirt_size='%s', picture='%s', registered='%s',comments='%s', last_update=now()";
                 $sqlWhere = " WHERE student_id = " . $_POST['student_id'];
                 $sqlStmt = sprintf($sql,
                     mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
@@ -253,8 +250,7 @@ switch ($_REQUEST['submit']) {
                     $_POST['shirt_size'],
                     (isset($_POST['picture'])    ? $_POST['picture']    : ''),
                     (isset($_POST['registered']) ? $_POST['registered'] : ''),
-                    mysqli_real_escape_string($vbsDBi, $_POST['comments']),
-                    mysqli_real_escape_string($vbsDBi, $_SESSION['confoNo'])
+                    mysqli_real_escape_string($vbsDBi, $_POST['comments'])
                 );
                 $sqlStmt .= $sqlWhere;
                 if (DEBUG) print 'Line '.__LINE__." $sqlStmt";
@@ -470,7 +466,6 @@ do {
     	    <input name="student_id" type="hidden" value="<?php echo $row_rsStudent['student_id']; ?>">
             <input name="family_id" type="hidden" value="<?php echo $row_rsStudent['family_id']; ?>">
             <input name="deleted" type="hidden" value="<?php echo $row_rsStudent['deleted']; ?>">
-            <input name="confo" type="hidden" value="<?php echo $row_rsStudent['confo']; ?>">
             <input name="offset" type="hidden" value="<?php echo $offset;?>">
             <input name="numStudents" type="hidden" value="<?php echo $numStudents;?>">
             <div id="buttonSubGroup">

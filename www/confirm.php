@@ -237,7 +237,7 @@ global $vbsDBi, $studentTotal;
 		$stud .= '<table id="Student">';
 
 		if (! is_null($s)){
-            $stud .= "<tr><td colspan='7' class=\"center border-bottom\">Student Information</td></tr>";
+            $stud .= "<tr><td colspan='7' class=\"center title border-bottom\">Student Information</td></tr>";
 		    $stud .= "<tr><th>Name</th><th>Birthdate</th><th>Picture</th>";
 			$stud .= "<th>Class</th><th>T-Shirt</th><th>Friend Request</th><th>Comments</th></tr>";
 			$stud .= "<tr>";
@@ -254,7 +254,7 @@ global $vbsDBi, $studentTotal;
 			} while ($s = mysqli_fetch_assoc($result));
 		}
 		else{
-			$stud .= "<tr><td class='center'>No students registered</td></tr>";
+			$stud .= "<tr><td class='center title'>No students registered</td></tr>";
 			$studentTotal = 0;
 		}
 		$stud .= "</table>";
@@ -603,6 +603,7 @@ if (DEBUG) print "Total students = $studentTotal.  Total staff = $staffTotal.<br
     <body>
     <div id="Find" class="gridContainer">
     <div><h1>Registration Summary</h1></div>
+    <div id="Confo">
     <?php
         echo formatFamily($_SESSION['family_id']);
         echo formatStudents($_SESSION['family_id']);
@@ -614,6 +615,7 @@ if (DEBUG) print "Total students = $studentTotal.  Total staff = $staffTotal.<br
 			<input type="submit" name="submit" class="button" value="<?php echo SUBMIT_REGISTRATION;?>" <?php echo (($studentTotal+$staffTotal==0)?'disabled':'');?>>&nbsp;&nbsp;&nbsp;
 			<input type="submit" name="submit" class="button" value="<?php echo PREVIOUS_BUTTON?>">&nbsp;
 		</form>
+    </div>
     </div>
     </div>
     </body>
