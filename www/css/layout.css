@@ -32,7 +32,7 @@ img, object, embed, video {
 	max-width: 100%;
 }
 h1 {
-	width: 99%;
+	/*width: 99%; */
 	font-family: "Castle Font";
 	margin: auto;
 	text-align: center;
@@ -195,9 +195,6 @@ tr *{
 	overflow: auto;
 }
 .center{
-	/* @@ Removed 2/7/20 11 PM 
-	margin: auto;
-	width:90%; */
 	text-align:center;
 }
 .centerText{
@@ -208,15 +205,13 @@ tr *{
 	position: absolute;
 	top:50%;
 	width: inherit;
-	-ms-transform: translateY(-50%);
+	/* OBSOLETE ? -ms-transform: translateY(-50%); */
 	transform: translateY(-50%);
 }
 .horizontal-center{
-	margin:0;
-	position: absolute;
+	margin: auto;
+	position: fixed;
 	left:50%;
-	width: inherit;
-	-ms-transform: translateX(-50%);
 	transform: translateX(-50%);
 }
 .vertical-horizontal-center{
@@ -264,7 +259,7 @@ tr *{
 	left:50%;
 	margin-top: .5em;
 	width: inherit;
-	-ms-transform: translateX(-50%);
+	/* @@ -ms-transform: translateX(-50%); ? OBSOLETE */
 	transform: translateX(-50%);
 }
 #mnuBtn { /* Only used in index page right now */
@@ -284,7 +279,7 @@ tr *{
 	color: LightSlateGray;
 	background-color: DarkBlue;
 }
-/*
+
 #dataLayout{
 	clear: both;
 	margin: auto;
@@ -292,7 +287,7 @@ tr *{
 	width: 100%;
 	display: block;
 }
-*/
+
 #buttonGroup{
 	margin-top: 0;
 	padding-top: 0;
@@ -375,6 +370,7 @@ tr *{
 #Family .label{min-width: 12%;}
 
 /****************** PHONE / CONTACTS PAGE *********/
+/*
 #Contacts table{
 	border: 2px solid black;
 }
@@ -390,8 +386,9 @@ tr *{
 }
 #Contacts .title{
 	font-size: 1rem;
+	text-align: center;
 }
-
+*/
 
 /****************** STUDENT PAGE (Mobile) *****************/
 #Student .value, #Student .label, #Student td{
@@ -421,9 +418,51 @@ tr *{
 #Staff td.label {width:33%}
 
 /****************** CONFIRMATION (CONFO) PAGE  (Mobile) *****************/
-#Confo td{font-size: 1rem}
+#Confo table{
+	border: 5px solid black;
+	background-color: LightGray;
+	opacity: 0.8;
+	padding: 0;
+}
 
-#Confo #Student td{font-size: 0.75rem}
+#Confo #Family .title,
+#Confo #Student .title,
+#Confo #Staff .title
+{
+	font-size: 1.5rem;
+	text-align: center;
+}
+
+#Confo #Student th,
+#Confo #Staff th
+{font-size: 1rem}
+
+#Confo .value,
+#Confo .label,
+#Confo #Student td,
+#Confo #Staff td{
+font-size: 1rem;
+padding-bottom: 0.5vh;
+}
+
+#Confo #Student td,
+#Confo #Staff td{
+	font-size: 0.8rem
+}
+
+#Confo #Student .col3, 
+#Confo #Student .col6,
+#Confo #Student .col7 {  /* Used to suppress picture, friend and comments on mobile */
+	display: none;
+}
+#Confo #Staff .col7,
+#Confo #Staff .col8,
+#Confo #Staff .col9,
+#Confo #Staff .col10,
+#Confo #Staff .col13{
+	display: none;
+}
+
 
 
 
@@ -456,21 +495,6 @@ tr *{
 	width: 100%;
 	max-height: 12vh;
 }
-/*
-#OLDFooter {
-	width: 96%;
-	position: absolute;
-	clear: both;
-	float: left;
-	margin-left: 0;
-	text-align:center;
-	display: block;
-	padding: 2.5vmin; 
-	bottom:1px;
-	left:1px;
-	font-size: 1vmax; /* 80%; */
-}
-*/
 #Button0{
 	clear: both;
 	float: left;
@@ -491,16 +515,6 @@ tr *{
 	text-align: center;
 	font-size: 5vmin;
 	margin-bottom: 2.5vh;
-}
-/************************************************ CONFO PAGE *********************************************************************************/
-/* Styles that apply only to the confirmation screen */
-#Family table.confo{
-	width: 99%;
-	float: left;
-}
-#Family .confo td{
-	padding: .25em;
-	font-size: .5rem; 
 }
 
 
@@ -576,6 +590,54 @@ input[type=checkbox], input[type=radio]{
 #Family td.value{
 	padding-left:.5em;
 }
+#Confo #Family .title,
+#Confo #Student .title,
+#Confo #Staff .title
+{font-size: 2rem}
+
+#Confo #Student th,
+#Confo #Staff th
+{font-size: 1rem}
+
+#Confo .value,
+#Confo .label,
+#Confo #Student td,
+#Confo #Staff td{
+font-size: 1.25rem;
+padding-bottom: 0.25vh;
+}
+
+#Confo #Student td,
+#Confo #Staff td{
+	font-size: 0.8rem
+}
+
+#Confo #Student .col3, 
+#Confo #Student .col6,
+#Confo #Student .col7 {  /* Used to suppress picture, friend and comments on mobile. This makes it visible again. */
+	display: table-cell;
+}
+#Confo #Staff .col7,
+#Confo #Staff .col8,
+#Confo #Staff .col9,
+#Confo #Staff .col10,
+#Confo #Staff .col13{
+	display: table-cell;
+	text-align: center;
+}
+#Confo #Staff th.col7,
+#Confo #Staff th.col8,
+#Confo #Staff th.col9,
+#Confo #Staff th.col10{
+	width: 1.5vw;
+	vertical-align: text-bottom;
+	transform: rotate(-90deg);
+}
+#Confo #Staff th{
+	vertical-align: bottom;
+}
+
+
 #buttonGroup{
 	margin-top: 0;
 	padding-top: 0;
@@ -602,12 +664,6 @@ input[type=checkbox], input[type=radio]{
 /********************************************************  DESKTOP LAYOUT ********************* DESKTOP LAYOUT ************************************/
 @media only screen 
 and (min-width: 836px) {
-
-h1 {
-	font-family: "Castle Font";
-	font-size: 5vw;
-	color:black;
-}
 h2, .h2 {
 	font-size: 4rem;
 }
@@ -640,12 +696,11 @@ h3{
 	position: absolute;
 	top:50%;
 	width: inherit;
-	-ms-transform: translateY(-50%);
+	/* OBSOLETE ? -ms-transform: translateY(-50%); */
 	transform: translateY(-50%);
 }
 tr *{
 	font-size: 1.25rem;
-	/* @@ padding-bottom: 0.05; */
 }
 input[type=checkbox], input[type=radio]{
 	transform:scale(2,2);
@@ -667,11 +722,44 @@ input[type=checkbox], input[type=radio]{
 }
 #Find td{font-size: 2em;}
 
+#Confo #Family .title,
+#Confo #Student .title,
+#Confo #Staff .title
+{font-size: 2rem}
+
+#Confo #Student th,
+#Confo #Staff th
+{font-size: 1rem}
+
+#Confo .value,
+#Confo .label,
+#Confo #Student td,
+#Confo #Staff td,
+#Confo #Student td,
+#Confo #Staff td{
+font-size: 1.25rem;
+padding-bottom: 0.25vh;
+}
+
+
+#Confo #Student .col3, 
+#Confo #Student .col6,
+#Confo #Student .col7 {  /* Used to suppress picture, friend and comments on mobile */
+	display: inline-block;
+}
+#Confo #Staff .col7,
+#Confo #Staff .col8,
+#Confo #Staff .col9,
+#Confo #Staff .col10,
+#Confo #Staff .col13{
+	display: inline-block;
+}
+
 
 /******************* PAGE SPECIFIC OVERRIDES FOR DESKTOP **************************/
 #Contacts th, 
 #Contacts td{
-	padding: 1vh 0.5vh;
+	padding: 1vh;
 	font-size: 1.2rem;
 }
 #Contacts .title{
