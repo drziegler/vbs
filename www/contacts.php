@@ -1,6 +1,4 @@
 <?php
-
-
 session_start();
 require_once('./Connections/vbsDB.php');
 include_once('vbsUtils.inc');
@@ -9,7 +7,7 @@ $errMsgText = '';
 
 if ($_SESSION['family_id']==0){
 	if (DEBUG) print "Forwarding to search page from Phones.";
-//	header("Location: search.php");
+	header("Location: index.php");
 }
 
 function quickSave(){
@@ -320,20 +318,19 @@ if (DEBUG) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS-Contact Information</title>
-<link href="css/layout.css" rel="stylesheet" type="text/css">
+<link href="css/layout.css?v4" rel="stylesheet" type="text/css">
 <script src="respond.min.js"></script>
 <script src="scripts/vbsUtils.js"></script>
 </head>
-<title>VBS-Telephone Contacts</title>
 <body>
 <div id="Find" class="gridContainer">
 <h1>Contact Info</h1>
 <div id="dataLayout">
 	<div id="Contacts">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="POST" name="frmContacts" target="_self">
-    <table border="1">
+    <table>
         <?php if (strlen($errMsgText)>0) { ?>
-        	<tr><td colspan="3" class="center title nowrap error"><?php echo $errMsgText;?></td></tr>
+        	<tr><td colspan="3" class="title nowrap error"><?php echo $errMsgText;?></td></tr>
         <?php } else { ?>
         	<tr><td colspan="3" class="center title nowrap">Provide at least two different phone numbers.</td></tr>
         <?php } ?>

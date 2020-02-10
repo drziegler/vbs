@@ -173,18 +173,17 @@ function formatFamily($famID){
 		$family = mysqli_fetch_assoc($result);
 
 		// Add the family data to the email body
-		$fam = '<div id="Find"> <div id="Confo" class="dataLayout">';
-		$fam .= '<table>';
-		$fam .= '<tr class="border-bottom"><td colspan="2" class="center">Family Information</td></tr>';
-		$fam .= '<tr><td class="label">Family Name:</td><td class="confo value">' . $family['family_name'] . "</td></tr>";
-		$fam .= '<tr><td class="label">Address:</td><td class="confo value">' . $family['address'] . "</td></tr>";
+		$fam = '<table id="Family">';
+		$fam .= '<tr><td colspan="2" class="title border-bottom">Family Information</td></tr>';
+		$fam .= '<tr><td class="label">Family Name:</td><td class="value">' . $family['family_name'] . "</td></tr>";
+		$fam .= '<tr><td class="label">Address:</td><td class="value">' . $family['address'] . "</td></tr>";
 		$fam .= '<tr><td class="label">City State Zip:</td><td class="value">' . $family['city'] . " " . $family['state'] . " " . $family['zipcode'] . "</td></tr>";
 		$fam .= '<tr><td class="label">Email:</td><td class="value">'.$family['email']."</a></td></tr>";
 		$fam .= "<tr><td class='label'>Home Church:</td><td class='value'>" . $family['home_church'] . "</td></tr>";
 		if (strlen(trim($family['comments']))>0){
 			$fam .= "<tr><td class='label'>Comments:</td><td>".$family["comments"]."</td></tr>";
 		}
-		$fam .= "</table></div></div><br><br>";
+		$fam .= "</table><br><br>";
 	}
 	else {
 		$sqlErr = mysqli_error($vbsDBi);
@@ -233,32 +232,30 @@ global $vbsDBi, $studentTotal;
 
 	if ($result) {
 		$s = mysqli_fetch_assoc($result);
-		$stud = '<div id="Find"><div id="Confo" class="dataLayout">';
-		$stud .= '<table id="Student">';
+		$stud = '<table id="Student">';
 
 		if (! is_null($s)){
-            $stud .= "<tr><td colspan='7' class=\"center title border-bottom\">Student Information</td></tr>";
-		    $stud .= "<tr><th>Name</th><th>Birthdate</th><th>Picture</th>";
-			$stud .= "<th>Class</th><th>T-Shirt</th><th>Friend Request</th><th>Comments</th></tr>";
+            $stud .= "<tr><td colspan='7' class='title border-bottom'>Student Information</td></tr>";
+		    $stud .= "<tr><th>Name</th><th>Birthdate</th><th class=\"col3\">Picture</th>";
+			$stud .= "<th>Class</th><th>T-Shirt</th><th class=\"col6\">Friend</th><th class=\"col7\">Comments</th></tr>";
 			$stud .= "<tr>";
 			do {
-				$stud .= "<td class='nowrap left'>" . $s['name'] . "</td>";
-				$stud .= "<td class='nowrap centerText'>" . $s['birthdate'] . "</td>";
-				$stud .= "<td class='centerText'>" . (($s['picture']=='Y')?"Yes":"No") . "</td>";
+				$stud .= "<td class='col1 nowrap left'>" . $s['name'] . "</td>";
+				$stud .= "<td class='col2 nowrap centerText'>" . $s['birthdate'] . "</td>";
+				$stud .= "<td class='col3 centerText'>" . (($s['picture']=='Y')?"Yes":"No") . "</td>";
 				$stud .= "<td class='left'>" . $s['class'] . "</td>";
 				$stud .= "<td class='left'>" . $s['shirt_size'] . "</td>";
-				$stud .= "<td class='left'>" . $s['buddy'] . "</td>";
-				$stud .= "<td>" . $s['comments'] . "</td>";
+				$stud .= "<td class='col6 left'>" . $s['buddy'] . "</td>";
+				$stud .= "<td class='col7'>" . $s['comments'] . "</td>";
 				$stud .= "</tr>";
 				$studentTotal++;
 			} while ($s = mysqli_fetch_assoc($result));
 		}
 		else{
-			$stud .= "<tr><td class='center title'>No students registered</td></tr>";
+			$stud .= "<tr><td class='title'>No students registered</td></tr>";
 			$studentTotal = 0;
 		}
 		$stud .= "</table>";
-		$stud .= "</div></div>";
 	}
 
 	@mysqli_free_result($s);
@@ -282,46 +279,44 @@ global $vbsDBi, $staffTotal;
 	else {
 		$s = mysqli_fetch_assoc($result);
 
-		$stf = '<div id="Find"><div id="Confo" class="dataLayout">';
-		$stf .= '<table cellspacing="0">';
+		$stf = '<table id="Staff">';
 
 		if (! is_null($s)){
 			/* Add the STAFF SECTION */
-		    $stf .= "<tr><td colspan='14'>Volunteer Information</td></tr>";
+		    $stf .= "<tr><td colspan='14' class='title border-bottom'>Volunteer Information</td></tr>";
 			$stf .= "<tr>";
 			$stf .= "<th>Name</th>";
 			$stf .= "<th>M</th><th>T</th><th>W</th><th>Th</th><th>F</th>";
-			$stf .= "<th>Class</th><th>Craft</th><th>Kitchen</th><th>Any</th>";
-			$stf .= "<th>Picture</th>";
-			$stf .= "<th>T-Shirt</th><th>Teach with</th>";
-			$stf .= "<th>Clearance Required</th></tr>";
+			$stf .= "<th class='col7'>Class</th><th class='col8'>Craft</th><th class='col9'>Kitchen</th><th class='col10'>Any</th>";
+			$stf .= "<th>Pic</th>";
+			$stf .= "<th>T-Shirt</th><th class='col13'>Teach with</th>";
+			$stf .= "<th>Clearance<br>Required</th></tr>";
 
 			do {
 				$stf .= "<tr>";
-				$stf .= "<td>".trim($s['name'])."</td>";
+				$stf .= "<td class='nowrap'>".trim($s['name'])."</td>";
 				$stf .= "<td class='centerText'>" . $s['mon'] . "</td>";
 				$stf .= "<td class='centerText'>" . $s['tue'] . "</td>";
 				$stf .= "<td class='centerText'>" . $s['wed'] . "</td>";
 				$stf .= "<td class='centerText'>" . $s['thur'] . "</td>";
 				$stf .= "<td class='centerText'>" . $s['fri'] . "</td>";
-				$stf .= "<td class='centerText'>" . $s['classroom'] . "</td>";
-				$stf .= "<td class='centerText'>" . $s['craft'] . "</td>";
-				$stf .= "<td class='centerText'>" . $s['kitchen'] . "</td>";
-				$stf .= "<td class='centerText'>" . $s['anything'] . "</td>";
+				$stf .= "<td class='col7 centerText'>" . $s['classroom'] . "</td>";
+				$stf .= "<td class='col8 centerText'>" . $s['craft'] . "</td>";
+				$stf .= "<td class='col9 centerText'>" . $s['kitchen'] . "</td>";
+				$stf .= "<td class='col10 centerText'>" . $s['anything'] . "</td>";
 				$stf .= "<td class='centerText'>" . $s['picture'] . "</td>";
 				$stf .= "<td class='centerText'>" . $s['shirt_size'] . "</td>";
-				$stf .= "<td class='centerText'>" . $s['teach_with'] . "</td>";
+				$stf .= "<td class='col13 centerText'>" . $s['teach_with'] . "</td>";
 				$stf .= "<td class='centerText'>" . ($s['age_group']=='Adult'?'Y':'N') . "</td>";
-				//$stf .= "<td>" . $s['confo'] . "</td>";
 				$stf .= "</tr>";
 				$staffTotal++;
 			} while ($s = mysqli_fetch_assoc($result));
 		}
 		else {
-			$stf .= "<tr><td class='center'>No volunteers registered</td></tr>";
+			$stf .= "<tr><td class='title'>No volunteers registered</td></tr>";
 			$staffTotal=0;
 		}
-		$stf .= "</table></div></div>";
+		$stf .= "</table>";
 	}
 
 	return $stf;
@@ -598,12 +593,12 @@ if (DEBUG) print "Total students = $studentTotal.  Total staff = $staffTotal.<br
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>VBS Confirmation</title>
     <!--  <link href="css/boilerplate.css" rel="stylesheet" type="text/css">  -->
-    <link href="css/layout.css" rel="stylesheet" type="text/css">
+    <link href="css/layout.css?v2" rel="stylesheet" type="text/css">
     </head>
     <body>
-    <div id="Find" class="gridContainer">
+    <!--   <div id="Find"> -->
     <div><h1>Registration Summary</h1></div>
-    <div id="Confo">
+    <div id="Confo" class="gridContainer">
     <?php
         echo formatFamily($_SESSION['family_id']);
         echo formatStudents($_SESSION['family_id']);
@@ -617,6 +612,6 @@ if (DEBUG) print "Total students = $studentTotal.  Total staff = $staffTotal.<br
 		</form>
     </div>
     </div>
-    </div>
+    <!--  </div> -->
     </body>
     </html>
