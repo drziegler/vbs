@@ -249,8 +249,7 @@ if (DEBUG) print_r($_SESSION);
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS - Family</title>
 <link href="css/layout.css" rel="stylesheet" type="text/css">
-<script src="scripts/vbsUtils.js"></script>
-<script src="css/respond.min.js"></script>
+<!-- @@ <script src="css/respond.min.js"></script>  -->
 </head>
 <body>
 <div id="Find" class="gridContainer">
@@ -263,7 +262,7 @@ if (DEBUG) print_r($_SESSION);
 	<?php } else { ?>
 		<tr><td colspan="2" class="center title">Edit family information</td></tr> 
  	<?php } ?>
-	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFamName')">Family Name<span class="popuptext" id="hFamName">Enter your family name in the format you want it to appear on correspondence to you, e.g. Mr &amp; Mrs John Doe.</span></span></td><td class="value"><input name="family_name" type="text" value="<?php echo $rsFam['family_name']; ?>" maxlength='40'></td></tr>
+	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFamName')">Family Name<span class="popuptext" id="hFamName">Enter your family name in the format you want it to appear on correspondence to you, e.g. Mr &amp; Mrs John Doe.</span></span></td><td class="value"><input name="family_name" type="text" value="<?php echo $rsFam['family_name']; ?>" maxlength='40' autofocus></td></tr>
 	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAddress')">Address<span class="popuptext" id="hAddress">Enter your street address or mailing address.</span></span></td><td class="value"><input name="address" type="text" value="<?php echo $rsFam['address'];?>" maxlength='64'></td></tr>
 	<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hZip')">Zipcode<span class="popuptext" id="hZip">Enter your 5-digit zipcode.  We'll look up the city and state.</span></span></td><td class="value"><input name="zipcode" type="number" min="0" max="99999" value="<?php echo $rsFam['zipcode'];?>" maxlength='5'></td></tr>
     <tr><td class="label"><span class="popup" onclick="myPopUp('hCity')">City, State<span class="popuptext" id="hCity">You can't enter anything here.  We will calculate your city and state from your zipcode. Eh?  You're from Canada?  Call us to make sure you can still enter our country!</span></span></td><td class="value"><span><?php echo (strlen($city)>0 || strlen($state)>0) ? $city . ', ' . $state : ""; ?></span></td></tr>
@@ -289,6 +288,7 @@ if (DEBUG) print_r($_SESSION);
 </form>
 </div>
 </div>
+<script src="scripts/vbsUtils.js"></script>  <!--  needed for popups -->
 </body>
 </html>
 <?php

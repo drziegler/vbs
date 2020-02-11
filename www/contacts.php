@@ -319,8 +319,7 @@ if (DEBUG) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS-Contact Information</title>
 <link href="css/layout.css?v4" rel="stylesheet" type="text/css">
-<script src="respond.min.js"></script>
-<script src="scripts/vbsUtils.js"></script>
+<!--  @@ <script src="respond.min.js"></script> -->
 </head>
 <body>
 <div id="Find" class="gridContainer">
@@ -337,7 +336,7 @@ if (DEBUG) {
     	<tr><th>*&nbsp;Name</th><th>*&nbsp;Phone</th><th>Select</th></tr>
         <?php for ($i=0; $i<count($rsPhone); $i++){ ?>
         <tr>
-            <td class="center col1"><input type="text" name="phone[<?php echo $i;?>][contact_name]" value="<?php echo $rsPhone[$i]['contact_name']; ?>" maxlength="50"></td>
+            <td class="center col1"><input type="text" name="phone[<?php echo $i;?>][contact_name]" value="<?php echo $rsPhone[$i]['contact_name']; ?>" maxlength="50" <?php echo ($i==0 ? " autofocus" : " ");?>></td>
             <td class="center col2"><input type="text" name="phone[<?php echo $i;?>][phone]" maxlength="12" value="<?php echo formatPhone($rsPhone[$i]['phone']); ?>" ></td>
     		<td class="center col3"><input name="phone[<?php echo $i;?>][sel]" type="checkbox" value="">
             <input type="hidden" name="phone[<?php echo $i;?>][family_id]" value="<?php echo $_SESSION['family_id']?>"></td>
@@ -361,6 +360,7 @@ if (DEBUG) {
 	</div>
 </div>
 </div>
+<script src="scripts/vbsUtils.js"></script>
 </body>
 </html>
 <?php

@@ -28,7 +28,7 @@ switch ($_POST['submit']) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS-Find Family</title>
 <link href="css/layout.css?v2" rel="stylesheet" type="text/css">
-<script src="scripts/respond.min.js"></script>
+<!--  @@ <script src="scripts/respond.min.js"></script> -->
 </head>
 <body>
 <div id="Find" class="gridContainer clearfix">

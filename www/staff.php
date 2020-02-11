@@ -508,7 +508,6 @@ $offset = --$offset;
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS Staff</title>
 <link href="css/layout.css?v7" rel="stylesheet" type="text/css">
-<script src="scripts/vbsUtils.js"></script>
 </head>
 <body>
 <div id="Find" class="gridContainer">
@@ -528,7 +527,7 @@ $offset = --$offset;
 			<label><input type="radio" name="registered" id="reg-yes" value="<?php echo $yesVal?>" <?php echo $yesChk . $fldEnabled?>> Yes</label>
             <label><input type="radio" name="registered" id="reg-no" value="N" <?php echo $noChk . $fldEnabled?>> No</label>
 			</td></tr>
-		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter the first name of the staff volunteer.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']; ?>" maxlength="20" <?php echo $fldEnabled ?>></td></tr>
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter the first name of the staff volunteer.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']; ?>" maxlength="20" <?php echo $fldEnabled ?> autofocus></td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter the last name of the staff volunteer.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20" <?php echo $fldEnabled ?>></td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hAvail')">Availability<span class="popuptext" id="hAvail">Select the days you are available to help during the week of VBS.  You must select at least one day.</span></span></td><td class="value">
             <div class="item"><input type="checkbox" name="mon" id="mon" value="Y" <?php echo (empty($row_rsStudent['mon'])||$row_rsStudent['mon']=='N' ?'':'checked ') . $fldEnabled;?>><label for="mon">Mo</label></div>
@@ -605,6 +604,7 @@ do {
   </div>
   </div>
 </div>
+<script src="scripts/vbsUtils.js"></script>
 </body>
 </html>
 <?php
