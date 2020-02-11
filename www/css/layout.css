@@ -2,7 +2,7 @@
 @font-face{
 	font-family: "Castle Font";
 	src: url('../fonts/oldenglishfive.ttf');
-	font-weight: 100 1700;
+	font-weight: 100 1700; 
 }
 /* Simple fluid media  Version 1
    Note: Fluid media requires that you remove the media's height and width attributes from the HTML
@@ -28,30 +28,31 @@ body, input, select, textarea {
 	font-family: sans-serif;
 	color: #222;
 }
+/* @@
 img, object, embed, video {
 	max-width: 100%;
 }
+*/
 h1 {
-	/*width: 99%; */
 	font-family: "Castle Font";
 	margin: auto;
 	text-align: center;
 	font-size: 6.5vmin;
 }
-h2, .h2 {
-	width: 99%;
+h2  {
 	margin: auto;
 	text-align: center;
 	font-size: 2rem;
 	font-weight:normal;
 }
-h3{
+/* @@
+h3 {
+	margin: 0;
+	text-align: center;
 	font-size:5vw;
 	font-weight: normal;
-	text-align: center;
-	margin: 0;
 	color:red;
-}
+} */
 hr {border-top: 5px solid black;}
 input {
 	box-sizing: border-box;
@@ -664,7 +665,7 @@ padding-bottom: 0.25vh;
 /********************************************************  DESKTOP LAYOUT ********************* DESKTOP LAYOUT ************************************/
 @media only screen 
 and (min-width: 836px) {
-h2, .h2 {
+h2 {
 	font-size: 4rem;
 }
 h3{
@@ -818,10 +819,5 @@ table #schedule{
 	width: 40%;
 }
 
-/* * * * * * * * * * * * * * *   TEST CLASSES * * * * * * * * * * * * * */
-.test-border{
-	border: solid;
-	border-color:black;
-}
 
 }
