@@ -123,11 +123,7 @@ $yesVal = $yesChk = $noChk = $fldEnabled = $errMsgText = "";
 $numStudents =(empty($_POST['numStudents'])) ? 0 : $_POST['numStudents'];
 
 /* Turn on the button display by default */
-$button['New'] = '';
-$button['Home'] = '';
-$button['Back'] = '';
-$button['NextPage'] = '';
-
+$button = array('New'  => '','Home' => '','Back' => '','NextPage' => '');
 
 if (empty($_REQUEST['submit'])){	
     /* Entering from another page.  $_REQUEST[submit] will be empty. Perform initial population */
@@ -159,8 +155,6 @@ switch ($_POST['submit']) {
 		$row_rsStudent['student_id'] = 0;
 		$numStudents = 0;
 		
-		$fieldEnable='';
-		
 		/* Disable the inappropriate buttons so we don't have to do a lot of status checking.
 		   The only valid buttons in new student mode are save and cancel. */
 		$button['Home'] = ' disabled';
@@ -176,7 +170,6 @@ switch ($_POST['submit']) {
 	case "Save" :   /* Only happens on a new record */
 	    if (validate($_POST) && (check4dupes($_POST) === NO_DUPES)) {
             if (DEBUG) print "Line " . __LINE__ . " Save - passed validation<br>";
-            $errMsg = '';
             /* This is a new record to insert */
             $sql = "INSERT into students (family_id, first_name, last_name, birthdate, class, ";
             $sql .= "shirt_size, picture, registered, buddy, comments, create_date, last_update) ";
