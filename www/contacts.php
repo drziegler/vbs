@@ -319,12 +319,11 @@ if (DEBUG) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS-Contact Information</title>
 <link href="css/layout.css?v4" rel="stylesheet" type="text/css">
-<!--  @@ <script src="respond.min.js"></script> -->
 </head>
 <body>
-<div id="Find" class="gridContainer">
+<div id="Find" class="gridContainer-footer">
 <h1>Contact Info</h1>
-<div id="dataLayout">
+<div id="dataLayout" class="gridContainer border-on">
 	<div id="Contacts">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="POST" name="frmContacts" target="_self">
     <table>
@@ -361,9 +360,10 @@ if (DEBUG) {
 </div>
 </div>
 <script src="scripts/vbsUtils.js"></script>
-</body>
-</html>
 <?php
+include('footer.inc');
 @mysqli_free_result($rsPhone);
 @mysqli_free_result($rsPhoneTypeList);
 ?>
+</body>
+</html>
