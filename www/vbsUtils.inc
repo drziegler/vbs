@@ -1,4 +1,6 @@
 <?php
+require_once('Connections/vbsDB.php'); /* Needed for queries in functions below */
+
 // Defines for this file
 define('FILE_NAME_UTIL',     '[VBSUTILS] '); 
 
@@ -25,6 +27,9 @@ define("HOME_BUTTON",		"Home");
 define("PREVIOUS_BUTTON",	"Previous Page");
 define("NEW_BUTTON",		"New");
 define("STAFF_NURSERY",		"Staff Nursery");
+define("START_PAGE", 	 "index.php");
+define("REGISTER",	     "Register");
+define("UNREGISTER",	 "Unregister");
 
 /* Record Navigation Constants */
 define("FIRST_RECORD",		"First");
@@ -35,17 +40,13 @@ define("LAST_RECORD",		"Last");
 define("ADULT_VOLUNTEERS",  TRUE);
 define("ALL_VOLUNTEERS",    FALSE);
 
-
-
 //PROD
 define("LOG_FILE",  	'./logs/vbs.log');
 define("ERR_FILE", 	'./logs/vbs_error.log');
 //DEV
 //define("LOG_FILE",  	'C:/Users/David/git/vbs/www/vbs.log');
 //define("ERR_FILE", 	'C:/Users/David/git/vbs/www/vbs_error.log'); 
-define("START_PAGE", 	"index.php");
-define("REGISTER",	"Register");
-define("UNREGISTER",	"Unregister");
+
 
 
 #Date constants
