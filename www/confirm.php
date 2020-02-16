@@ -596,9 +596,8 @@ if (DEBUG) print "Total students = $studentTotal.  Total staff = $staffTotal.<br
     <link href="css/layout.css?v2" rel="stylesheet" type="text/css">
     </head>
     <body>
-    <!--   <div id="Find"> -->
     <div><h1>Registration Summary</h1></div>
-    <div id="Confo" class="gridContainer">
+    <div id="Confo" class="gridContainer-footer">
     <?php
         echo formatFamily($_SESSION['family_id']);
         echo formatStudents($_SESSION['family_id']);
@@ -612,6 +611,6 @@ if (DEBUG) print "Total students = $studentTotal.  Total staff = $staffTotal.<br
 		</form>
     </div>
     </div>
-    <!--  </div> -->
+<?php include('footer.inc');?>
     </body>
     </html>

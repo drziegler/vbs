@@ -289,10 +289,11 @@ if (DEBUG) print_r($_SESSION);
 </div>
 </div>
 <script src="scripts/vbsUtils.js"></script>  <!--  needed for popups -->
-</body>
-</html>
 <?php
+include('footer.inc');
 @mysqli_free_result($rsFam);
 @mysqli_free_result($rsCityState);
 @mysqli_free_result($rsChurchList);
 ?>
+</body>
+</html>
