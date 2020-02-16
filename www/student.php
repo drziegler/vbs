@@ -499,10 +499,11 @@ do {
   </div>
 </div>
 <script src="scripts/vbsUtils.js"></script>
-</body>
-</html>
 <?php
+include('footer.inc');
 @mysqli_free_result($rsStudent);
 @mysqli_free_result($rsClassList);
 @mysqli_free_result($rsStudentShirtList);
 ?>
+</body>
+</html>
