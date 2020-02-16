@@ -197,15 +197,11 @@ include('vbsUtils.inc');
 define("FILE_NAME", '[STAFF] ');
 
 $validateError = FALSE;
-$staffNurseryExists = FALSE;
 $yesVal = $yesChk = $noChk = $fldEnabled = $errMsgText = "";
 $numStudents =(empty($_POST['numStudents'])) ? 0 : $_POST['numStudents'];
 
 /* Turn on the button display by default */
-$button['New'] = '';
-$button['Home'] = '';
-$button['Back'] = '';
-$button['NextPage'] = '';
+$button = array('New'  => '','Home' => '','Back' => '','NextPage' => '');
 
 
 if (empty($_REQUEST['submit'])){
@@ -239,8 +235,6 @@ switch ($_POST['submit']) {
 		$row_rsStudent['family_id'] = $_SESSION['family_id'];
 		$row_rsStudent['staff_id'] = 0;
 		
-		$fieldEnable='';
-		
 		/* Disable the inappropriate buttons so we don't have to do a lot of status checking.
 		   The only valid buttons in new student mode are save and cancel. */
 		$button['Home'] = ' disabled';
@@ -256,7 +250,6 @@ switch ($_POST['submit']) {
 	case "Save" :                  /* ONLY HAPPENS ON A NEW RECORD */
 		if (validate($_POST)) {
 		    if (DEBUG) print "Line " . __LINE__ . " Save - passed validation<br>";
-		    $errMsg = '';
 			/* This is a new record to insert */
 		    $sql = "INSERT into staff (family_id, first_name, last_name, shirt_size, picture, registered, teach_with, ";
 			$sql .= "classroom, nursery, craft, kitchen, anything, mon, tue, wed, thur, fri, age_group, create_date, last_update)";
@@ -450,26 +443,30 @@ else {                      /* PASSED validation */
 		$query_rsStudent = "SELECT staff_id, family_id, first_name, last_name, Assignment, picture, mon, tue, wed, thur, fri, kitchen, craft, classroom, nursery, anything, shirt_size, teach_with, age_group, registered, comments, create_date, last_update, deleted FROM staff WHERE family_id=".$_SESSION['family_id'];
 		if (DEBUG) writeLog(FILE_NAME . __LINE__ . "-" . $query_rsStudent);
 		$all_rsStudent = mysqli_query($vbsDBi, $query_rsStudent);
-		if (DEBUG and $all_rsStudent===FALSE) writeLog(FILE_NAME . __LINE__ . "-SQL Query failed.");
-		$numStudents = mysqli_num_rows($all_rsStudent);
+		if ($all_rsStudent===FALSE) {
+            $numStudents = 0;
+            /* Since there are no students on record, disable the input fields.  User required to press new button */
+            $fldEnabled=' disabled';
+            $_REQUEST['submit']=NEW_BUTTON;
+		}
+		else {
+		  $numStudents = mysqli_num_rows($all_rsStudent);
+		}
 		if (DEBUG) print'Line '. __LINE__ . " Number of staff rows selected: $numStudents <br>";
 
 		if ($_REQUEST['submit']=='Redisplay') $offset = $numStudents-1;  /* Go to current record */
 		$query_limit_rsStudent = sprintf("%s LIMIT %d, %d", $query_rsStudent, $offset, $numStudents);
 		$rsStudent = mysqli_query($vbsDBi, $query_limit_rsStudent);
-		$row_rsStudent = mysqli_fetch_assoc($rsStudent);
+		if (! $rsStudent==NULL){
+    		$row_rsStudent = mysqli_fetch_assoc($rsStudent);
 		
-		/*Set the registered radio button variables here */
-		$yesVal = ($row_rsStudent['registered']=='C') ? 'C' : 'Y';
-		$yesChk = ($row_rsStudent['registered']=='Y' or $row_rsStudent['registered']=='C') ? ' checked ' : '';
-		$noChk  = ($row_rsStudent['registered']=='N') ? ' checked ' : '';
+    		/*Set the registered radio button variables here */
+    		$yesVal = ($row_rsStudent['registered']=='C') ? 'C' : 'Y';
+    		$yesChk = ($row_rsStudent['registered']=='Y' or $row_rsStudent['registered']=='C') ? ' checked ' : '';
+    		$noChk  = ($row_rsStudent['registered']=='N') ? ' checked ' : '';
+		}
 
 		if (DEBUG) print 'Line '.__LINE__." Number of staff: $numStudents <br>";
-		if ($numStudents==0) {
-		    $_REQUEST['submit']=NEW_BUTTON;
-		    /* If there are no students on record, disable the input fields.  User required to press new button */
-		    $fldEnabled=' disabled';
-		}
 	}
 }
 if (DEBUG) print 'Line '.__LINE__." Pagination: $offset of $numStudents <br>";
@@ -486,7 +483,6 @@ else{
 $query_rsStudentShirtList = "SELECT shirt_size FROM list_shirts WHERE staff_opt = TRUE ORDER BY disp_order ";
 $rsStudentShirtList = mysqli_query($vbsDBi, $query_rsStudentShirtList);
 $row_rsStudentShirtList = mysqli_fetch_assoc($rsStudentShirtList);
-$totalRows_rsStudentShirtList = mysqli_num_rows($rsStudentShirtList);
 
 $_SESSION['staff_id'] = $row_rsStudent['staff_id'];
 
@@ -515,7 +511,7 @@ $offset = --$offset;
 	<div id="dataLayout">
 	<div id="Staff">
 	<form method="post" name="frmStaff" target="_self" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
-	<table cellspacing="0">
+	<table>
 		<?php if ($validateError) { ?> 
 			<tr><td colspan="2" class="error title center"> <?php echo $errMsgText; ?>
 		<?php } else { ?>
