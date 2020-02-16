@@ -1,5 +1,4 @@
 <?php
-require_once('Connections/vbsDB.php');
 require('vbsUtils.inc');
 ?>
 <!doctype html>
@@ -12,7 +11,6 @@ require('vbsUtils.inc');
 <link rel="stylesheet" type="text/css" href="css/layout.css?v5" >
 </head>
 <body>
-<div id="Find">
 <div id="Register" class="gridContainer-footer">
 	<h1>Hope Lutheran Church</h1>
 	<h2>VBS Information</h2>
@@ -30,7 +28,6 @@ require('vbsUtils.inc');
    		<a href="search.php"><div id="mnuBtn">Register</div></a>
    	</div>
 </div>
-</div>
-<div id="Footer" class="center"><div id="counter">Over&nbsp;<?php echo registrationCount();?>&nbsp;students&nbsp;in the dungeon.</div>&copy; <?php echo date("Y");?> David R Ziegler &amp; Hope Lutheran Church</div>
+<?php include('footer.inc')?>
 </body>
 </html>

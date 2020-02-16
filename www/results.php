@@ -159,8 +159,9 @@ $offset = --$offset;
     </form>
 </div></div>
 </div>
-</body>
-</html>
 <?php
+include('footer.inc');
 @mysqli_free_result($rsFamily);
 ?>
+</body>
+</html>
