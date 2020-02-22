@@ -6,14 +6,14 @@ define('ENV',	'DEV');
 switch(ENV){
     case 'PROD' :
         $hostname_vbsDB = "dziegler3.dotstermysql.com";
-        $database_vbsDB = "vbs2";
+        $database_vbsDB = "vbs";
         $username_vbsDB = "phpvbsuser";
-        $password_vbsDB = "vbs13";
+        $password_vbsDB = "vbs20";
         break;
     case 'TEST' :
         $hostname_vbsDB = "dziegler3.dotstermysql.com";
-        $database_vbsDB = "vbs2test";
-        $username_vbsDB = "phpvbsusertest";
+        $database_vbsDB = "vbs2";
+        $username_vbsDB = "phpvbsuser";
         $password_vbsDB = "vbs19";
         break;
         
