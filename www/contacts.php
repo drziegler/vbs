@@ -247,34 +247,6 @@ switch ($_POST['submit']){
 		break;
 	case "Display" :
 	    break;
-	    
-		if (DEBUG) print "Line: " . __LINE__ . "-Display<br>";
-		
-
-		$sqlPhone = "SELECT phone, contact_name FROM phone_numbers WHERE family_id=" . $_SESSION['family_id'] . " ORDER BY contact_name";
-		$rsResult = mysqli_query($vbsDBi, $sqlPhone);
-		if ($rsResult){
-			$rsPhone = mysqli_fetch_all($rsResult, MYSQLI_ASSOC);
-
-			if (DEBUG) {
-				print_r($rsPhone);
-				print "<br>";
-			}
-
-			if (($_POST['submit']=='Add') or (count($rsPhone)<1)){
-				if (DEBUG) print "Line: " . __LINE__ . "<br>";
-				/* Put a blank record on the end of the array and redisplay */
-				if (DEBUG) print 'Before: '; print_r($rsPhone); print '<br>';
-				$rsTemp = $rsPhone;
-				$rsPhone = array_merge($rsTemp, $blankPhoneArray);
-				if (DEBUG) print 'After: '; print_r($rsPhone); print '<br>';
-			}
-		}
-		else {
-			if (DEBUG) print "Line: " . __LINE__ . "<br>";	
-			$rsPhone = $blankPhoneArray;
-		}
-		break;
 }
 
 /* This was the "display" case statement, just now moved to outside the case */
@@ -303,6 +275,7 @@ if ($rsResult){
 else {
     if (DEBUG) print "Line: " . __LINE__ . "<br>";
     $rsPhone = $blankPhoneArray;
+    $rsPhone[0]['phone']=$_SESSION['search_phone'];
 }
 if (DEBUG) {
     print "Session: ";
@@ -321,23 +294,23 @@ if (DEBUG) {
 <link href="css/layout.css?v4" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div id="Find" class="gridContainer-footer">
+<div id="Find" class="gridContainer-footer" >
 <h1>Contact Info</h1>
-<div id="dataLayout" class="gridContainer border-on">
-	<div id="Contacts">
+<div id="dataLayout">
+-  	<div id="Contacts">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>" method="POST" name="frmContacts" target="_self">
-    <table>
+    <table class="border-on">
         <?php if (strlen($errMsgText)>0) { ?>
         	<tr><td colspan="3" class="title nowrap error"><?php echo $errMsgText;?></td></tr>
         <?php } else { ?>
         	<tr><td colspan="3" class="center title nowrap">Provide at least two different phone numbers.</td></tr>
         <?php } ?>
-    	<tr><th>*&nbsp;Name</th><th>*&nbsp;Phone</th><th>Select</th></tr>
+    	<tr><th class="col1">*&nbsp;Name</th><th class="col2">*&nbsp;Phone</th><th class="col3">Select</th></tr>
         <?php for ($i=0; $i<count($rsPhone); $i++){ ?>
         <tr>
-            <td class="center col1"><input type="text" name="phone[<?php echo $i;?>][contact_name]" value="<?php echo $rsPhone[$i]['contact_name']; ?>" maxlength="50" <?php echo ($i==0 ? " autofocus" : " ");?>></td>
-            <td class="center col2"><input type="text" name="phone[<?php echo $i;?>][phone]" maxlength="12" value="<?php echo formatPhone($rsPhone[$i]['phone']); ?>" ></td>
-    		<td class="center col3"><input name="phone[<?php echo $i;?>][sel]" type="checkbox" value="">
+            <td class="center col1 border-on"><input type="text" name="phone[<?php echo $i;?>][contact_name]" value="<?php echo $rsPhone[$i]['contact_name']; ?>" maxlength="50" <?php echo ($i==0 ? " autofocus" : " ");?>></td>
+            <td class="center col2 border-on"><input type="text" name="phone[<?php echo $i;?>][phone]" maxlength="12" value="<?php echo formatPhone($rsPhone[$i]['phone']); ?>" ></td>
+    		<td class="center col3 border-on"><input name="phone[<?php echo $i;?>][sel]" type="checkbox" value="">
             <input type="hidden" name="phone[<?php echo $i;?>][family_id]" value="<?php echo $_SESSION['family_id']?>"></td>
     	</tr>
         <?php } ?>
@@ -363,7 +336,7 @@ if (DEBUG) {
 <?php
 include('footer.inc');
 @mysqli_free_result($rsPhone);
-@mysqli_free_result($rsPhoneTypeList);
+// @@ @mysqli_free_result($rsPhoneTypeList);
 ?>
 </body>
 </html>
