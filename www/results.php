@@ -25,6 +25,7 @@ if (!empty($_REQUEST['submit'])){
     		if (DEBUG) print "Line: " . __LINE__ . "<br>";
     		$_SESSION['family_id'] = $_REQUEST['family_id'];
     		$_SESSION['family_name'] =
+    		$_SESSION['search_phone'] = $_REQUEST["txtPhone"];
     		insertStats($vbsDBi, $_REQUEST['family_id'], 'reused');
     		header("Location: " . FAMILY_PAGE);
     		break;
@@ -41,6 +42,7 @@ if (!empty($_REQUEST['submit'])){
     			   for the new family id */
     			//--unset($_SESSION['newPhone']);
     		}
+    		$_SESSION['search_phone'] = $_REQUEST["txtPhone"];
     		$_SESSION['family_id']='New';
     		header("Location: " . FAMILY_PAGE);
     		break;
@@ -94,34 +96,22 @@ else {
 
 /* Set the button disabled properties */
 $offset = ++$offset;
-//$button['First'] = ($numFamilies > 2 and $offset > 2) ? '' : ' disabled';
 $button['Previous'] = ($numFamilies > 1 and $offset > 1) ? '' : ' disabled';
 $button['Next'] = ($numFamilies > 1 and $offset<($numFamilies)) ? '' : ' disabled';
-//$button['Last'] = ($numFamilies > 2 and $offset<($numFamilies-1)) ? '' : ' disabled';
 $button['New'] = '';
 $offset = --$offset;
 
 ?>
 <!doctype html>
-<!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
-<!--[if IE 7]>    <html class="ie7 oldie"> <![endif]-->
-<!--[if IE 8]>    <html class="ie8 oldie"> <![endif]-->
-<!--[if gt IE 8]><!-->
 <html class="">
-<!--<![endif]-->
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VBS Search Results</title>
-<link href="css/layout.css?v1" rel="stylesheet" type="text/css">
-<!--  <link href="css/boilerplate.css" rel="stylesheet" type="text/css">  -->
-<!--[if lt IE 9]>
-<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-<script src="scripts/respond.min.js"></script>
+<link href="css/layout.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div id="Find" class="gridContainer">
+<div id="Find" class="gridContainer-footer">
 	<h1>Search Results</h1>
     <div id="dataLayout">
     <div id="Result">
@@ -131,7 +121,6 @@ $offset = --$offset;
 		<tr><td class="center"><?php echo $errMsg?><input name="family_id" type="hidden" value="0"></td></tr>
 	<?php } else {?>
 	<table>
-	
 		<tr><td class="center"><?php echo $row_rsFamily['family_name']; ?></td></tr>
         <tr><td class="center"><?php echo $row_rsFamily['address']; ?><input type="hidden" name="address" value="<?php echo $row_rsFamily['address']; ?>"></td></tr>
         <tr><td class="center"><?php echo $row_rsFamily['city']; ?></td></tr>
