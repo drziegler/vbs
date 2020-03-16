@@ -294,7 +294,7 @@ if (DEBUG) {
 <link href="css/layout.css?v4" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div id="Find" class="gridContainer-footer" >
+<div id="Find" class="gridContainer-footer">
 <h1>Contact Info</h1>
 <div id="dataLayout">
 -  	<div id="Contacts">
@@ -336,7 +336,6 @@ if (DEBUG) {
 <?php
 include('footer.inc');
 @mysqli_free_result($rsPhone);
-// @@ @mysqli_free_result($rsPhoneTypeList);
 ?>
 </body>
 </html>
