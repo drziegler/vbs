@@ -8,8 +8,9 @@
    Note: Fluid media requires that you remove the media's height and width attributes from the HTML
    http://www.alistapart.com/articles/fluid-images/ 
 */
-html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-body { 
+html { font-size: 100%;  -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+body {
+	font-size: 100%;
 	margin: 0; 
 	line-height: 1.231; 
 	background-image: url("../images/stonewall.jpg");
@@ -20,7 +21,7 @@ body {
 /******************* FOR TESTING ******************/
 /*div {border:5px dashed blue;} */
 /* div div {border: 5px dashed green;} */
-
+/* #Register, #Search, #Results, #Student, #Contacts {border: 3px dotted orange;}  @@ TESTING */
 
 /************* GENERAL ELEMENT STYLES ****************/
 /* DO NOT REMOVE - IN USE */
@@ -28,11 +29,6 @@ body, input, select, textarea {
 	font-family: sans-serif;
 	color: #222;
 }
-/* @@
-img, object, embed, video {
-	max-width: 100%;
-}
-*/
 h1 {
 	font-family: "Castle Font";
 	margin: auto;
@@ -45,14 +41,6 @@ h2  {
 	font-size: 2rem;
 	font-weight:normal;
 }
-/* @@
-h3 {
-	margin: 0;
-	text-align: center;
-	font-size:5vw;
-	font-weight: normal;
-	color:red;
-} */
 hr {border-top: 5px solid black;}
 input {
 	box-sizing: border-box;
@@ -65,7 +53,7 @@ input:focus, select:focus, textarea:focus{background-color: yellow}
 table {
 	width:99%;
 	margin:auto;
-	margin-top:1em;
+	margin-top:0.25em;
 	border: 0.25em solid;
 	border-collapse: collapse;
 	border-spacing: 0px;		/* equivalent to cellspacing*/ 
@@ -91,10 +79,6 @@ tr *{
 /* POPUPS format the popup help text boxes */
 .width-equal-thirds{
 	width:33%;
-}
-.border-on{
-	/* Used to turn borders on and off to test view layouts */
-	border: .25em solid black;
 }
 .border-bottom{	/* Puts a border at the bottom of the element. Good for header rows in tables */
 	border-bottom: inherit;
@@ -188,7 +172,7 @@ tr *{
 	margin-top: 0;
 	width: 98%;		/* Increasing this causes left-right scroll on mobile */
 	max-height: 88vh;
-	overflow: auto;
+	overflow: hidden;
 }
 .gridContainer {
 	margin-left: auto;
@@ -208,7 +192,6 @@ tr *{
 	position: absolute;
 	top:50%;
 	width: inherit;
-	/* OBSOLETE ? -ms-transform: translateY(-50%); */
 	transform: translateY(-50%);
 }
 .horizontal-center{
@@ -223,7 +206,6 @@ tr *{
 	top:50%;
 	left:50%;
 	width: inherit;
-	-ms-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
 }
 .nowrap{white-space: nowrap}
@@ -257,13 +239,12 @@ tr *{
 }
 #dataLayout{  /* Includes automatic horizontal centering */
 	clear: both;
-	margin: 0;
+	margin: auto;
 	position: absolute;
 	left:50%;
-	margin-top: .5em;
 	width: inherit;
-	/* @@ -ms-transform: translateX(-50%); ? OBSOLETE */
 	transform: translateX(-50%);
+	overflow: auto;
 }
 #mnuBtn { /* Only used in index page right now */
 	width: 12rem;
@@ -278,19 +259,10 @@ tr *{
 	font-family: "Castle Font";
 	font-size: 2rem;
 }
-#mnuBtn:hover, #mnuBtn:focus{
+#mnuBtn:hover, #mnuBtn:focus, #mnuBtn:active{
 	color: LightSlateGray;
 	background-color: DarkBlue;
 }
-
-#dataLayout{
-	clear: both;
-	margin: auto;
-	margin-top: .5em;
-	width: 100%;
-	display: block;
-}
-
 #buttonGroup{
 	margin-top: 0;
 	padding-top: 0;
@@ -362,8 +334,7 @@ tr *{
 
 
 /****************** SEARCH & RESULTS PAGES *****************/
-#Result {margin-top: 10vh;}
-#Search {margin-top: 10vh;}
+#Result, #Search {margin-top: 10vh;}
 
 /****************** FAMILY PAGE /*****************/
 #Family .value, #Family .label, #Family td {
@@ -373,25 +344,21 @@ tr *{
 #Family .label{min-width: 12%;}
 
 /****************** PHONE / CONTACTS PAGE *********/
-/*
-#Contacts table{
-	border: 2px solid black;
+#Contacts {clear:both;}
+#Contacts .title{
+	font-size: 1.1rem;
+	text-align: center;
 }
 #Contacts th, #Contacts td{
 	padding: 1vh 0.5vh;
 	font-size: 0.75rem;
 }
+#Contacts .col2, #Contacts .col1{
+	width: 40%;
+}
 #Contacts .col3{
 	width: 10%;
 }
-#Contacts .col2, #Contacts .col1{
-	width: 45%;
-}
-#Contacts .title{
-	font-size: 1rem;
-	text-align: center;
-}
-*/
 
 /****************** STUDENT PAGE (Mobile) *****************/
 #Student .value, #Student .label, #Student td{
@@ -410,14 +377,6 @@ tr *{
 	font-size: 1.2rem;
 	padding-bottom: 1vh;
 }
-/* @@
-#Staff label{	 		 label the element not the class and only for the Staff page
-	padding-left: 0.1;
-	padding-right: 0;
-	margin-left: 0.1;
-	margin-right: 0;
-}*/
-
 #Staff td.label {width:33%}
 
 /****************** CONFIRMATION (CONFO) PAGE  (Mobile) *****************/
@@ -496,7 +455,7 @@ padding-bottom: 0.5vh;
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	max-height: 12vh;
+	max-height: 10vh;
 }
 #Button0{
 	clear: both;
@@ -517,10 +476,21 @@ padding-bottom: 0.5vh;
 	top: 0%;
 	text-align: center;
 	font-size: 5vmin;
-	margin-bottom: 2.5vh;
+	margin-bottom: 1vh;
 }
-
-
+#copyright{
+	color: white;
+	font-weight: bold;
+	font-size: 1.5vh;
+}
+#environment{
+	display:inline;
+	float: right;
+	color:yellow;
+	font-weight: bold;
+	font-size: 2vh;
+	border:none;
+}
 
 
 /* Tablet Layout: 481px to 768px. Inherits styles from: Mobile Layout. */
@@ -564,7 +534,6 @@ input[type=checkbox], input[type=radio]{
 	overflow: auto;
 }
 .gridContainer {
-	/*width: 90.675%; */
 	width: 98%;
 	padding-left: 1.1625%;
 	padding-right: 1.1625%;
@@ -573,9 +542,10 @@ input[type=checkbox], input[type=radio]{
 	font-size: 5vw;
 }
 #dataLayout {
-	clear: both;
+ 	clear: both;
 	float: left;
 	margin-left: 0;
+	height: 100%;
 	width: 100%;
 	display: block;
 }
@@ -702,9 +672,6 @@ h3{
 	/* OBSOLETE ? -ms-transform: translateY(-50%); */
 	transform: translateY(-50%);
 }
-tr *{
-	font-size: 1.25rem;
-}
 input[type=checkbox], input[type=radio]{
 	transform:scale(2,2);
 }
@@ -770,12 +737,12 @@ padding-bottom: 0.25vh;
 }
 #Student .value, 
 #Student .label, 
-#Family td, 
-#Staff .value, 
-#Staff .label{
+#Family td 
+{
 	font-size: 1rem;
 	padding-bottom: 0;
 }
+#Staff .value, #Staff .label{font-size: 0.75rem; padding-bottom: 0}
 #Family .title, 
 #Student .title, 
 #Staff .title{font-size:1.45rem}
