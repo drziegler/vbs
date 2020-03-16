@@ -1,8 +1,24 @@
 <?php
-require_once('Connections/vbsDB.php'); /* Needed for queries in functions below */
 
 // Defines for this file
-define('FILE_NAME_UTIL',     '[VBSUTILS] '); 
+define('FILE_NAME_UTIL',     '[VBSUTILS] ');
+define('VBS_ENV_DEV',        'DEV');
+define('VBS_ENV_TEST',       'TEST');
+define('VBS_ENV_PROD',       'PROD');
+$env_file = 'ENV.';
+/* New enhancement to auto define the environment based upon exitence of a specially crafted Environment file name */
+if (file_exists($env_file.VBS_ENV_DEV)){
+    define('VBS_ENV', VBS_ENV_DEV);
+    $vbs_env='Development';}
+elseif (file_exists($env_file.VBS_ENV_TEST)){
+    define('VBS_ENV', VBS_ENV_TEST);
+    $vbs_env='Test';}
+elseif (file_exists($env_file.VBS_ENV_PROD)){
+    define('VBS_ENV', VBS_ENV_PROD);
+    $vbs_env='';    
+}
+
+require_once('Connections/vbsDB.php'); /* Needed for queries in functions below AND must be after enviornment declaractions */
 
 
 define("DEBUG", 		FALSE);
@@ -40,13 +56,37 @@ define("LAST_RECORD",		"Last");
 define("ADULT_VOLUNTEERS",  TRUE);
 define("ALL_VOLUNTEERS",    FALSE);
 
-//PROD
-define("LOG_FILE",  	'./logs/vbs.log');
-define("ERR_FILE", 	'./logs/vbs_error.log');
-//DEV
-//define("LOG_FILE",  	'C:/Users/David/git/vbs/www/vbs.log');
-//define("ERR_FILE", 	'C:/Users/David/git/vbs/www/vbs_error.log'); 
+switch (VBS_ENV) {
+case VBS_ENV_PROD:
+    define('VBS_PATH',              '/vbs');
+    define('LOG_FILE',              './logs/vbs.log');
+    define('ERR_FILE', 	            './logs/vbs_error.log');
+    define('VBS_EMAIL',		        'vbs@hopecherryville.org');
+    define('VBS_TEXT',		        '6102629198@vtext.com');
+    define('VBS_CLEARANCES_EMAIL',  'clearances@hopecherryville.org');
+    define('DOMAIN',                'hopecherryville.org');
 
+    break;
+case VBS_ENV_TEST:
+    define('VBS_PATH',             '/test/vbs');
+    define('LOG_FILE',  	       './logs/vbs.log');
+    define('ERR_FILE', 	           './logs/vbs_error.log');
+    define("VBS_EMAIL",		       'david@the-zieglers.com');
+    define("VBS_TEXT",		       '6102629199@vtext.com');
+    define("VBS_CLEARANCES_EMAIL", 'david@the-zieglers.com');
+    define('DOMAIN',               'hopecherryville.org');
+    
+    break;
+case VBS_ENV_DEV: 
+    define("LOG_FILE",  	       'C:/Users/David/git/vbs/www/logs/vbs.log');
+    define("ERR_FILE", 	           'C:/Users/David/git/vbs/www/logs/vbs_error.log');
+    define("VBS_EMAIL",		       'david@the-zieglers.com');
+    define("VBS_TEXT",		       '6102629199@vtext.com');
+    define("VBS_CLEARANCES_EMAIL", 'david@the-zieglers.com');
+    define('DOMAIN',               'localhost:8080');
+    define('VBS_PATH',             '');                                        /* This is docroot in my local dev environment */
+    break;
+}
 
 
 #Date constants
@@ -59,19 +99,9 @@ define("VBS_MOM_ME_DEADLINE",               '2020-06-20');
 define("VBS_MOM_ME_DEADLINE_MMDDYYYY",      '06-20-2020');
 
 #Validation constants
-define("NO_DUPES",		false);
-define("WAITLIST_ONLY",	false);
-//PROD
-/*
-define("VBS_EMAIL",		"vbs@hopecherryville.org");
-define("VBS_TEXT",		"6102629198@vtext.com");
-define("VBS_CLEARANCES_EMAIL","clearances@hopecherryville.org");
-*/
-//DEV
+define('NO_DUPES',		false);
+define('WAITLIST_ONLY',	false);
 
-define("VBS_EMAIL",		"david@the-zieglers.com");
-define("VBS_TEXT",		"6102629199@vtext.com");
-define("VBS_CLEARANCES_EMAIL",  "david@the-zieglers.com");
 
 
 function formatPhone($rawPhone){
