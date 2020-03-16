@@ -1,36 +1,31 @@
-<?php 
-include("vbsUtils.inc");
+<?php
+  require_once($_SERVER['DOCUMENT_ROOT'] . "/var.inc.php");
+  include("$path_building_blocks/header.inc.php"); 
+  include("../vbs/vbsUtils.inc");
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VBS Volunteer Clearances</title>
-
-<link rel="stylesheet" media="screen and (max-device-width:360px)" href="css/mobile.css?j" >
-<link rel="stylesheet" media="screen and (max-device-width:640px)" href="css/mobile.css?l" >
-<link rel="stylesheet" media="screen and (min-device-width:961px)" href="css/desktop.css?d" >
-
-</head>
-<body>
+<!----------------------------------------------------------------------------->
+<!-- Page top -->
+<!----------------------------------------------------------------------------->
+<style>
+    td {border:3px solid black; border-collapse: collapse;}
+</style>
+<div class="w3-container w3-padding">
+	<div class="w3-content">
+		<h1 class="w3-text-theme">
+			Volunteer Clearance Information
+		</h1>
 <div id="clearance" class="gridContainer">
-	<table style="border-style:hidden;margin:0em;padding:0em;"><tr><td style="width:5%;border-style:hidden" ><a href="./index.php"><input type="submit" class="button" name="submit" value="<?php echo HOME_BUTTON?>"></a></td>
-	           <td><h1>VBS Volunteer Clearance Information</h1></td>
-	           <td style="width:5%; border-style:hidden;">&nbsp;</td></tr></table>
-	<p>Thank you for registering for VBS.</p>
 	<p>If you are 18 or older or are attending the 'Mom and Me' class and ...</p>
 	<table>
-	<tr><td><ul><li>volunteered for Hope's VBS within the past 5 years</li></ul></td>
-	    <td><ul style="line-height:50%"><li>are a new VBS volunteer</li></ul></td>
+	<tr><td><ul><li>volunteered for Hope's within the past 5 years</li></ul></td>
+	    <td><ul style="line-height:50%"><li>are a new volunteer</li></ul></td>
 	</tr>
 	<tr><td><ul><li>We have clearances on file for you but</li>
-				<li>You must sign a new 2020 <a href='#VolunteerDisclosureStatement'>Volunteer Discolsure Statement</a> and</li>
+				<li>You must sign a new <?php echo date("Y") ?> <a href='#VolunteerDisclosureStatement'>Volunteer Discolsure Statement</a> and</li>
 				<li>if you did not live in PA for the past 10 consecutive years, you need a <a href='#OtherClearances'>Federal Criminal History Check.</a></li>
 	    <td><ul><li>You will need a <a href='#OtherClearances'>Child Abuse History Clearance</a> and</li>
 	    		<li>You will need a <a href='#OtherClearances'>PA Criminal Record Check</a> and</li>
-	    		<li>You must sign a new 2020 <a href='#VolunteerDisclosureStatement'>Volunteer Discolsure Statement</a> and</li>
+	    		<li>You must sign a new <?php echo date("Y") ?>  <a href='#VolunteerDisclosureStatement'>Volunteer Discolsure Statement</a> and</li>
 	    		<li>if you did not lived in PA for the past 10 consecutive years, you need a <a href='#OtherClearances'>Federal Criminal History Check.</a></li></ul></td></ul></td>
 	</tr>
 	</table><br>
@@ -55,5 +50,4 @@ include("vbsUtils.inc");
 	 please do not delay in completing these as we must have them prior to the start of Vacation Bible School.</p><a href='#top'>Back to top</a>
     <p><br><br><br><br><br><br></p>
 </div>
-</body>
-</html>
+<?php require("$path_building_blocks/footer.inc.php");?>
