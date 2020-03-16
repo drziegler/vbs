@@ -582,22 +582,16 @@ if (DEBUG) print "Total students = $studentTotal.  Total staff = $staffTotal.<br
 
 ?>
     <!doctype html>
-    <!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
-    <!--[if IE 7]>    <html class="ie7 oldie"> <![endif]-->
-    <!--[if IE 8]>    <html class="ie8 oldie"> <![endif]-->
-    <!--[if gt IE 8]><!-->
     <html class="">
-    <!--<![endif]-->
     <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>VBS Confirmation</title>
-    <!--  <link href="css/boilerplate.css" rel="stylesheet" type="text/css">  -->
-    <link href="css/layout.css?v2" rel="stylesheet" type="text/css">
+    <link href="css/layout.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-    <div><h1>Registration Summary</h1></div>
-    <div id="Confo" class="gridContainer-footer">
+    <div class="gridContainer-footer"><h1>Registration Summary</h1>
+    <div id="Confo">
     <?php
         echo formatFamily($_SESSION['family_id']);
         echo formatStudents($_SESSION['family_id']);
@@ -611,6 +605,7 @@ if (DEBUG) print "Total students = $studentTotal.  Total staff = $staffTotal.<br
 		</form>
     </div>
     </div>
-<?php include('footer.inc');?>
+    </div>
+	<?php include('footer.inc');?>
     </body>
     </html>
