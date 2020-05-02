@@ -1,6 +1,5 @@
 <?php
 session_start();
-require_once('./Connections/vbsDB.php');
 include_once('vbsUtils.inc');
 define("USE_THIS_RECORD",	"Use this record");
 define("SEARCH_AGAIN",		"Search again");

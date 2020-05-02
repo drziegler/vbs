@@ -1,24 +1,27 @@
 <?php
-
 // Defines for this file
 define('FILE_NAME_UTIL',     '[VBSUTILS] ');
-define('VBS_ENV_DEV',        'DEV');
-define('VBS_ENV_TEST',       'TEST');
-define('VBS_ENV_PROD',       'PROD');
-$env_file = 'ENV.';
+$curDir = dirname(__FILE__);
+define('VBS_ENV_DEV_FILE',        "$curDir/ENV.DEV");
+define('VBS_ENV_TEST_FILE',       "$curDir/ENV.TEST");
+define('VBS_ENV_PROD_FILE',       "$curDir/ENV.PROD");
+define('VBS_ENV_DEV',             'DEV');
+define('VBS_ENV_TEST',            'TEST');
+define('VBS_ENV_PROD',            'PROD');
+
 /* New enhancement to auto define the environment based upon exitence of a specially crafted Environment file name */
-if (file_exists($env_file.VBS_ENV_DEV)){
-    define('VBS_ENV', VBS_ENV_DEV);
+if (file_exists(VBS_ENV_DEV_FILE)){
+    define('VBS_ENV', 'DEV');
     $vbs_env='Development';}
-elseif (file_exists($env_file.VBS_ENV_TEST)){
-    define('VBS_ENV', VBS_ENV_TEST);
+elseif (file_exists(VBS_ENV_TEST_FILE)){
+    define('VBS_ENV', 'TEST');
     $vbs_env='Test';}
-elseif (file_exists($env_file.VBS_ENV_PROD)){
-    define('VBS_ENV', VBS_ENV_PROD);
+elseif (file_exists(VBS_ENV_PROD_FILE)){
+    define('VBS_ENV', 'PROD');
     $vbs_env='';    
 }
 
-require_once('Connections/vbsDB.php'); /* Needed for queries in functions below AND must be after enviornment declaractions */
+
 
 
 define("DEBUG", 		FALSE);
@@ -58,7 +61,7 @@ define("ALL_VOLUNTEERS",    FALSE);
 
 switch (VBS_ENV) {
 case VBS_ENV_PROD:
-    define('VBS_PATH',              '/vbs');
+    define('VBS_ROOT',              '/vbs');
     define('LOG_FILE',              './logs/vbs.log');
     define('ERR_FILE', 	            './logs/vbs_error.log');
     define('VBS_EMAIL',		        'vbs@hopecherryville.org');
@@ -68,7 +71,7 @@ case VBS_ENV_PROD:
 
     break;
 case VBS_ENV_TEST:
-    define('VBS_PATH',             '/test/vbs');
+    define('VBS_ROOT',             '/test/vbs');
     define('LOG_FILE',  	       './logs/vbs.log');
     define('ERR_FILE', 	           './logs/vbs_error.log');
     define("VBS_EMAIL",		       'david@the-zieglers.com');
@@ -78,13 +81,13 @@ case VBS_ENV_TEST:
     
     break;
 case VBS_ENV_DEV: 
-    define("LOG_FILE",  	       'C:/Users/David/git/vbs/www/logs/vbs.log');
-    define("ERR_FILE", 	           'C:/Users/David/git/vbs/www/logs/vbs_error.log');
+    define('VBS_ROOT',             'C:/Users/David/git/vbs/www');                                        /* This is docroot in my local dev environment */
+    define("LOG_FILE",  	       VBS_ROOT . '/logs/vbs.log');
+    define("ERR_FILE", 	           VBS_ROOT . '/logs/vbs_error.log');
     define("VBS_EMAIL",		       'david@the-zieglers.com');
     define("VBS_TEXT",		       '6102629199@vtext.com');
     define("VBS_CLEARANCES_EMAIL", 'david@the-zieglers.com');
     define('DOMAIN',               'localhost:8080');
-    define('VBS_PATH',             '');                                        /* This is docroot in my local dev environment */
     break;
 }
 
@@ -152,6 +155,7 @@ function registrationCount(){
 	    writeLog(FILE_NAME_UTIL . __LINE__ . " rsResult is FALSE");
 	    writeLog(FILE_NAME_UTIL . __LINE__ . " mySQLiErrno " . mysqli_errno($vbsDBi));
 	    writeLog(FILE_NAME_UTIL . __LINE__ . " mySQLiError " . mysqli_error($vbsDBi));
+	    $regCount = 'Unknown';
 	}
 	return $regCount;
 }
@@ -185,15 +189,13 @@ function insertStats($mysqli, $fam_id, $type){
 	}
 }
 /*
-  These are wrapper scripts for the write function.
+  These are wrapper functions for the write function.
   It provides the Log file parameter to write to.
 */
 function writeLog($text2write){
-	//if (DEBUG) print "Function: " . __FUNCTION__ . " Line: " . __LINE__ . "<br>";
 	write($text2write, LOG_FILE);
 }
 function writeErr($text2write, $functionName, $lineNo, $errNo){
-	//if (DEBUG) print "Function: " . __FUNCTION__ . " Line: " . __LINE__ . "<br>";
 	$text2write = $functionName .  $lineNo . "-ErrNo: " . $errNo . " " . $text2write;
 	write($text2write, ERR_FILE);	
 }
@@ -216,5 +218,8 @@ function contains_substr($mainStr, $str, $loc = false) {
     if (($loc + strlen($str)) > strlen($mainStr)) return false;
     return (strcasecmp(substr($mainStr, $loc, strlen($str)), $str) == 0);
 }
+
+/* WARNING! Do not move this above LOG_FILE declaraction */
+require_once('./Connections/vbsDB.php');
 
 ?>

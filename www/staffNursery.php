@@ -109,7 +109,6 @@ function check4dupes($form){
 }
 
 /*******************************    MAIN  ***********************************/
-require_once('Connections/vbsDB.php');
 include('vbsUtils.inc');
 define('FILE_NAME', '[STAFF_NURSERY] ');
 $validateError = FALSE;

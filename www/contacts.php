@@ -1,6 +1,5 @@
 <?php
 session_start();
-require_once('./Connections/vbsDB.php');
 include_once('vbsUtils.inc');
 define("FILE_NAME", "[CONTACTS] ");
 $errMsgText = '';

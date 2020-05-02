@@ -114,7 +114,6 @@ function check4dupes($form){
 	
 }
 /* * * * * * * * *    MAIN   * * * * * * * * * * * * * * * * * */
-require_once('Connections/vbsDB.php');
 include('vbsUtils.inc');
 define('FILE_NAME', '[STUDENT] ');
 
@@ -427,8 +426,8 @@ $offset = --$offset;
 			<label><input type="radio" name="registered" id="reg-yes" value="<?php echo $yesVal?>" <?php echo $yesChk . $fldEnabled?> > Yes</label>
             <label><input type="radio" name="registered" id="reg-no" value="N" <?php echo $noChk . $fldEnabled?>> No</label>
 		</td></tr>
-		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter your child's first name exactly as you want it to appear on name tags, project labels, etc.  This includes capitalization and any punctuation you desire.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']?>" maxlength="20" <?php echo  $fldEnabled?> style="width:60%" autofocus></td></tr>
-		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter your child's last name exactly as you want it to appear on name tags, project labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20" <?php echo  $fldEnabled?> style="width:60%"></td></tr>
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter your child's first name exactly as you want it to appear on name tags, project labels, etc.  This includes capitalization and any punctuation you desire.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']?>" maxlength="20" <?php echo  $fldEnabled?> autofocus></td></tr>
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter your child's last name exactly as you want it to appear on name tags, project labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20" <?php echo  $fldEnabled?>></td></tr>
 		<tr><td class="label">*&nbsp;<span>Birthdate</span></td><td class="value"><input name="birthdate" type="date" value="<?php echo $row_rsStudent['birthdate']; ?>" min="<?php echo VBS_DATE_MIN?>" max="<?php echo VBS_DATE_MAX?>" <?php echo  $fldEnabled?>></td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hGrade')">Grade Completed<span class="popuptext" id="hGrade">Select the grade your child is in right now or just completed.  DO NOT select the grade your child is going to in the fall.  Mom and Me students must register by <?php echo VBS_MOM_ME_DEADLINE_MMDDYYYY ?> because of the requirement for security clearances to be completed.</span></span></td><td class="value">
         <select name="class" <?php echo $fldEnabled?>>
@@ -462,7 +461,7 @@ do {
         </td></tr>
         <tr><td class="label"><span class="popup" onclick="myPopUp('hBud')">Friend<span class="popuptext" id="hBud">If your child wants to be with a specific friend, enter their name here.  Their friend must be in the same grade.  We will do our best to accommodate your request.</span></span></td><td class="value"><input name="buddy" type="text" value="<?php echo $row_rsStudent['buddy']; ?>" maxlength="20" <?php echo $fldEnabled;?>></td></tr>
         <tr>
-          <td class="label"><span class="popup" onclick="myPopUp('sComment')">Comments:<span class="popuptext" id="sComment">Enter comments here that are related to this child.</span></span></td><td class="value"><textarea name="comments" cols="" rows="" <?php echo $fldEnabled?>><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
+          <td class="label"><span class="popup" onclick="myPopUp('sComment')">Comments:<span class="popuptext" id="sComment">Enter comments here that are related to this child.</span></span></td><td class="value"><textarea name="comments" cols="" rows="" width='40px' <?php echo $fldEnabled?>><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
         <tr>
           <td class="label left"><span>*&nbsp;required</span></td>
           <td class="value">
@@ -500,7 +499,6 @@ do {
 </div>
 <script src="scripts/vbsUtils.js"></script>
 <?php
-include('footer.inc');
 @mysqli_free_result($rsStudent);
 @mysqli_free_result($rsClassList);
 @mysqli_free_result($rsStudentShirtList);
