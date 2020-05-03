@@ -14,7 +14,6 @@ body {
 	margin: 0; 
 	line-height: 1.231; 
 	background-image: url("../images/stonewall.jpg");
-	background-size: cover;
 }
 
 
@@ -490,6 +489,11 @@ padding-bottom: 0.5vh;
 	font-weight: bold;
 	font-size: 2vh;
 	border:none;
+}
+
+#admin a:link {
+	text-decoration:underline;
+	color:blue;
 }
 
 
