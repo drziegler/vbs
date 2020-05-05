@@ -220,6 +220,6 @@ function contains_substr($mainStr, $str, $loc = false) {
 }
 
 /* WARNING! Do not move this above LOG_FILE declaraction */
-require_once('./Connections/vbsDB.php');
+require_once(VBS_ROOT . "/Connections/vbsDB.php");
 
 ?>
