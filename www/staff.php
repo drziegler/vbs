@@ -25,7 +25,6 @@ function quickSave(){
     $sqlUpdate = "UPDATE staff SET ";
     $sqlUpdate .= "first_name='"  . ((strlen(trim($_POST['first_name']))>0) ? mysqli_real_escape_string($vbsDBi,trim($_POST['first_name']))  : "") . "'";
     $sqlUpdate .= ",last_name='"  . ((strlen(trim($_POST['last_name']))>0) ? mysqli_real_escape_string($vbsDBi,trim($_POST['last_name']))  : "") . "'";
-    $sqlUpdate .= ",teach_with='" . ((strlen(trim($_POST['teach_with']))>0) ? mysqli_real_escape_string($vbsDBi,trim($_POST['teach_with']))  : "") . "'";
     $sqlUpdate .= ",comments='"   . ((strlen(trim($_POST['comments']))>0) ? mysqli_real_escape_string($vbsDBi,trim($_POST['comments']))  : "") . "'";
     $sqlUpdate .= ",mon ='" 	  .	(isset($_POST['mon'])  ? 'Y' : 'N') .  "'";
     $sqlUpdate .= ",tue ='" 	  . (isset($_POST['tue'])  ? 'Y' : 'N') .  "'";
@@ -74,7 +73,6 @@ function validate($form){
 	/* Mandatory form elements */	
 	$mustExist  = array('picture'=>'Indicate picture','age_group'=>'Indicate age group','registered'=>'Select \'Yes\' if helping.');
 	$notBlank   = array('first_name'=>'Enter first name', 'last_name'=>'Enter last name');
-	$selectedLists  = array('shirt_size'=>'Select shirt size');
 	/* Arrays for looping through check boxes */
 	$chkDays = array("mon"=>1, "tue"=>2, "wed"=>3,"thur"=>4,"fri"=>5);
 	$chkAct  = array("classroom"=>1,"craft"=>2,"kitchen"=>3,"anything"=>4);
@@ -104,16 +102,6 @@ function validate($form){
 	/* Add the missing elements back into the array to avoid display errors */
 	$_POST = array_merge($_POST, $missing);	
 	
-	/* Check for options not selected */
-	$selected = array_intersect_key($form,$selectedLists);
-	foreach ($selected as $key=>$value){
-		if (DEBUG) print 'Line '.__LINE__ . " Selected key: " . $key . "-" . $value ."<br>";
-		if (contains_substr($value, "Select")){
-			$error = TRUE;
-			$errMsg .= $selectedLists[$key] . ",";
-		}
-	}
-
 	/* Require at least one element of the set for check boxes.  */
 	if (count(array_intersect_key($chkDays, $form))==0){
 	    if (DEBUG) print "No days selected";
@@ -250,17 +238,15 @@ switch ($_POST['submit']) {
 		if (validate($_POST)) {
 		    if (DEBUG) print "Line " . __LINE__ . " Save - passed validation<br>";
 			/* This is a new record to insert */
-		    $sql = "INSERT into staff (family_id, first_name, last_name, shirt_size, picture, registered, teach_with, ";
+		    $sql = "INSERT into staff (family_id, first_name, last_name, picture, registered, ";
 			$sql .= "classroom, nursery, craft, kitchen, anything, mon, tue, wed, thur, fri, age_group, create_date, last_update)";
-			$sql .= "VALUES (%u,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',now(),now())";
+			$sql .= "VALUES (%u,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',now(),now())";
 			$sqlStmt = 	sprintf($sql, 
 				$_SESSION['family_id'],
 				mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
 				mysqli_real_escape_string($vbsDBi, $_POST['last_name']),
-				$_POST['shirt_size'],
 				(isset($_POST['picture'])    ? $_POST['picture']    : 'N'),
 				(isset($_POST['registered']) ? $_POST['registered'] : 'N'),
-				mysqli_real_escape_string($vbsDBi, $_POST['teach_with']),
 				(isset($_POST['classroom'])?'Y':'N'),
 			    (isset($_POST['nursery'])  ?'Y':'N'),
 				(isset($_POST['craft'])    ?'Y':'N'),
@@ -326,17 +312,15 @@ switch ($_POST['submit']) {
 	        /* Validate only records where the registered value is true.  No use validating someone who is not attending! */
 	        if (validate($_POST)){           /* Validation passed */
 	            if (DEBUG) print "Line " . __LINE__ . " Update - PASSED validation<br>";
-                $sql = "UPDATE staff SET first_name='%s', last_name='%s', shirt_size='%s', picture='%s', registered='%s',teach_with='%s', comments='%s', age_group='%s', ";
+                $sql = "UPDATE staff SET first_name='%s', last_name='%s', picture='%s', registered='%s', comments='%s', age_group='%s', ";
                 $sql .= "classroom='%s',nursery='%s',craft='%s', kitchen='%s', anything='%s', mon='%s', tue='%s', wed='%s', thur='%s', fri='%s', ";
                 $sql .= "last_update=now()";
                 $sqlWhere = " WHERE staff_id = " . $_POST['staff_id'];
                 $sqlStmt = sprintf($sql,
                         mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
                         mysqli_real_escape_string($vbsDBi, $_POST['last_name']),
-                        $_POST['shirt_size'],
                         (isset($_POST['picture'])    ? $_POST['picture']    : 'N'),
                         (isset($_POST['registered']) ? $_POST['registered'] : 'N'),
-                        mysqli_real_escape_string($vbsDBi, (isset($_POST['teach_with']) ? $_POST['teach_with'] : '')),
                         mysqli_real_escape_string($vbsDBi, $_POST['comments']),
                         (isset($_POST['age_group'])  ? $_POST['age_group'] : ''),
                         (isset($_POST['classroom'])  ? 'Y' : 'N'),
@@ -479,10 +463,6 @@ else{
 	writeErr("Unable to get class list", "Student.php", __LINE__, $sqlErr);
 }
 
-$query_rsStudentShirtList = "SELECT shirt_size FROM list_shirts WHERE staff_opt = TRUE ORDER BY disp_order ";
-$rsStudentShirtList = mysqli_query($vbsDBi, $query_rsStudentShirtList);
-$row_rsStudentShirtList = mysqli_fetch_assoc($rsStudentShirtList);
-
 $_SESSION['staff_id'] = $row_rsStudent['staff_id'];
 
 $staffID = $row_rsStudent['staff_id'];
@@ -536,21 +516,6 @@ $offset = --$offset;
 			<div class="item"><input type="checkbox" name="craft" id="craft" value="Y" <?php echo (empty($row_rsStudent['craft'])||$row_rsStudent['craft']=='N' ?'':'checked ') . $fldEnabled;?>><label for="craft">Craft</label></div>
             <div class="item"><input type="checkbox" name="kitchen" id="kitchen" value="Y" <?php echo (empty($row_rsStudent['kitchen'])||$row_rsStudent['kitchen']=='N' ?'':'checked ') . $fldEnabled;?>>&nbsp;<label for="kitchen">Kitchen</label></div>
             <div class="item"><input type="checkbox" name="anything" id="anything" value="Y" <?php echo (empty($row_rsStudent['anything'])||$row_rsStudent['anything']=='N' ?'':'checked ') . $fldEnabled;?>><label for="anything">Anything</label></div>
-	    <tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hShirt')">Shirt Size<span class="popuptext" id="hShirt">Select the shirt size you want for <?php echo (empty($row_rsStudent['first_name']) ? "this volunteer" : $row_rsStudent['first_name']); ?>.  T-Shirts are only available for those who register before <?php echo VBS_SHIRT_DEADLINE_MMDDYYYY?></span></span></td><td class="value"><select name="shirt_size" <?php echo $fldEnabled?>>
-      <?php
-do {  
-?>
-      <option value="<?php echo $row_rsStudentShirtList['shirt_size']?>"<?php if (!(strcmp($row_rsStudentShirtList['shirt_size'], $row_rsStudent['shirt_size']))) {echo "selected=\"selected\"";} ?>><?php echo $row_rsStudentShirtList['shirt_size']?></option>
-      <?php
-} while ($row_rsStudentShirtList = mysqli_fetch_assoc($rsStudentShirtList));
-  $rows = mysqli_num_rows($rsStudentShirtList);
-  if($rows > 0) {
-      mysqli_data_seek($rsStudentShirtList, 0);
-	  $row_rsStudentShirtList = mysqli_fetch_assoc($rsStudentShirtList);
-  }
-?>
-		</select>
-		</td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hPic')">Picture&nbsp;?<span class="popuptext" id="hPic">May we take and post photos of you during VBS?  Those who decline will be required to wear a "No-pictures" identification sign during VBS.</span></span></td><td class="value">
             <label><input type="radio" name="picture" id="pic-yes" value="Y" <?php echo (strcasecmp($row_rsStudent['picture'],"Y")==0 ? "checked " : "") . $fldEnabled; ?>>&nbsp;Yes</label>
             <label><input type="radio" name="picture" id="pic-no" value="N" <?php echo (strcasecmp($row_rsStudent['picture'],"N")==0 ? "checked " : "") . $fldEnabled;?>>&nbsp;No</label>
@@ -562,8 +527,6 @@ do {
         <tr><td class="label"><span class="popup" onclick="myPopUp('nursery')">I need staff nursery<span class="popuptext" id="nursery">Check this box if you have a child under 3 and want to place them in the staff nursery.  You will be guided to register the child on the next page.  Leave box unchecked if you do not need these services. If a staff nursery record already exists, the text "Staff nursery registrant exists" will appear adjacent to the check box.</span></span></td><td class="value">
             <label><input type="checkbox" name="nursery" <?php echo ($nurseryCount>0?'checked ':'') . $fldEnabled;?>></label> <?php if ($nurseryCount>0) echo "<a href='staffNursery.php'>Staff nursery exists</a>"?>
     	</td></tr>
-		<tr>
-          <td class="label"><span class="popup" onclick="myPopUp('hClass')">I want to help in my child's class<span class="popuptext" id="hClass">If you want to be in the same class as your child, enter the child's name in this space.</span></span></td><td class="value"><input type="text" name="teach_with" placeholder="Your child's name and grade" value="<?php echo $row_rsStudent['teach_with'];?>" <?php echo $fldEnabled;?> style="width:60%"></td></tr>
         <tr><td class="label"><span class="popup" onclick="myPopUp('hComment')">Comments<span class="popuptext" id="hComment">This block is for comments specifically related to this volunteer.  Comments are optional.</span></span></td><td class="value"><textarea name="comments"<?php echo $fldEnabled?> ><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
         <tr><td class="label left"><span>*&nbsp;required</span></td><td class="value">
    		<?php if ($staffID==0) { ?>

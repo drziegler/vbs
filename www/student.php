@@ -16,7 +16,6 @@ function quickSave(){
 	$sqlUpdate .= "first_name='" . ((strlen(trim($_POST['first_name']))>0) ? trim($_POST['first_name'])  : "") . "'";
 	$sqlUpdate .= ",last_name='" . ((strlen(trim($_POST['last_name']))>0) ? trim($_POST['last_name'])  : "") . "'";
 	$sqlUpdate .= ",birthdate='" . ((strlen(trim($_POST['birthdate']))>0) ? trim($_POST['birthdate'])  : "") . "'";
-	$sqlUpdate .= ",buddy='" . ((strlen(trim($_POST['buddy']))>0) ? trim($_POST['buddy']) : "") . "'";
 	$sqlUpdate .= ",comments='" . ((strlen(trim($_POST['comments']))>0) ? trim($_POST['comments']) : "") . "'";
 	if (isset($_POST['picture'])) $sqlUpdate .= ",picture='" . $_POST['picture'] . "'";
 	if (isset($_POST['registered'])) $sqlUpdate .= ",registered='" . $_POST['registered'] . "'";
@@ -51,7 +50,7 @@ function validate($form){
 	/* Mandatory form elements */	
 	$mustExist  = array('picture'=>'Picture', 'registered'=>'Attending VBS?');
 	$notBlank   = array('first_name'=>'First Name', 'last_name'=>'Last Name', 'birthdate'=>'Birthdate');
-	$selectLists  = array('shirt_size'=>'Shirt size', 'class'=>'Class');
+	$selectLists  = array('class'=>'Class');
 
 	/* Remove leading and trailing spaces */
 	foreach ($form as $key => $value){
@@ -171,8 +170,8 @@ switch ($_POST['submit']) {
             if (DEBUG) print "Line " . __LINE__ . " Save - passed validation<br>";
             /* This is a new record to insert */
             $sql = "INSERT into students (family_id, first_name, last_name, birthdate, class, ";
-            $sql .= "shirt_size, picture, registered, buddy, comments, create_date, last_update) ";
-            $sql .= "VALUES (%u,'%s','%s','%s','%s','%s','%s','%s','%s','%s', now(), now())";
+            $sql .= "picture, registered, comments, create_date, last_update) ";
+            $sql .= "VALUES (%u,'%s','%s','%s','%s','%s','%s','%s', now(), now())";
             if (DEBUG) print "Registered value is " . $_POST['registered'] . "<br>";
             $sqlStmt = 	sprintf($sql, 
                 $_SESSION['family_id'],
@@ -180,10 +179,8 @@ switch ($_POST['submit']) {
                 mysqli_real_escape_string($vbsDBi, $_POST['last_name']),
                 mysqli_real_escape_string($vbsDBi, $_POST['birthdate']),
                 mysqli_real_escape_string($vbsDBi, $_POST['class']),
-                mysqli_real_escape_string($vbsDBi, $_POST['shirt_size']),
                 mysqli_real_escape_string($vbsDBi, $_POST['picture']),
                 mysqli_real_escape_string($vbsDBi, $_POST['registered']),									
-                mysqli_real_escape_string($vbsDBi, $_POST['buddy']),
                 mysqli_real_escape_string($vbsDBi, $_POST['comments'])
             );
             /* Get the new student id after insert */
@@ -243,17 +240,15 @@ switch ($_POST['submit']) {
 			if (validate($_POST)){           /* Validation passed */
 			    if (DEBUG) print "Line " . __LINE__ . " Update - PASSED validation<br>";
 				$sql = "UPDATE students SET first_name='%s', last_name='%s', birthdate='%s', 
-						class='%s', shirt_size='%s', picture='%s', registered='%s', buddy='%s', comments='%s', last_update=now()";
+						class='%s', picture='%s', registered='%s', comments='%s', last_update=now()";
 				$sqlWhere = " WHERE student_id = " . $_POST['student_id'];
 				$sqlStmt =  sprintf($sql,
             				mysqli_real_escape_string($vbsDBi, $_POST['first_name']),
             				mysqli_real_escape_string($vbsDBi, $_POST['last_name']),
             				mysqli_real_escape_string($vbsDBi, $_POST['birthdate']),
             				$_POST['class'],
-            				$_POST['shirt_size'],
             				mysqli_real_escape_string($vbsDBi, $_POST['picture']),
             				mysqli_real_escape_string($vbsDBi, $_POST['registered']),
-            				mysqli_real_escape_string($vbsDBi, $_POST['buddy']),
             				mysqli_real_escape_string($vbsDBi, $_POST['comments'])
                             );
 				$sqlStmt .= $sqlWhere;				
@@ -382,10 +377,6 @@ else{
     writeErr("-Unable to get class list", FILE_NAME, __LINE__, mysqli_errno($vbsDBi));
 }
 
-$query_rsStudentShirtList = "SELECT shirt_size FROM list_shirts WHERE student_opt = TRUE ORDER BY disp_order ";
-$rsStudentShirtList = mysqli_query($vbsDBi, $query_rsStudentShirtList);
-$row_rsStudentShirtList = mysqli_fetch_assoc($rsStudentShirtList);
-$totalRows_rsStudentShirtList = mysqli_num_rows($rsStudentShirtList);
 
 $_SESSION['student_id'] = $row_rsStudent['student_id'];
 if (DEBUG) print "Line " . __LINE__ . " Session student id is" . $_SESSION['student_id'] . "<br>";
@@ -429,7 +420,7 @@ $offset = --$offset;
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hFirst')">First Name<span class="popuptext" id="hFirst">Enter your child's first name exactly as you want it to appear on name tags, project labels, etc.  This includes capitalization and any punctuation you desire.</span></span></td><td class="value"><input name="first_name" type="text" id="first_name" value="<?php echo $row_rsStudent['first_name']?>" maxlength="20" <?php echo  $fldEnabled?> autofocus></td></tr>
 		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hLast')">Last Name<span class="popuptext" id="hLast">Enter your child's last name exactly as you want it to appear on name tags, project labels, etc.  This includes capitalization and any punctuation you require.</span></span></td><td class="value"><input name="last_name" type="text" value="<?php echo $row_rsStudent['last_name']; ?>" maxlength="20" <?php echo  $fldEnabled?>></td></tr>
 		<tr><td class="label">*&nbsp;<span>Birthdate</span></td><td class="value"><input name="birthdate" type="date" value="<?php echo $row_rsStudent['birthdate']; ?>" min="<?php echo VBS_DATE_MIN?>" max="<?php echo VBS_DATE_MAX?>" <?php echo  $fldEnabled?>></td></tr>
-		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hGrade')">Grade Completed<span class="popuptext" id="hGrade">Select the grade your child is in right now or just completed.  DO NOT select the grade your child is going to in the fall.  Mom and Me students must register by <?php echo VBS_MOM_ME_DEADLINE_MMDDYYYY ?> because of the requirement for security clearances to be completed.</span></span></td><td class="value">
+		<tr><td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hGrade')">Grade Completed<span class="popuptext" id="hGrade">Select the grade your child is in right now or just completed.  DO NOT select the grade your child is going to in the fall.</span></span></td><td class="value">
         <select name="class" <?php echo $fldEnabled?>>
 		<?php do {  ?>
 			<option value="<?php echo $row_rsClassList['class']?>"<?php if (!(strcmp($row_rsClassList['class'], $row_rsStudent['class']))) {echo "selected=\"selected\"";} ?>>
@@ -439,27 +430,11 @@ $offset = --$offset;
 		} while ($row_rsClassList = mysqli_fetch_assoc($rsClassList));
 ?>
         </select></td></tr>
-    <tr><td class="label">*&nbsp;<span>Shirt Size</span></td><td class="value"><select name="shirt_size" <?php echo $fldEnabled?>>
-      <?php
-do {  
-?>
-      <option value="<?php echo $row_rsStudentShirtList['shirt_size']?>"<?php if (!(strcmp($row_rsStudentShirtList['shirt_size'], $row_rsStudent['shirt_size']))) {echo "selected=\"selected\"";} ?>><?php echo $row_rsStudentShirtList['shirt_size']?></option>
-      <?php
-} while ($row_rsStudentShirtList = mysqli_fetch_assoc($rsStudentShirtList));
-  $rows = mysqli_num_rows($rsStudentShirtList);
-  if($rows > 0) {
-      mysqli_data_seek($rsStudentShirtList, 0);
-	  $row_rsStudentShirtList = mysqli_fetch_assoc($rsStudentShirtList);
-  }
-?>
-		</select>
-		</td></tr>
 		<tr>
 		  <td class="label">*&nbsp;<span class="popup" onclick="myPopUp('hPic')">Picture<span class="popuptext" id="hPic">May we take and post photos of your child during VBS?</span></span></td><td class="value">
             <label><input type="radio" name="picture" id="pic-yes" value="Y" <?php if (!(strcmp($row_rsStudent['picture'],"Y"))) {echo "checked";} echo $fldEnabled; ?> > Yes</label>
             <label><input type="radio" name="picture" id="pic-no" value="N" <?php if (!(strcmp($row_rsStudent['picture'],"N"))) {echo "checked";} echo $fldEnabled; ?>> No</label>
         </td></tr>
-        <tr><td class="label"><span class="popup" onclick="myPopUp('hBud')">Friend<span class="popuptext" id="hBud">If your child wants to be with a specific friend, enter their name here.  Their friend must be in the same grade.  We will do our best to accommodate your request.</span></span></td><td class="value"><input name="buddy" type="text" value="<?php echo $row_rsStudent['buddy']; ?>" maxlength="20" <?php echo $fldEnabled;?>></td></tr>
         <tr>
           <td class="label"><span class="popup" onclick="myPopUp('sComment')">Comments:<span class="popuptext" id="sComment">Enter comments here that are related to this child.</span></span></td><td class="value"><textarea name="comments" cols="" rows="" width='40px' <?php echo $fldEnabled?>><?php echo $row_rsStudent['comments']; ?></textarea></td></tr>
         <tr>
