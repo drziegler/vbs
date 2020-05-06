@@ -483,12 +483,13 @@ padding-bottom: 0.5vh;
 	font-size: 1.5vh;
 }
 #environment{
-	display:inline;
 	float: right;
 	color:yellow;
 	font-weight: bold;
 	font-size: 2vh;
 	border:none;
+	margin-right: 2vw;
+	margin-bottom:3vh;
 }
 
 #admin a:link {
