@@ -106,6 +106,10 @@ define('NO_DUPES',		false);
 define('WAITLIST_ONLY',	false);
 
 
+/* WARNING! Do not move this above LOG_FILE declaraction */
+require_once("Connections/vbsDB.php");
+
+
 
 function formatPhone($rawPhone){
 	$delimiter = "&#45;";
@@ -219,7 +223,5 @@ function contains_substr($mainStr, $str, $loc = false) {
     return (strcasecmp(substr($mainStr, $loc, strlen($str)), $str) == 0);
 }
 
-/* WARNING! Do not move this above LOG_FILE declaraction */
-require_once(VBS_ROOT . "/Connections/vbsDB.php");
 
 ?>
