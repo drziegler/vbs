@@ -160,9 +160,9 @@ switch ($_POST['submit']) {
 					}
 				}
 				else {
-					if (DEBUG) print "Line " . __LINE__ . "<br>";
+					if (DEBUG) print "Line " . __LINE__ . " ERROR: Insert statement failed.<br>";
 					$sqlErr = mysqli_error($vbsDBi);
-					writeLog(FILE_NAME . __LINE__ . " Error writing insert statement", "Switch:Save", __LINE__, $sqlErr);
+					writeErr(" Switch:Save-Error writing insert statement ", FILE_NAME, __LINE__, $sqlErr);
 				}
 			}
 			else { /* We have an update */
@@ -179,7 +179,7 @@ switch ($_POST['submit']) {
 				if (!mysqli_query($vbsDBi, $sqlStmt)){
 					if (DEBUG) print "Line: " . __LINE__ . "-Update(2)<br>";					
 					$sqlErr = mysqli_error($vbsDBi);
-					writeLog(FILE_NAME . __LINE__ . " Error writing family update statement", "Switch:Save", __LINE__, $sqlErr);
+					writeErr(" Switch:Save-Error writing family update statement ", FILE_NAME, __LINE__,  $sqlErr);
 				}
 				else {
 					if (DEBUG) print "Line: " . __LINE__ . "-Updated:family<br>";
