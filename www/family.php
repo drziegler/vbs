@@ -115,7 +115,7 @@ switch ($_POST['submit']) {
 		if (DEBUG) print "Line: " . __LINE__ . "-Next<br>";
 	case 'Save' :
 		if (validate($_POST)){
-			if (DEBUG) print "Family ID: " . $_SESSION['family_id'] . "<br>";
+			if (DEBUG) print 'Family ID: ' . $_SESSION['family_id'] . '<br>';
 			if ($_SESSION['family_id']==0){
 				/* This is a new family to insert */
 				if (DEBUG) print "Line: " . __LINE__ . "-Save:Insert<br>";
@@ -137,11 +137,11 @@ switch ($_POST['submit']) {
 					$rsFamily['family_id'] = $_SESSION['family_id'];
 					$_SESSION['family_name'] = $_POST['family_name'];
 					insertStats($vbsDBi, $_SESSION['family_id'], 'new');
-					writeLog(FILE_NAME . __LINE__ . " Inserted new family id " . $_SESSION['family_id'] . " for " . $_POST['family_name']);
+					writeLog2(FILE_NAME, __LINE__ , "Inserted new family id {$_SESSION['family_id']} for {$_POST['family_name']}");
 					
 					/* IF we have a search phone number saved, create a reference phone number against this family id for future retrieval */
 					if (!empty($_SESSION['newPhone'])){
-						if (DEBUG) print "Line " . __LINE__ . "<br>";	
+						if (DEBUG) print "Line " . __LINE__ . "<br>";
 						$sql = "INSERT INTO phone_numbers (family_id, contact_name, phone, phone_type_code, create_date, last_update) VALUES ('%s', '%s', '%s', 'H', now(), now())";
 						$sqlInsert = sprintf($sql,
 							mysqli_real_escape_string($vbsDBi, trim($_SESSION['family_id'])), 
@@ -151,11 +151,11 @@ switch ($_POST['submit']) {
 						if (!mysqli_query($vbsDBi, $sqlInsert)){
 							if (DEBUG) print "Line: " . __LINE__ . " Fam:Phone:Ins<br>";					
 							$sqlErr = mysqli_error($vbsDBi);
-							writeLog(FILE_NAME . __LINE__ . " Error writing phone insert", " Family:Switch:Save", __LINE__, $sqlErr);
+							writeErr(" Switch:Save-Error writing phone insert", FILE_NAME, __LINE__, $sqlErr);
 						}
 						else {
 							if (DEBUG) print "Line: " . __LINE__ . "-Updated:phone<br>";
-							writeLog(FILE_NAME . __LINE__ . " Inserted new phone number as " . $sqlInsert);
+							writeLog2(FILE_NAME, __LINE__, "Inserted new phone number as $sqlInsert");
 						}
 					}
 				}
@@ -183,7 +183,8 @@ switch ($_POST['submit']) {
 				}
 				else {
 					if (DEBUG) print "Line: " . __LINE__ . "-Updated:family<br>";
-					writeLog(FILE_NAME . __LINE__ ." Updated family id as " . $sqlStmt);
+					//@@ writeLog(FILE_NAME . __LINE__ ." Updated family id as " . $sqlStmt);
+					writeLog2(FILE_NAME, __LINE__, "Updated family {$_POST['family_id']} as $sqlStmt");
 					$_SESSION['family_name'] = $_POST['family_name'];
 				}
 			}
