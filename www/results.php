@@ -23,7 +23,7 @@ if (!empty($_REQUEST['submit'])){
     	case USE_THIS_RECORD :
     		if (DEBUG) print "Line: " . __LINE__ . "<br>";
     		$_SESSION['family_id'] = $_REQUEST['family_id'];
-    		$_SESSION['family_name'] =
+    		//@@$_SESSION['family_name'] =  /* mal-formed line causing variable to be mis-populated ! */
     		$_SESSION['search_phone'] = $_REQUEST["txtPhone"];
     		insertStats($vbsDBi, $_REQUEST['family_id'], 'reused');
     		header("Location: " . FAMILY_PAGE);
