@@ -24,7 +24,7 @@ elseif (file_exists(VBS_ENV_PROD_FILE)){
 
 
 
-define("DEBUG", 		FALSE);
+define("DEBUG", 		TRUE);
 define("SEND_TEXT",		TRUE);
 define("SEND_ERROR_TEXT", TRUE);
 
@@ -90,6 +90,10 @@ case VBS_ENV_DEV:
     define('DOMAIN',               'localhost:8080');
     break;
 }
+
+#Other Log File constants
+define('LOG_FILE_WIDTH',            12);
+define('LOG_LINE_WIDTH',             3);
 
 
 #Date constants
@@ -202,6 +206,15 @@ function writeLog($text2write){
 function writeErr($text2write, $functionName, $lineNo, $errNo){
 	$text2write = $functionName .  $lineNo . "-ErrNo: " . $errNo . " " . $text2write;
 	write($text2write, ERR_FILE);	
+}
+/* Improved and standardized log functions.  Eventually will totally replace the above two function */
+function writeLog2($fileName, $lineNo, $text2write){
+    $text2write = str_pad($fileName, LOG_FILE_WIDTH, ' ', STR_PAD_RIGHT) . str_pad($lineNo, LOG_LINE_WIDTH, '0', STR_PAD_LEFT) . ' ' . trim($text2write);
+    write($text2write, LOG_FILE);
+}
+function writeErr2($fileName, $lineNo, $errNo, $text2write){
+    $text2write = str_pad($fileName, LOG_FILE_WIDTH, ' ', STR_PAD_RIGHT) . str_pad($lineNo, LOG_LINE_WIDTH, '0', STR_PAD_LEFT) . ' ' . $errNo . ' ' .trim($text2write);
+    write($text2write, ERR_FILE);
 }
 /*
   This formats and writes a string to the file as 
