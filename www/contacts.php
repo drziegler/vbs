@@ -1,18 +1,19 @@
 <?php
 session_start();
 include_once('vbsUtils.inc');
-define("FILE_NAME", "[CONTACTS] ");
+define('FILE_NAME', '[CONTACTS]');
 $errMsgText = '';
 
 if ($_SESSION['family_id']==0){
-	if (DEBUG) print "Forwarding to search page from Phones.";
-	header("Location: index.php");
+	if (DEBUG) print 'Forwarding to search page from Phones.';
+	header('Location: index.php');
 }
 
 function quickSave(){
     global $vbsDBi;
     if (DEBUG) print "Line " . __LINE__ . ' Quick Save: $_POST = ' . print_r($_POST) . '<br>';
-    writeLog(FILE_NAME . __LINE__ . " Entering quickSave()");
+    writeLog2(FILE_NAME, __LINE__, 'Entering quickSave()');
+
 
     $sql = "DELETE from phone_numbers WHERE family_id=" . $_SESSION['family_id'];
     if (mysqli_query($vbsDBi, $sql)){
@@ -29,7 +30,7 @@ function quickSave(){
                 mysqli_real_escape_string($vbsDBi, trim($newPhone[$i]['contact_name'])));
             if (mysqli_query($vbsDBi, $sqlInsert)){
                 if (DEBUG) print "Inserting records at line: " . __LINE__ . "<br>" . $sqlInsert . "<br>";
-                writeLog(FILE_NAME . __LINE__ . " Inserted new phone data as " . $sqlInsert);}
+                writeLog2(FILE_NAME, __LINE__, "Insert new phone as $sqlInsert"); }
             else {
                 /* ERROR!  ERROR!  We have an ERROR! Just log it.*/
                 $sqlErrNum = mysqli_errno($vbsDBi);
@@ -83,12 +84,13 @@ function validatePhoneQuantity(){
     $validatedOK = TRUE;
     
 	/* Perform validation. Count must be > 1 */
-    $sql = "SELECT count(distinct phone) from phone_numbers where family_id = " . $_SESSION['family_id'];
+    $sql = "SELECT count(distinct phone) from phone_numbers where family_id = {$_SESSION['family_id']}";
     $rsPhoneCount = mysqli_fetch_row(mysqli_query($vbsDBi, $sql))[0];
-    if (DEBUG) writelog(FILE_NAME . __LINE__ . "-Unique phone count for fam ID " . $_SESSION['family_id'] . " is " . $rsPhoneCount);
+    if (DEBUG) writelog2(FILE_NAME, __LINE__ , "Unique phone count for fam ID {$_SESSION['family_id']} is $rsPhoneCount");
     
     if ($rsPhoneCount < 2){
-    	writeLog(FILE_NAME . __LINE__ . " Family id " . $_SESSION['family_id'] . " has < 2 contacts.");
+    	writeLog(FILE_NAME . __LINE__ . " ");
+    	writeLog2(FILE_NAME, __LINE__, "Family id {$_SESSION['family_id']} has < 2 contacts.");
         $validatedOK = FALSE;
     }
 
@@ -176,7 +178,8 @@ switch ($_POST['submit']){
 						mysqli_real_escape_string($vbsDBi, $newPhone[$i]['contact_name']));
 					if (mysqli_query($vbsDBi, $sqlInsert)){
 						if (DEBUG) print "Inserting records at line: " . __LINE__ . "<br>" . $sqlInsert . "<br>";		
-						writeLog(FILE_NAME . __LINE__ . " Inserted new phone data as " . $sqlInsert);}
+						writeLog2(FILE_NAME, __LINE__ , "Insert new phone as $sqlInsert");
+                    }
 					else {
 
 						$sqlErrNum = mysqli_errno($vbsDBi);
