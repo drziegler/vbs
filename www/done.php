@@ -13,7 +13,6 @@ include('vbsUtils.inc');
 	<div id="buttonSubGroup" style="position:fixed; width:100%; top:0;">
 		<a href="<?php echo HOME_PAGE?>"><input type="submit" class="button" name="submit" value="<?php echo HOME_BUTTON?>"></a>
 	</div>
-	<div class="vertical-horizontal-center"><img src="images/vbs-logo.jpg"></div>
 	<div style="position:fixed; width:100%; bottom:0"><h1>See you in July</h1></div>
 </body>
 </html>
