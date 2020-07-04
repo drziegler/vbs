@@ -24,7 +24,7 @@ elseif (file_exists(VBS_ENV_PROD_FILE)){
 
 
 
-define("DEBUG", 		TRUE);
+define("DEBUG", 		FALSE);
 define("SEND_TEXT",		TRUE);
 define("SEND_ERROR_TEXT", TRUE);
 
@@ -98,7 +98,7 @@ define('LOG_LINE_WIDTH',             3);
 
 #Date constants
 define("VBS_DATE",                          '2020-07-06');
-define("VBS_DATE_MAX",                      '2016-07-01');
+define("VBS_DATE_MAX",                      '2017-07-31');
 define("VBS_DATE_MIN",                      '2006-09-01');
 define("VBS_SHIRT_DEADLINE",                '2020-06-14');
 define("VBS_SHIRT_DEADLINE_MMDDYYYY",	    '06-14-2020');
