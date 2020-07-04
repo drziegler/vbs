@@ -44,7 +44,7 @@
 	<p>You can print a copy of the <a href="http://keepkidssafe.pa.gov/cs/groups/webcontent/documents/document/c_160267.pdf" target="_new">Volunteer Disclosure Statement</a> or obtain a paper copy from the church office.  
 	Place your completed disclosure into the Clearance Coordinator mailbox in the hallway at church.</p><a href='#top'>Back to top</a>
 	<p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>  
-	<a name='OtherClearances'></a><h2>Child Abuse History Clearance<br>PA Criminal Record Check<br>Federal Criminal History Check (FBI Fingerprinting)</h2></a>
+	<a name='OtherClearances'><h2>Child Abuse History Clearance<br>PA Criminal Record Check<br>Federal Criminal History Check (FBI Fingerprinting)</h2></a>
 	<p>Forms and instructions for the above clearances can be found on the <a href="http://keepkidssafe.pa.gov/resources/clearances/index.htm" target="_new">Keeps Kids Safe</a> website.</p>
 	<p>Please note that the PA Child Abuse Clearance and the PA Criminal record Check are free for volunteers.  There is a fee for the FBI Fingerprints.  It can take weeks for you to receive the Child Abuse Clearance and FBT Fingerprint results, so
 	 please do not delay in completing these as we must have them prior to the start of Vacation Bible School.</p><a href='#top'>Back to top</a>
