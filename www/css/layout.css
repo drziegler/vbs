@@ -13,7 +13,6 @@ body {
 	font-size: 100%;
 	margin: 0; 
 	line-height: 1.231; 
-	background-image: url("../images/stonewall.jpg");
 }
 
 
@@ -21,6 +20,45 @@ body {
 /*div {border:5px dashed blue;} */
 /* div div {border: 5px dashed green;} */
 /* #Register, #Search, #Results, #Student, #Contacts {border: 3px dotted orange;}  @@ TESTING */
+
+/******************** FLEX LAYOUT FOR SCHEDULES **************/
+/* Defines the container into which all flex elements are contained */
+.flex-container{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+	margin: 1vh 1vw;
+}
+
+.header{
+	margin: auto;
+	text-align: center;
+	font-size: 1.5rem;
+}
+
+.flex-container span{
+	font-size: 2rem; 
+	font-weight: bold;
+	vertical-align: top;}
+
+.flex-container div{
+	border: 3px blue solid;
+	font-size: 1rem;
+	margin: 1.25vh 0.25vw;
+	padding: .5vh .5vw;
+	min-width: 25%; 
+}
+
+.flex-container table{
+	border: none;
+}
+
+
+.flex-container a:link{
+	text-decoration: underline;
+}
+
+
 
 /************* GENERAL ELEMENT STYLES ****************/
 /* DO NOT REMOVE - IN USE */
@@ -155,14 +193,13 @@ tr *{
 	display: none !important;
 }
 .label {
-	width: 30%;
+	max-width: 30%;
 	padding-right: 0;
 	text-align: right;
 	vertical-align: top;
 }
 .value{
 	text-align: left;
-	padding-left: 0;
 	padding-left: 0.5em;
 }
 .gridContainer-footer {
@@ -450,6 +487,7 @@ padding-bottom: 0.5vh;
 }
  
 #Footer {
+	display: none;
 	position: fixed;
 	bottom: 0;
 	left: 0;
@@ -521,9 +559,12 @@ tr *{
 	font-size: 2.5rem;
 	padding: 0.25em;
 }
+
+
 td *{
 	font-size: 2.5vw;
 }
+
 input[type=checkbox], input[type=radio]{
 	transform:scale(1.5,1.5);
 }
@@ -635,7 +676,26 @@ padding-bottom: 0.25vh;
 	width: 60%;
 	margin: auto;
 }
+
+
+/******************** FLEX LAYOUT FOR SCHEDULES  in tablet **************/
+/* Defines the table specific values for the schedules  */
+
+.flex-container span{font-size: 2rem;}
+
+.flex-container div{
+	border: 3px orange solid;
+	max-width: 45%; 
 }
+
+.flex-container td {
+	font-size: 2.5vw;
+}
+
+
+}
+
+
 
 
 /* Desktop Layout: 769px to a max of 1232px.  Inherits styles from: Mobile Layout and Tablet Layout. */
@@ -651,6 +711,7 @@ h3{
 #status{
 	font-size: 1.5vw;
 }
+#footer {display: default;}
 .gridContainer-footer {
 	width: 90%;
 	height: 88vh;
@@ -728,6 +789,34 @@ padding-bottom: 0.25vh;
 #Confo #Staff .col10,
 #Confo #Staff .col13{
 	display: inline-block;
+}
+
+
+/******************** FLEX LAYOUT FOR SCHEDULES **************/
+/* Defines the container into which all flex elements are contained */
+.flex-container{
+	margin: 2vh 2vw;
+}
+
+.header{
+	font-size: 3vw;;
+}
+
+.flex-container span{
+	font-size: 2rem; 
+	font-weight: bold;
+	vertical-align: top;}
+
+.flex-container div{
+	max-width: 30%;
+	border: 3px green solid;
+	font-size: 1rem;
+	margin: 0.25vh 0.25vw;
+	padding: .5vh .5vw;
+}
+
+.flex-container table{
+	border: none;
 }
 
 
